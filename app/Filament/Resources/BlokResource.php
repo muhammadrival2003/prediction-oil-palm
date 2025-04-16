@@ -55,6 +55,7 @@ class BlokResource extends Resource
                     ->query(fn(Builder $query): Builder => $query->where('is_featured', true))
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
