@@ -12,6 +12,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -50,7 +51,8 @@ class BlokResource extends Resource
                 TextColumn::make('jumlah_pokok'),
             ])
             ->filters([
-                //
+                Filter::make('is_featured')
+                    ->query(fn(Builder $query): Builder => $query->where('is_featured', true))
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
