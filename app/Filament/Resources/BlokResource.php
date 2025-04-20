@@ -7,6 +7,7 @@ use App\Filament\Resources\BlokResource\RelationManagers;
 use App\Models\Blok;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -21,7 +22,26 @@ class BlokResource extends Resource
 {
     protected static ?string $model = Blok::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    public static function getNavigationLabel(): string
+    {
+        return __('Blok');
+    }
+
+    protected static ?string $navigationGroup = 'Data Aktual';
+
+    protected static ?int $navigationSort = 2;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeTooltip(): ?string
+    {
+        return 'Jumlah Data Blok';
+    }
+
+    // protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -31,11 +51,8 @@ class BlokResource extends Resource
                     ->required(),
                 TextInput::make('luas_lahan')
                     ->required(),
-                DatePicker::make('tahun_tanam')
-                    ->native(false)
-                    ->displayFormat('Y')
-                    ->Format('Y') // hanya tampil tahun
-                    ->required(),
+                Select::make('tahun_tanam_id')
+                    ->relationship('tahun_tanam', 'tahun_tanam'),
                 TextInput::make('jumlah_pokok')
                     ->required()
             ]);
@@ -46,8 +63,8 @@ class BlokResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('nama_blok'),
+                TextColumn::make('tahun_tanam.tahun_tanam'),
                 TextColumn::make('luas_lahan'),
-                TextColumn::make('tahun_tanam'),
                 TextColumn::make('jumlah_pokok'),
             ])
             ->filters([

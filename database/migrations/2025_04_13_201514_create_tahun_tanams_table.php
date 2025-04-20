@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bloks', function (Blueprint $table) {
+        Schema::create('tahun_tanams', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_blok');
-            $table->integer('luas_lahan');
-            $table->foreignId(column: 'tahun_tanam_id')->constrained()->cascadeOnDelete();
-            $table->integer('jumlah_pokok');
+            $table->integer('tahun_tanam');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bloks');
+        Schema::dropIfExists('tahun_tanams');
     }
 };

@@ -13,9 +13,14 @@ class Blok extends Model
     protected $fillable = [
         'nama_blok',
         'luas_lahan',
-        'tahun_tanam',
+        'tahun_tanam_id',
         'jumlah_pokok'
     ];
+
+    public function tahun_tanam()
+    {
+        return $this->belongsTo(TahunTanam::class);
+    }
 
     public function pemupukans()
     {
