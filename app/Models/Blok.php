@@ -17,7 +17,7 @@ class Blok extends Model
         'jumlah_pokok'
     ];
 
-    public function tahun_tanam()
+    public function tahunTanam()
     {
         return $this->belongsTo(TahunTanam::class);
     }
@@ -29,6 +29,10 @@ class Blok extends Model
     public function chemis()
     {
         return $this->hasMany(Chemis::class);
+    }
+    public function many_gawangan_manuals()
+    {
+        return $this->hasMany(ManyGawanganManual::class);
     }
     public function curah_hujans()
     {

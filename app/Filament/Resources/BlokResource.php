@@ -15,6 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
+use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -52,7 +53,7 @@ class BlokResource extends Resource
                 TextInput::make('luas_lahan')
                     ->required(),
                 Select::make('tahun_tanam_id')
-                    ->relationship('tahun_tanam', 'tahun_tanam'),
+                    ->relationship('tahunTanam', 'tahun_tanam'),
                 TextInput::make('jumlah_pokok')
                     ->required()
             ]);
@@ -68,8 +69,7 @@ class BlokResource extends Resource
                 TextColumn::make('jumlah_pokok'),
             ])
             ->filters([
-                Filter::make('is_featured')
-                    ->query(fn(Builder $query): Builder => $query->where('is_featured', true))
+                //
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

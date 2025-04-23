@@ -24,9 +24,25 @@ class TahunTanamResource extends Resource
         return __('TahunTanam');
     }
 
+    // Hidden Resource Navigation
+    // public static function shouldRegisterNavigation(): bool
+    // {
+    //     return false;
+    // }
+
     protected static ?int $navigationSort = 1;
 
     protected static ?string $navigationGroup = 'Data Aktual';
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeTooltip(): ?string
+    {
+        return 'Jumlah Data Blok';
+    }
 
     public static function form(Form $form): Form
     {
