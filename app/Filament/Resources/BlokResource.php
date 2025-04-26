@@ -5,8 +5,17 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\BlokResource\Pages;
 use App\Filament\Resources\BlokResource\RelationManagers;
 use App\Models\Blok;
+use Carbon\Carbon;
+// use Filament\Actions\ViewAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
+// use Filament\Forms\Components\Grid;
+// use Filament\Forms\Components\Section;
+// use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -72,7 +81,42 @@ class BlokResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                ViewAction::make()
+                    ->iconButton()
+                    ->color('primary')
+                    ->infolist([
+                        Section::make('Informasi Blok')
+                            ->icon('heroicon-o-information-circle')
+                            ->schema([
+                                Grid::make(2)
+                                    ->schema([
+                                        TextEntry::make('nama_blok')
+                                            ->label('Nama Blok')
+                                            ->columnSpan(1)
+                                            ->badge()
+                                            ->color('gray'),
+                                        TextEntry::make('tahunTanam.tahun_tanam')
+                                            ->label('Tahun Tanam')
+                                            ->columnSpan(1)
+                                            ->badge()
+                                            ->color('gray'),
+                                    ]),
+                                Grid::make(2)
+                                    ->schema([
+                                        TextEntry::make('luas_lahan')
+                                            ->label('Luas Lahan')
+                                            ->columnSpan(1)
+                                            ->badge()
+                                            ->color('gray'),
+                                        TextEntry::make('jumlah_pokok')
+                                            ->label('Jumlah Pokok')
+                                            ->columnSpan(1)
+                                            ->badge()
+                                            ->color('gray'),
+                                    ]),
+                            ]),
+                    ])
+                    ->modalWidth('xl'),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
