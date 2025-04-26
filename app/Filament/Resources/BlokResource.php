@@ -64,7 +64,7 @@ class BlokResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('nama_blok'),
-                TextColumn::make('tahun_tanam.tahun_tanam'),
+                TextColumn::make('tahunTanam.tahun_tanam'),
                 TextColumn::make('luas_lahan'),
                 TextColumn::make('jumlah_pokok'),
             ])

@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Exports\ManyGawanganManualExporter;
 use App\Filament\Resources\ManyGawanganManualResource\Pages;
 use App\Filament\Resources\ManyGawanganManualResource\RelationManagers;
 use App\Models\Blok;
 use App\Models\ManyGawanganManual;
 use Carbon\Carbon;
+use Filament\Actions\Exports\Enums\ExportFormat;
 // use Filament\Actions\CreateAction;
 // use Filament\Actions\ViewAction;
 use Filament\Forms;
@@ -30,7 +32,9 @@ use Filament\Notifications\Collection;
 use Filament\Notifications\Notification;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\CreateAction;
+use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ExportAction;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -92,14 +96,42 @@ class ManyGawanganManualResource extends Resource
                         Carbon::setLocale('id');
                         return Carbon::parse($state)->translatedFormat('F');
                     }),
-                TextColumn::make('rencana_gawangan'),
-                TextColumn::make('realisasi_gawangan'),
+                TextColumn::make('rencana_gawangan')
+                    ->label('Rencana')
+                    ->badge()
+                    ->color('gray'),
+                TextColumn::make('realisasi_gawangan')
+                    ->label('Realisasi')
+                    ->badge()
+                    ->color('success'),
             ])
             ->filters([
                 //
             ])
             ->actions([
+                Action::make('updateRealisasi')
+                    ->label('Realisasi')
+                    ->button()
+                    ->outlined()
+                    ->form([
+                        TextInput::make('realisasi_gawangan')
+                            ->label('Realisasi Gawangan')
+                            ->required()
+                            ->numeric()
+                            ->minValue(0),
+                    ])
+                    ->fillForm(fn(ManyGawanganManual $record): array => [
+                        'realisasi_gawangan' => $record->rencana_gawangan,
+                    ])
+                    ->action(function (ManyGawanganManual $record, array $data): void {
+                        $record->update([
+                            'realisasi_gawangan' => $data['realisasi_gawangan']
+                        ]);
+                    })
+                    ->modalWidth('xs'),
                 ViewAction::make()
+                    ->iconButton()
+                    ->color('primary')
                     ->infolist([
                         Section::make('Informasi Blok')
                             ->description('Detail informasi blok gawangan')
@@ -122,44 +154,32 @@ class ManyGawanganManualResource extends Resource
                                 Grid::make(3)
                                     ->schema([
                                         TextEntry::make('tanggal')
-                                            ->label('Tanggal Input')
-                                            ->date(),
+                                            ->label('Bulan')
+                                            ->formatStateUsing(function ($state) {
+                                                Carbon::setLocale('id');
+                                                return Carbon::parse($state)->translatedFormat('F');
+                                            }),
                                         TextEntry::make('rencana_gawangan')
                                             ->label('Rencana')
                                             ->badge()
-                                            ->color('primary'),
+                                            ->color('gray'),
                                         TextEntry::make('realisasi_gawangan')
                                             ->label('Realisasi')
                                             ->badge()
                                             ->color(fn($state) => $state ? 'success' : 'danger'),
                                     ]),
                             ]),
-                    ]),
-                Action::make('updateRealisasi')
-                    ->label('Realisasi')
-                    ->form([
-                        TextInput::make('realisasi_gawangan')
-                            ->label('Realisasi Gawangan')
-                            ->required()
-                            ->numeric()
-                            ->minValue(0),
                     ])
-                    ->fillForm(fn(ManyGawanganManual $record): array => [
-                        'realisasi_gawangan' => $record->rencana_gawangan,
-                    ])
-                    ->action(function (ManyGawanganManual $record, array $data): void {
-                        $record->update([
-                            'realisasi_gawangan' => $data['realisasi_gawangan']
-                        ]);
-                    })
-                    ->modalWidth('xs'),
-                EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                    ->modalWidth('xl'),
+                EditAction::make()
+                    ->iconButton(),
+                DeleteAction::make()
+                    ->iconButton(),
             ])
             ->bulkActions([
                 BulkAction::make('isi_semua_realisasi')
-                    ->label('Isi Semua Realisasi Kosong')
-                    ->icon('heroicon-o-check')
+                    ->label('Isi Semua Realisasi')
+                    // ->icon('heroicon-o-check')
                     ->color('warning')
                     ->requiresConfirmation()
                     ->modalHeading('Konfirmasi')
@@ -198,6 +218,10 @@ class ManyGawanganManualResource extends Resource
                                 ->send();
                         }),
                 ]),
+            ])
+            ->headerActions([
+                ExportAction::make()->exporter(ManyGawanganManualExporter::class)
+                ->label('Export')
             ]);
     }
 

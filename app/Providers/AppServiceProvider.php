@@ -5,6 +5,7 @@ namespace App\Providers;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Notifications\DatabaseNotification;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,5 +30,12 @@ class AppServiceProvider extends ServiceProvider
             'success' => Color::Green,
             'warning' => Color::Amber,
         ]);
+
+        // // Fix untuk query JSON di PostgreSQL
+        // DatabaseNotification::addGlobalScope('postgres-fix', function ($builder) {
+        //     if (config('database.default') === 'pgsql') {
+        //         $builder->whereRaw("data::jsonb->>'format' = 'filament'");
+        //     }
+        // });
     }
 }
