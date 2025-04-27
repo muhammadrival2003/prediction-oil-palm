@@ -44,6 +44,8 @@ class TahunTanamResource extends Resource
         return 'Jumlah Data Blok';
     }
 
+    // protected static ?string $navigationIcon = 'heroicon-s-academic-cap';
+
     public static function form(Form $form): Form
     {
         return $form

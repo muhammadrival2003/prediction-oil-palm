@@ -18,11 +18,12 @@ class RencanaRealisasi extends Page
         return __('Rencana dan Realisasi');
     }
 
-    protected static ?int $navigationSort = 3;
-
-    protected static ?string $navigationGroup = 'Data Aktual';
+    // protected static ?int $navigationSort = 3;
+    // protected static ?string $navigationGroup = 'Data Aktual';
 
     protected static string $view = 'filament.pages.rencana-realisasi';
+
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     public static function getPages(): array
     {

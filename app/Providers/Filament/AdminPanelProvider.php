@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+// use Doctrine\DBAL\Schema\View;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -17,7 +18,10 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Filament\Notifications\DatabaseNotification;
+use Illuminate\Contracts\View\View as ContractsViewView;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Illuminate\Contracts\View\View;
+use Illuminate\View\View as ViewView;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -28,6 +32,9 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName('Prediction Oil Palm')
+            // ->brandLogo(fn (): View => view('filament.logo'))
+            ->brandLogo(asset('images/palm-svgrepo-com.svg'))
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -56,6 +63,7 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->databaseNotifications();
     }
 }

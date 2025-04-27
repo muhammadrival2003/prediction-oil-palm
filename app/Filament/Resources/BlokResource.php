@@ -51,7 +51,7 @@ class BlokResource extends Resource
         return 'Jumlah Data Blok';
     }
 
-    // protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    // protected static ?string $navigationIcon = 'images/area-svgrepo-com.svg';
 
     public static function form(Form $form): Form
     {

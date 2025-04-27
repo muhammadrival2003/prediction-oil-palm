@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
+use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Notifications\DatabaseNotification;
 
@@ -29,6 +30,11 @@ class AppServiceProvider extends ServiceProvider
             'primary' => Color::Amber,
             'success' => Color::Green,
             'warning' => Color::Amber,
+        ]);
+
+        FilamentIcon::register([
+            'panels::topbar.global-search.field' => 'fas-magnifying-glass',
+            // 'panels::sidebar.group.collapse-button' => view('icons.chevron-up')
         ]);
 
         // // Fix untuk query JSON di PostgreSQL
