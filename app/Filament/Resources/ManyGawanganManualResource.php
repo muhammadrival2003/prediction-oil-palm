@@ -2,18 +2,12 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Exports\ManyGawanganManualExporter;
+use App\Exports\ManyGawanganManualsExport;
 use App\Filament\Resources\ManyGawanganManualResource\Pages;
-use App\Filament\Resources\ManyGawanganManualResource\RelationManagers;
 use App\Models\Blok;
 use App\Models\ManyGawanganManual;
 use Carbon\Carbon;
-use Filament\Actions\Exports\Enums\ExportFormat;
-// use Filament\Actions\CreateAction;
-// use Filament\Actions\ViewAction;
-use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
-// use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -22,23 +16,16 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Actions\Action;
-use Filament\Forms\Components\Hidden;
-// use Filament\Forms\Components\Section;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\Grid;
-use Filament\Notifications\Collection;
 use Filament\Notifications\Notification;
 use Filament\Tables\Actions\BulkAction;
-use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ExportAction;
-use GuzzleHttp\Promise\Create;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ManyGawanganManualResource extends Resource
 {
@@ -220,8 +207,12 @@ class ManyGawanganManualResource extends Resource
                 ]),
             ])
             ->headerActions([
-                ExportAction::make()->exporter(ManyGawanganManualExporter::class)
-                ->label('Export')
+                // ExportAction::make()->exporter(ManyGawanganManualExporter::class)
+                //     ->label('Export')
+                Action::make('export')
+                    ->label('Export Excel')
+                    ->action(fn() => Excel::download(new ManyGawanganManualsExport, 'Rencana Pekerjaan Many Gawangan Manual.xlsx'))
+                    ->color('success'),
             ]);
     }
 
