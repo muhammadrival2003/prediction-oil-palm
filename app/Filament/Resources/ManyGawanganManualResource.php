@@ -7,6 +7,7 @@ use App\Filament\Resources\ManyGawanganManualResource\Pages;
 use App\Models\Blok;
 use App\Models\ManyGawanganManual;
 use Carbon\Carbon;
+use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -73,6 +74,8 @@ class ManyGawanganManualResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->heading('Admin')
+            ->description('Buat Rencana dan Realisasi Many Gawangan disini.')
             ->columns([
                 TextColumn::make('blok.tahunTanam.tahun_tanam')
                     ->label('Tahun Tanam'),
@@ -93,7 +96,86 @@ class ManyGawanganManualResource extends Resource
                     ->color('success'),
             ])
             ->filters([
-                //
+                // Filter berdasarkan Tahun Tanam
+                Tables\Filters\SelectFilter::make('tahun_tanam')
+                    ->relationship('blok.tahunTanam', 'tahun_tanam')
+                    ->label('Tahun Tanam')
+                    ->searchable()
+                    ->preload(),
+
+                // Filter berdasarkan Blok
+                Tables\Filters\SelectFilter::make('blok')
+                    ->relationship('blok', 'nama_blok')
+                    ->label('Blok')
+                    ->searchable()
+                    ->preload(),
+
+                // Filter berdasarkan Bulan (PERBAIKAN)
+                Tables\Filters\SelectFilter::make('bulan')
+                    ->label('Bulan')
+                    ->options([
+                        '1' => 'Januari',
+                        '2' => 'Februari',
+                        '3' => 'Maret',
+                        '4' => 'April',
+                        '5' => 'Mei',
+                        '6' => 'Juni',
+                        '7' => 'Juli',
+                        '8' => 'Agustus',
+                        '9' => 'September',
+                        '10' => 'Oktober',
+                        '11' => 'November',
+                        '12' => 'Desember',
+                    ])
+                    ->query(function ($query, $data) {
+                        if (!empty($data['value'])) {
+                            $query->whereMonth('tanggal', $data['value']);
+                        }
+                    }),
+
+                // Filter berdasarkan Tahun (PERBAIKAN)
+                Tables\Filters\SelectFilter::make('tahun')
+                    ->label('Tahun')
+                    ->options(function () {
+                        $connection = config('database.default');
+                        $years = ManyGawanganManual::query();
+
+                        if ($connection === 'pgsql') {
+                            $years->selectRaw('EXTRACT(YEAR FROM tanggal)::integer as year');
+                        } else {
+                            $years->selectRaw('YEAR(tanggal) as year');
+                        }
+
+                        return $years->groupBy('year')
+                            ->pluck('year', 'year')
+                            ->mapWithKeys(fn($year) => [strval($year) => strval($year)])
+                            ->toArray();
+                    })
+                    ->query(function ($query, $data) {
+                        if (!empty($data['value'])) {
+                            $connection = config('database.default');
+                            if ($connection === 'pgsql') {
+                                $query->whereRaw('EXTRACT(YEAR FROM tanggal) = ?', [$data['value']]);
+                            } else {
+                                $query->whereYear('tanggal', $data['value']);
+                            }
+                        }
+                    }),
+
+                // Filter untuk realisasi yang sudah diisi atau belum (PERBAIKAN)
+                Tables\Filters\SelectFilter::make('realisasi_status')
+                    ->label('Status Realisasi')
+                    ->options([
+                        'filled' => 'Sudah Diisi',
+                        'empty' => 'Belum Diisi',
+                    ])
+                    ->query(function ($query, $data) {
+                        if ($data['value'] === 'filled') {
+                            $query->whereNotNull('realisasi_gawangan');
+                        } elseif ($data['value'] === 'empty') {
+                            $query->whereNull('realisasi_gawangan');
+                        }
+                    }),
             ])
             ->actions([
                 Action::make('updateRealisasi')

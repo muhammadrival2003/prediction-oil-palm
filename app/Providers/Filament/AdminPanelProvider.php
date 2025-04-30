@@ -18,6 +18,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Filament\Notifications\DatabaseNotification;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Contracts\View\View as ContractsViewView;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\Contracts\View\View;
@@ -34,7 +35,7 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->brandName('Prediction Oil Palm')
             // ->brandLogo(fn (): View => view('filament.logo'))
-            ->brandLogo(asset('images/palm-svgrepo-com.svg'))
+            // ->brandLogo(asset('images/palm-svgrepo-com.svg'))
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -64,6 +65,17 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->viteTheme('resources/css/filament/admin/theme.css')
-            ->databaseNotifications();
+            ->databaseNotifications()
+            ->renderHook(
+                PanelsRenderHook::STYLES_AFTER,
+                fn() => '<style>
+                    .fi-sidebar {
+                        background: #FFFFFF !important; /* Ganti dengan warna yang Anda inginkan */
+                    }
+                    .dark .fi-sidebar {
+                        background: #18181B !important;
+                    }
+                </style>'
+            );;
     }
 }
