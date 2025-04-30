@@ -22,7 +22,7 @@ class BlokFactory extends Factory
     {
         return [
             'nama_blok' => $this->faker->unique()->bothify('ST.##'), // ?? untuk huruf, ## untuk angka
-            'luas_lahan' => $this->faker->numberBetween(100, 600), // Luas antara 5-50 hektar
+            'luas_lahan' => $this->faker->numberBetween(20, 60), // Luas antara 5-50 hektar
             'tahun_tanam_id' => TahunTanam::factory(),
             'jumlah_pokok' => $this->faker->numberBetween(500, 2000), // Jumlah pohon per blok
         ];

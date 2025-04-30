@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('bloks', function (Blueprint $table) {
             $table->id();
             $table->string('nama_blok');
-            $table->integer('luas_lahan');
+            $table->float('luas_lahan');
             $table->foreignId(column: 'tahun_tanam_id')->constrained()->cascadeOnDelete();
             $table->integer('jumlah_pokok');
             $table->softDeletes();

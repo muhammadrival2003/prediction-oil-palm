@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Blok;
+use App\Models\ManyGawanganManual;
+use App\Models\TahunTanam;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -19,5 +22,9 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
         ]);
+
+        TahunTanam::factory(10)->create();
+        // Blok::factory(10)->create();
+        // ManyGawanganManual::factory(35)->create();
     }
 }

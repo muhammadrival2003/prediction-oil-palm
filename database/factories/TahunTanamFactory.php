@@ -20,8 +20,14 @@ class TahunTanamFactory extends Factory
 
     public function definition(): array
     {
+        $existingYears = TahunTanam::pluck('tahun_tanam')->toArray();
+
+        do {
+            $year = $this->faker->numberBetween(2000, date('Y'));
+        } while (in_array($year, $existingYears));
+
         return [
-            'tahun_tanam' => $this->faker->numberBetween(2000, date('Y'))
+            'tahun_tanam' => $year
         ];
     }
 }

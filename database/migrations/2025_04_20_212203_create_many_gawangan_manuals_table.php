@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('blok_id')->constrained()->cascadeOnDelete();
             $table->date('tanggal');
-            $table->integer('rencana_gawangan');
-            $table->integer('realisasi_gawangan')->nullable();
+            $table->float('rencana_gawangan');
+            $table->float('realisasi_gawangan')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
