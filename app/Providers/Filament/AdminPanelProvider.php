@@ -23,6 +23,7 @@ use Illuminate\Contracts\View\View as ContractsViewView;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\View as ViewView;
+use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -76,6 +77,9 @@ class AdminPanelProvider extends PanelProvider
                         background: #18181B !important;
                     }
                 </style>'
-            );;
+            )
+            ->plugins([
+                FilamentApexChartsPlugin::make()
+            ]);
     }
 }

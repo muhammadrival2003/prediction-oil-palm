@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Blok;
+use Filament\View\LegacyComponents\Widget;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Number;
@@ -12,6 +13,15 @@ class StatsDashboard extends BaseWidget
     protected static ?string $pollingInterval = '10s';
     protected static bool $isLazy = false;
 
+    protected static ?int $sort = 1;
+
+    public function getColumnSpan(): int | string | array
+    {
+        return [
+            'md' => 12,
+            'xl' => 'full',
+        ];
+    }
     protected function getStats(): array
     {
         $countBlok = Blok::count();
@@ -19,7 +29,7 @@ class StatsDashboard extends BaseWidget
         $luasLahan = Blok::sum('luas_lahan');
 
         return [
-            Stat::make('Total Blok', Number::format($countBlok))
+            Stat::make('Total Blok', Number::format($countBlok) . ' Blok')
                 ->description('Jumlah blok keseluruhan')
                 ->descriptionIcon('heroicon-o-map-pin', 'before')
                 ->color('primary')
@@ -31,7 +41,7 @@ class StatsDashboard extends BaseWidget
                 ->icon('heroicon-o-view-columns')
                 ->chartColor('primary'),
 
-            Stat::make('Luas Lahan', Number::format($luasLahan, 2).' Ha')
+            Stat::make('Luas Lahan', Number::format($luasLahan, 2) . ' Ha')
                 ->description('Total lahan produktif')
                 ->descriptionIcon('heroicon-o-globe-alt', 'before')
                 ->color('success')
@@ -43,7 +53,7 @@ class StatsDashboard extends BaseWidget
                 ->icon('heroicon-o-square-3-stack-3d')
                 ->chartColor('success'),
 
-            Stat::make('Total Tanaman', Number::format($totalPokok).' Pokok')
+            Stat::make('Total Tanaman', Number::format($totalPokok) . ' Pokok')
                 ->description('Jumlah tanaman')
                 ->descriptionIcon('heroicon-o-sparkles', 'before')
                 ->color('warning')
