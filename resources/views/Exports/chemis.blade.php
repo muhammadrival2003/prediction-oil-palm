@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Laporan Gawangan Manual</title>
+    <title>Laporan chemis Manual</title>
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
         rel="stylesheet">
@@ -26,7 +26,7 @@
         </tr>
         <tr>
             <td colspan="30" class="text-center title">
-                <h2>RENCANAN PEKERJAAN MANY GAWANGAN MANUAL</h2>
+                <h2>RENCANAN PEKERJAAN CHEMIS PIRINGAN POKOK / PASAR PIKUL</h2>
             </td>
         </tr>
         @if($startDate && $endDate)
@@ -78,7 +78,7 @@
         <tbody>
             @php
             // Group data by tahun tanam
-            $groupedData = $gawangans->groupBy(function($item) {
+            $groupedData = $chemiss->groupBy(function($item) {
             return $item->blok->tahunTanam->tahun_tanam ?? '';
             })->sortBy(function($group, $year) {
             return $year; // Sort by tahun tanam
@@ -97,7 +97,7 @@
             $subtotalRealisasi = 0;
             @endphp
 
-            @foreach($items as $index => $gawangan)
+            @foreach($items as $index => $chemis)
             <tr @if($firstRow) class="year-group" @endif>
                 @if($firstRow)
                 <td rowspan="{{ $rowCount + 1 }}">{{ $counter++ }}</td>
@@ -105,25 +105,25 @@
                 @php $firstRow = false; @endphp
                 @endif
 
-                <td>{{ $gawangan->tanggal }}</td>
-                <td>{{ $gawangan->blok->nama_blok ?? '' }}</td>
-                <td>{{ $gawangan->blok->luas_lahan ?? '' }}</td>
-                <td>{{ $gawangan->blok->jumlah_pokok ?? '' }}</td>
+                <td>{{ $chemis->tanggal }}</td>
+                <td>{{ $chemis->blok->nama_blok ?? '' }}</td>
+                <td>{{ $chemis->blok->luas_lahan ?? '' }}</td>
+                <td>{{ $chemis->blok->jumlah_pokok ?? '' }}</td>
 
                 @foreach(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'] as $month)
                 <!-- Rencana -->
-                <td>{{ empty($gawangan->getRencanaForMonth($month)) ? '-' : $gawangan->getRencanaForMonth($month) }}</td>
+                <td>{{ empty($chemis->getRencanaForMonth($month)) ? '-' : $chemis->getRencanaForMonth($month) }}</td>
 
                 <!-- Realisasi -->
-                <td>{{ empty($gawangan->getRealisasiForMonth($month)) ? '-' : $gawangan->getRealisasiForMonth($month) }}</td>
+                <td>{{ empty($chemis->getRealisasiForMonth($month)) ? '-' : $chemis->getRealisasiForMonth($month) }}</td>
                 @endforeach
 
-                <td>{{ $gawangan->total_rencana ?? '-' }}</td>
-                <td>{{ $gawangan->total_realisasi ?? '-' }}</td>
+                <td>{{ $chemis->total_rencana ?? '-' }}</td>
+                <td>{{ $chemis->total_realisasi ?? '-' }}</td>
             </tr>
             @php
-            $subtotalRencana += $gawangan->total_rencana ?? 0;
-            $subtotalRealisasi += $gawangan->total_realisasi ?? 0;
+            $subtotalRencana += $chemis->total_rencana ?? 0;
+            $subtotalRealisasi += $chemis->total_realisasi ?? 0;
             @endphp
             @endforeach
 
@@ -152,12 +152,12 @@
             <tr class="grand-total-row">
                 <td colspan="4">TOTAL</td>
 
-                <td>{{ ($luas = $gawangans->sum(fn($item) => $item->blok->luas_lahan ?? 0)) ? number_format($luas) : '-' }}</td>
-                <td>{{ ($pokok = $gawangans->sum(fn($item) => $item->blok->jumlah_pokok ?? 0)) ? number_format($pokok) : '-' }}</td>
+                <td>{{ ($luas = $chemiss->sum(fn($item) => $item->blok->luas_lahan ?? 0)) ? number_format($luas) : '-' }}</td>
+                <td>{{ ($pokok = $chemiss->sum(fn($item) => $item->blok->jumlah_pokok ?? 0)) ? number_format($pokok) : '-' }}</td>
 
                 @foreach(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'] as $month)
-                <td>{{ ($rencana = $gawangans->sum(fn($item) => $item->getRencanaForMonth($month) ?? 0)) ? number_format($rencana, 2) : '-' }}</td>
-                <td>{{ ($realisasi = $gawangans->sum(fn($item) => $item->getRealisasiForMonth($month) ?? 0)) ? number_format($realisasi, 2) : '-' }}</td>
+                <td>{{ ($rencana = $chemiss->sum(fn($item) => $item->getRencanaForMonth($month) ?? 0)) ? number_format($rencana, 2) : '-' }}</td>
+                <td>{{ ($realisasi = $chemiss->sum(fn($item) => $item->getRealisasiForMonth($month) ?? 0)) ? number_format($realisasi, 2) : '-' }}</td>
                 @endforeach
 
                 <td>{{ $grandTotalRencana ? number_format($grandTotalRencana, 2) : '-' }}</td>

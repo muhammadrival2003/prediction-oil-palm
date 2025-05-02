@@ -10,6 +10,15 @@ class CreateManyGawanganManual extends CreateRecord
 {
     protected static string $resource = ManyGawanganManualResource::class;
 
+    public function getBreadcrumbs(): array
+    {
+        return [
+            route('filament.admin.pages.rencana-realisasi') => 'Rencana Realisasi',
+            route('filament.admin.resources.many-gawangan-manuals.index') => 'Many Gawangan Manual',
+            url()->current() => $this->getTitle(),
+        ];
+    }
+
     // Custome Redirect After Create
     public function getRedirectUrl(): string
     {

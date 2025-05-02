@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Filament\Resources\ManyGawanganManualResource\Pages;
+namespace App\Filament\Resources\ChemisResource\Pages;
 
-use App\Filament\Resources\ManyGawanganManualResource;
+use App\Filament\Resources\ChemisResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListManyGawanganManuals extends ListRecords
+class ListChemis extends ListRecords
 {
-    protected static string $resource = ManyGawanganManualResource::class;
+    protected static string $resource = ChemisResource::class;
+
     public function getBreadcrumbs(): array
     {
         return [

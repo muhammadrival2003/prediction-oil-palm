@@ -35,6 +35,6 @@ class BloksTableSeeder extends Seeder
             ]);
         }
 
-        $this->command->info("Berhasil membuat 35 data ManyGawanganManual!");
+        $this->command->info("Berhasil membuat 35 data Blok!");
     }
 }

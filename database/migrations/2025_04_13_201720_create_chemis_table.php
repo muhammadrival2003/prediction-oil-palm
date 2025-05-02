@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('chemis', function (Blueprint $table) {
             $table->id();
             $table->foreignId('blok_id')->constrained()->cascadeOnDelete();
-            $table->dateTime('tanggal');
-            $table->integer('jumlah_pokok');
+            $table->date('tanggal');
+            $table->float('rencana_chemis');
+            $table->float('realisasi_chemis')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

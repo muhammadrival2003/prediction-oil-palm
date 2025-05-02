@@ -2,10 +2,11 @@
 
 namespace App\Filament\Resources;
 
-use App\Exports\ManyGawanganManualsExport;
-use App\Filament\Resources\ManyGawanganManualResource\Pages;
+use App\Exports\CehListChemisExport;
+use App\Exports\ChemisExport;
+use App\Filament\Resources\ChemisResource\Pages;
 use App\Models\Blok;
-use App\Models\ManyGawanganManual;
+use App\Models\Chemis;
 use Carbon\Carbon;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\DatePicker;
@@ -28,9 +29,9 @@ use Filament\Tables\Actions\EditAction;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
-class ManyGawanganManualResource extends Resource
+class ChemisResource extends Resource
 {
-    protected static ?string $model = ManyGawanganManual::class;
+    protected static ?string $model = Chemis::class;
 
     // Hidden Resource Navigation
     public static function shouldRegisterNavigation(): bool
@@ -64,10 +65,10 @@ class ManyGawanganManualResource extends Resource
 
                 DatePicker::make('tanggal')
                     ->required(),
-                TextInput::make('rencana_gawangan')
+                TextInput::make('rencana_chemis')
                     ->numeric()
                     ->required(),
-                TextInput::make('realisasi_gawangan')
+                TextInput::make('realisasi_chemis')
             ]);
     }
 
@@ -75,7 +76,7 @@ class ManyGawanganManualResource extends Resource
     {
         return $table
             ->heading('Admin')
-            ->description('Buat Rencana dan Realisasi Many Gawangan disini.')
+            ->description('Buat Rencana dan Realisasi Chemis Piringan Pokok disini.')
             ->columns([
                 TextColumn::make('blok.tahunTanam.tahun_tanam')
                     ->label('Tahun Tanam'),
@@ -86,11 +87,11 @@ class ManyGawanganManualResource extends Resource
                         Carbon::setLocale('id');
                         return Carbon::parse($state)->translatedFormat('F');
                     }),
-                TextColumn::make('rencana_gawangan')
+                TextColumn::make('rencana_chemis')
                     ->label('Rencana')
                     ->badge()
                     ->color('gray'),
-                TextColumn::make('realisasi_gawangan')
+                TextColumn::make('realisasi_chemis')
                     ->label('Realisasi')
                     ->badge()
                     ->color('success'),
@@ -138,7 +139,7 @@ class ManyGawanganManualResource extends Resource
                     ->label('Tahun')
                     ->options(function () {
                         $connection = config('database.default');
-                        $years = ManyGawanganManual::query();
+                        $years = Chemis::query();
 
                         if ($connection === 'pgsql') {
                             $years->selectRaw('EXTRACT(YEAR FROM tanggal)::integer as year');
@@ -171,9 +172,9 @@ class ManyGawanganManualResource extends Resource
                     ])
                     ->query(function ($query, $data) {
                         if ($data['value'] === 'filled') {
-                            $query->whereNotNull('realisasi_gawangan');
+                            $query->whereNotNull('realisasi_chemis');
                         } elseif ($data['value'] === 'empty') {
-                            $query->whereNull('realisasi_gawangan');
+                            $query->whereNull('realisasi_chemis');
                         }
                     }),
             ])
@@ -183,18 +184,18 @@ class ManyGawanganManualResource extends Resource
                     ->button()
                     ->outlined()
                     ->form([
-                        TextInput::make('realisasi_gawangan')
-                            ->label('Realisasi Gawangan')
+                        TextInput::make('realisasi_chemis')
+                            ->label('Realisasi Chemis')
                             ->required()
                             ->numeric()
                             ->minValue(0),
                     ])
-                    ->fillForm(fn(ManyGawanganManual $record): array => [
-                        'realisasi_gawangan' => $record->rencana_gawangan,
+                    ->fillForm(fn(Chemis $record): array => [
+                        'realisasi_chemis' => $record->rencana_chemis,
                     ])
-                    ->action(function (ManyGawanganManual $record, array $data): void {
+                    ->action(function (Chemis $record, array $data): void {
                         $record->update([
-                            'realisasi_gawangan' => $data['realisasi_gawangan']
+                            'realisasi_chemis' => $data['realisasi_chemis']
                         ]);
                     })
                     ->modalWidth('xs'),
@@ -203,7 +204,7 @@ class ManyGawanganManualResource extends Resource
                     ->color('primary')
                     ->infolist([
                         Section::make('Informasi Blok')
-                            ->description('Detail informasi blok gawangan')
+                            ->description('Detail informasi blok Chemis')
                             ->icon('heroicon-o-information-circle')
                             ->schema([
                                 Grid::make(3)
@@ -220,7 +221,7 @@ class ManyGawanganManualResource extends Resource
                                     ]),
                             ]),
 
-                        Section::make('Data Gawangan')
+                        Section::make('Data Chemis')
                             ->icon('heroicon-o-clipboard-document-list')
                             ->schema([
                                 Grid::make(3)
@@ -231,11 +232,11 @@ class ManyGawanganManualResource extends Resource
                                                 Carbon::setLocale('id');
                                                 return Carbon::parse($state)->translatedFormat('F');
                                             }),
-                                        TextEntry::make('rencana_gawangan')
+                                        TextEntry::make('rencana_chemis')
                                             ->label('Rencana')
                                             ->badge()
                                             ->color('gray'),
-                                        TextEntry::make('realisasi_gawangan')
+                                        TextEntry::make('realisasi_chemis')
                                             ->label('Realisasi')
                                             ->badge()
                                             ->color(fn($state) => $state ? 'success' : 'danger'),
@@ -257,9 +258,9 @@ class ManyGawanganManualResource extends Resource
                     ->modalHeading('Konfirmasi')
                     ->modalDescription('Apakah Anda yakin ingin mengisi semua realisasi yang kosong dengan nilai rencana?')
                     ->action(function () {
-                        $updatedCount = ManyGawanganManual::whereNull('realisasi_gawangan')
+                        $updatedCount = Chemis::whereNull('realisasi_chemis')
                             ->update([
-                                'realisasi_gawangan' => DB::raw('rencana_gawangan')
+                                'realisasi_chemis' => DB::raw('rencana_chemis')
                             ]);
 
                         Notification::make()
@@ -275,12 +276,12 @@ class ManyGawanganManualResource extends Resource
                         ->color('danger')
                         ->requiresConfirmation()
                         ->modalHeading('Konfirmasi Reset Massal')
-                        ->modalDescription('Apakah Anda yakin ingin menghapus semua data realisasi gawangan?')
+                        ->modalDescription('Apakah Anda yakin ingin menghapus semua data realisasi Chemis?')
                         ->action(function () {
-                            $affected = DB::table('many_gawangan_manuals')
-                                ->whereNotNull('realisasi_gawangan')
+                            $affected = DB::table('chemis')
+                                ->whereNotNull('realisasi_chemis')
                                 ->update([
-                                    'realisasi_gawangan' => null,
+                                    'realisasi_chemis' => null,
                                     'updated_at' => now(),
                                 ]);
 
@@ -292,11 +293,11 @@ class ManyGawanganManualResource extends Resource
                 ]),
             ])
             ->headerActions([
-                // ExportAction::make()->exporter(ManyGawanganManualExporter::class)
+                // ExportAction::make()->exporter(ChemisExporter::class)
                 //     ->label('Export')
                 Action::make('export')
                     ->label('Export Excel')
-                    ->action(fn() => Excel::download(new ManyGawanganManualsExport, 'Rencana Pekerjaan Many Gawangan Manual.xlsx'))
+                    ->action(fn() => Excel::download(new ChemisExport, 'Rencana Pekerjaan Chemis Piringan Pokok.xlsx'))
                     ->color('success'),
             ]);
     }
@@ -311,9 +312,9 @@ class ManyGawanganManualResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListManyGawanganManuals::route('/'),
-            'create' => Pages\CreateManyGawanganManual::route('/create'),
-            'edit' => Pages\EditManyGawanganManual::route('/{record}/edit'),
+            'index' => Pages\ListChemis::route('/'),
+            'create' => Pages\CreateChemis::route('/create'),
+            'edit' => Pages\EditChemis::route('/{record}/edit'),
         ];
     }
 }

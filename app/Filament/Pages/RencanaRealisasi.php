@@ -8,6 +8,14 @@ use Illuminate\Contracts\Support\Htmlable;
 
 class RencanaRealisasi extends Page
 {
+    protected static ?string $title = 'Rencana';
+    // public function getBreadcrumbs(): array
+    // {
+    //     return [
+    //         route('filament.admin.pages.rencana-realisasi') => 'Rencana Realisasi',
+    //         url()->current() => 'Rencana',
+    //     ];
+    // }
     public static function getNavigationLabel(): string
     {
         return __('Rencana dan Realisasi');
@@ -23,7 +31,7 @@ class RencanaRealisasi extends Page
 
     protected static string $view = 'filament.pages.rencana-realisasi';
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationIcon = 'heroicon-s-document-text';
 
     public static function getPages(): array
     {
