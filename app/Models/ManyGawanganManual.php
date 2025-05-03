@@ -34,6 +34,20 @@ class ManyGawanganManual extends Model
         return 0;
     }
 
+    public function getTotalRencanaAttribute()
+    {
+        return collect(range(1, 12))->sum(function ($month) {
+            return $this->getRencanaForMonth(str_pad($month, 2, '0', STR_PAD_LEFT));
+        });
+    }
+
+    public function getTotalRealisasiAttribute()
+    {
+        return collect(range(1, 12))->sum(function ($month) {
+            return $this->getRealisasiForMonth(str_pad($month, 2, '0', STR_PAD_LEFT));
+        });
+    }
+
     public function blok()
     {
         return $this->belongsTo(Blok::class);

@@ -7,7 +7,7 @@
     @apply bg-cyan-50;
 }
 
-.fi-simple-main-ctn{
-    @apply justify-end;
+.fi-simple-main{
+    @apply w-full;
 } */
 

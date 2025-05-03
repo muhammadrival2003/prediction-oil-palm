@@ -87,6 +87,7 @@
             $counter = 1;
             $grandTotalRencana = 0;
             $grandTotalRealisasi = 0;
+
             @endphp
 
             @foreach($groupedData as $tahun_tanam => $items)
@@ -95,6 +96,12 @@
             $firstRow = true;
             $subtotalRencana = 0;
             $subtotalRealisasi = 0;
+
+            $subtotalRencana = $items->sum('total_rencana');
+            $subtotalRealisasi = $items->sum('total_realisasi');
+
+            $grandTotalRencana += $subtotalRencana;
+            $grandTotalRealisasi += $subtotalRealisasi;
             @endphp
 
             @foreach($items as $index => $gawangan)
@@ -156,12 +163,13 @@
                 <td>{{ ($pokok = $gawangans->sum(fn($item) => $item->blok->jumlah_pokok ?? 0)) ? number_format($pokok) : '-' }}</td>
 
                 @foreach(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'] as $month)
-                <td>{{ ($rencana = $gawangans->sum(fn($item) => $item->getRencanaForMonth($month) ?? 0)) ? number_format($rencana, 2) : '-' }}</td>
-                <td>{{ ($realisasi = $gawangans->sum(fn($item) => $item->getRealisasiForMonth($month) ?? 0)) ? number_format($realisasi, 2) : '-' }}</td>
+                <td>{{ ($rencana = $gawangans->sum(fn($item) => $item->getRencanaForMonth($month) ?? 0)) ? number_format($rencana) : '-' }}</td>
+                <td>{{ ($realisasi = $gawangans->sum(fn($item) => $item->getRealisasiForMonth($month) ?? 0)) ? number_format($realisasi) : '-' }}</td>
                 @endforeach
 
-                <td>{{ $grandTotalRencana ? number_format($grandTotalRencana, 2) : '-' }}</td>
-                <td>{{ $grandTotalRealisasi ? number_format($grandTotalRealisasi, 2) : '-' }}</td>
+                <!-- Tambahkan perhitungan untuk kolom RENCANA dan REALISASI -->
+                <td>{{ $grandTotalRencana ? number_format($grandTotalRencana) : '-' }}</td>
+                <td>{{ $grandTotalRealisasi ? number_format($grandTotalRealisasi) : '-' }}</td>
             </tr>
         </tbody>
     </table>

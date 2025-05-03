@@ -3,7 +3,10 @@
 namespace App\Filament\Resources\ManyGawanganManualResource\Pages;
 
 use App\Filament\Resources\ManyGawanganManualResource;
+use App\Models\ManyGawanganManual;
 use Filament\Actions;
+use Filament\Actions\CreateAction;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\ListRecords;
 
 class ListManyGawanganManuals extends ListRecords
@@ -20,7 +23,20 @@ class ListManyGawanganManuals extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            // CreateAction::make()
+            //         ->model(ManyGawanganManual::class)
+            //         ->label('Create')
+            //         ->button()
+            //         ->form([
+            //             TextInput::make('blok.tahunTanam.tahun_tanam')
+            //                 ->label('Tahun Tanam')
+            //                 ->required()
+            //                 ->numeric()
+            //                 ->minValue(0),
+            //         ]),
+            // ->fillForm(fn(ManyGawanganManual $record): array => [
+            //     'realisasi_gawangan' => $record->rencana_gawangan,
+            // ])
         ];
     }
 }

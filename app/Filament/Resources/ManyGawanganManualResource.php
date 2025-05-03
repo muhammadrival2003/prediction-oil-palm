@@ -7,11 +7,14 @@ use App\Filament\Resources\ManyGawanganManualResource\Pages;
 use App\Models\Blok;
 use App\Models\ManyGawanganManual;
 use Carbon\Carbon;
+use Filament\Forms\Components\Actions\Action as ActionsAction;
+use Filament\Tables\Actions\CreateAction;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -23,10 +26,15 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\Grid;
 use Filament\Notifications\Notification;
 use Filament\Tables\Actions\BulkAction;
+use Filament\Tables\Actions\CreateAction as ActionsCreateAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Filament\Forms\Set;
+// use Filament\Notifications\Collection;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Validation\Rules\Unique;
 
 class ManyGawanganManualResource extends Resource
 {
@@ -48,26 +56,74 @@ class ManyGawanganManualResource extends Resource
                     ->relationship('blok', 'nama_blok')
                     ->label('Blok')
                     ->reactive()
+                    ->required()
                     ->afterStateUpdated(function ($state, callable $set) {
                         $blok = Blok::with('tahunTanam')->find($state);
-                        $set('tahun_tanam_display', optional($blok->tahunTanam)->tahun_tanam);
+                        if ($blok) {
+                            $set('tahun_tanam_display', optional($blok->tahunTanam)->tahun_tanam);
+                            $set('luas_lahan_display', $blok->luas_lahan);
+                            $set('rencana_gawangan', $blok->luas_lahan); // Update disini
+                        }
                     }),
 
                 TextInput::make('tahun_tanam_display')
                     ->label('Tahun Tanam')
                     ->disabled()
-                    ->dehydrated(false) // supaya field ini tidak disimpan ke database
+                    ->dehydrated(false)
                     ->reactive()
+                    ->required()
                     ->afterStateHydrated(function (callable $set, $state, $record) {
                         $set('tahun_tanam_display', optional($record?->blok?->tahunTanam)->tahun_tanam);
                     }),
+                TextInput::make('luas_lahan_display')
+                    ->label('Luas Lahan')
+                    ->disabled()
+                    ->dehydrated(false)
+                    ->reactive()
+                    ->required()
+                    ->afterStateHydrated(function (callable $set, $state, $record) {
+                        $set('luas_lahan_display', $record?->blok?->luas_lahan);
+                    }),
 
                 DatePicker::make('tanggal')
+                    ->displayFormat('M Y')
+                    ->native(false)
                     ->required(),
                 TextInput::make('rencana_gawangan')
-                    ->numeric()
-                    ->required(),
+                    ->required()
+                    ->hintAction(
+                        ActionsAction::make('Isi Otomatis')
+                            ->icon('heroicon-o-clipboard-document-check')
+                            ->tooltip('Salin dari Luas Lahan')
+                            ->action(function (Set $set, $get) {
+                                // 1. Ambil blok_id dari form
+                                $blokId = $get('blok_id');
+
+                                // 2. Cek apakah blok sudah dipilih
+                                if (!$blokId) {
+                                    Notification::make()
+                                        ->title('Pilih blok terlebih dahulu!')
+                                        ->danger()
+                                        ->send();
+                                    return;
+                                }
+
+                                // 3. Ambil data luas_lahan dari blok terkait
+                                $blok = Blok::find($blokId);
+                                $set('rencana_gawangan', $blok->luas_lahan);
+                            })
+                    ),
                 TextInput::make('realisasi_gawangan')
+                    ->hintAction(
+                        ActionsAction::make('Isi Otomatis')
+                            ->icon('heroicon-o-clipboard-document-check')
+                            ->tooltip('Salin dari Rencana Gawangan')
+                            ->action(function (Set $set, $get) { // Gunakan $get untuk akses nilai field lain
+                                $rencanaValue = $get('rencana_gawangan');
+                                $set('realisasi_gawangan', $rencanaValue);
+                            })
+                    )
+
             ]);
     }
 
@@ -80,6 +136,9 @@ class ManyGawanganManualResource extends Resource
                 TextColumn::make('blok.tahunTanam.tahun_tanam')
                     ->label('Tahun Tanam'),
                 TextColumn::make('blok.nama_blok'),
+                TextColumn::make('blok.luas_lahan')
+                    ->label('Luas Lahan')
+                    ->extraCellAttributes(['class' => 'flex justify-center']),
                 TextColumn::make('tanggal')
                     ->label('Bulan')
                     ->formatStateUsing(function ($state) {
@@ -130,35 +189,6 @@ class ManyGawanganManualResource extends Resource
                     ->query(function ($query, $data) {
                         if (!empty($data['value'])) {
                             $query->whereMonth('tanggal', $data['value']);
-                        }
-                    }),
-
-                // Filter berdasarkan Tahun (PERBAIKAN)
-                Tables\Filters\SelectFilter::make('tahun')
-                    ->label('Tahun')
-                    ->options(function () {
-                        $connection = config('database.default');
-                        $years = ManyGawanganManual::query();
-
-                        if ($connection === 'pgsql') {
-                            $years->selectRaw('EXTRACT(YEAR FROM tanggal)::integer as year');
-                        } else {
-                            $years->selectRaw('YEAR(tanggal) as year');
-                        }
-
-                        return $years->groupBy('year')
-                            ->pluck('year', 'year')
-                            ->mapWithKeys(fn($year) => [strval($year) => strval($year)])
-                            ->toArray();
-                    })
-                    ->query(function ($query, $data) {
-                        if (!empty($data['value'])) {
-                            $connection = config('database.default');
-                            if ($connection === 'pgsql') {
-                                $query->whereRaw('EXTRACT(YEAR FROM tanggal) = ?', [$data['value']]);
-                            } else {
-                                $query->whereYear('tanggal', $data['value']);
-                            }
                         }
                     }),
 
@@ -251,7 +281,7 @@ class ManyGawanganManualResource extends Resource
             ->bulkActions([
                 BulkAction::make('isi_semua_realisasi')
                     ->label('Isi Semua Realisasi')
-                    // ->icon('heroicon-o-check')
+                    ->icon('heroicon-o-clipboard-document-check')
                     ->color('warning')
                     ->requiresConfirmation()
                     ->modalHeading('Konfirmasi')
@@ -267,25 +297,86 @@ class ManyGawanganManualResource extends Resource
                             ->success()
                             ->send();
                     }),
+                BulkAction::make('reset_all_realisasi')
+                    ->label('Reset Semua Realisasi')
+                    ->icon('heroicon-o-arrow-path')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Konfirmasi Reset Massal')
+                    ->modalDescription('Apakah Anda yakin ingin menghapus semua data realisasi gawangan?')
+                    ->action(function () {
+                        $affected = DB::table('many_gawangan_manuals')
+                            ->whereNotNull('realisasi_gawangan')
+                            ->update([
+                                'realisasi_gawangan' => null,
+                                'updated_at' => now(),
+                            ]);
+
+                        Notification::make()
+                            ->title("{$affected} data realisasi direset")
+                            ->success()
+                            ->send();
+                    }),
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                    BulkAction::make('reset_all_realisasi')
-                        ->label('Reset Semua Realisasi')
-                        ->icon('heroicon-o-arrow-path')
-                        ->color('danger')
+                    BulkAction::make('isi_realisasi_terpilih')
+                        ->label('Isi Realisasi Terpilih')
+                        ->color('warning')
                         ->requiresConfirmation()
-                        ->modalHeading('Konfirmasi Reset Massal')
-                        ->modalDescription('Apakah Anda yakin ingin menghapus semua data realisasi gawangan?')
-                        ->action(function () {
-                            $affected = DB::table('many_gawangan_manuals')
-                                ->whereNotNull('realisasi_gawangan')
+                        ->icon('heroicon-o-document-check')
+                        ->modalHeading('Konfirmasi')
+                        ->modalDescription('Apakah Anda yakin ingin mengisi realisasi untuk baris yang dipilih dengan nilai rencana?')
+                        ->action(function (Collection $selectedRecords) {
+                            $updatedCount = ManyGawanganManual::whereIn('id', $selectedRecords->pluck('id'))
+                                ->whereNull('realisasi_gawangan')
                                 ->update([
-                                    'realisasi_gawangan' => null,
-                                    'updated_at' => now(),
+                                    'realisasi_gawangan' => DB::raw('rencana_gawangan')
                                 ]);
 
                             Notification::make()
-                                ->title("{$affected} data realisasi direset")
+                                ->title("Berhasil update {$updatedCount} realisasi")
+                                ->success()
+                                ->send();
+                        }),
+                    BulkAction::make('hapus_bulan_terpilih')
+                        ->label('Hapus Bulan Terpilih')
+                        ->icon('heroicon-o-x-circle')
+                        ->color('danger')
+                        ->requiresConfirmation()
+                        ->modalHeading('Konfirmasi Penghapusan')
+                        ->modalDescription('Apakah Anda yakin ingin menghapus bulan pada baris yang dipilih?')
+                        ->action(function (Collection $selectedRecords) {
+                            $affected = ManyGawanganManual::whereIn('id', $selectedRecords->pluck('id'))
+                                ->whereNotNull('tanggal')
+                                ->update([
+                                    'tanggal' => null,
+                                    'rencana_gawangan' => null,
+                                    'realisasi_gawangan' => null,
+                                    'updated_at' => now()
+                                ]);
+
+                            Notification::make()
+                                ->title("Berhasil menghapus {$affected} realisasi")
+                                ->success()
+                                ->send();
+                        }),
+                    BulkAction::make('hapus_realisasi_terpilih')
+                        ->label('Hapus Realisasi Terpilih')
+                        ->icon('heroicon-o-x-circle')
+                        ->color('danger')
+                        ->requiresConfirmation()
+                        ->modalHeading('Konfirmasi Penghapusan')
+                        ->modalDescription('Apakah Anda yakin ingin menghapus realisasi pada baris yang dipilih?')
+                        ->action(function (Collection $selectedRecords) {
+                            $affected = ManyGawanganManual::whereIn('id', $selectedRecords->pluck('id'))
+                                ->whereNotNull('realisasi_gawangan')
+                                ->update([
+                                    'realisasi_gawangan' => null,
+                                    'updated_at' => now()
+                                ]);
+
+                            Notification::make()
+                                ->title("Berhasil menghapus {$affected} realisasi")
                                 ->success()
                                 ->send();
                         }),
@@ -294,10 +385,102 @@ class ManyGawanganManualResource extends Resource
             ->headerActions([
                 // ExportAction::make()->exporter(ManyGawanganManualExporter::class)
                 //     ->label('Export')
+                // CreateAction::make(),
+                Action::make('create_bulk')
+                    ->label('Buat/Update Rencana')
+                    ->icon('heroicon-o-calendar')
+                    ->form([
+                        DatePicker::make('tanggal')
+                            ->label('Bulan Target')
+                            ->displayFormat('M Y')
+                            ->native(false)
+                            ->required()
+                            ->closeOnDateSelection()
+                            ->reactive()
+                            ->afterStateUpdated(function ($state, $set) {
+                                if ($state) {
+                                    $month = Carbon::parse($state)->format('m');
+                                    $year = Carbon::parse($state)->format('Y');
+
+                                    $existingBlokIds = ManyGawanganManual::whereMonth('tanggal', $month)
+                                        ->whereMonth('tanggal', $month)
+                                        ->pluck('blok_id')
+                                        ->toArray();
+
+                                    $set('existing_blok_ids', $existingBlokIds);
+                                }
+                            }),
+
+                        Select::make('blok_ids')
+                            ->label('Pilih Blok')
+                            ->options(function ($get) {
+                                $existingBlokIds = $get('existing_blok_ids') ?? [];
+                                return Blok::whereNotIn('id', $existingBlokIds)
+                                    ->pluck('nama_blok', 'id');
+                            })
+                            ->multiple()
+                            ->required()
+                            ->searchable()
+                            ->preload()
+                            ->hidden(fn($get) => empty($get('tanggal')))
+                            ->helperText(function ($get) {
+                                $existingBlokIds = $get('existing_blok_ids') ?? [];
+                                if (count($existingBlokIds) > 0) {
+                                    $existingBlokNames = Blok::whereIn('id', $existingBlokIds)
+                                        ->pluck('nama_blok')
+                                        ->implode(', ');
+                                    return "Blok berikut sudah memiliki data di bulan ini: $existingBlokNames";
+                                }
+                                return null;
+                            }),
+
+                        TextInput::make('existing_blok_ids')
+                            ->hidden()
+                            ->dehydrated(false),
+                    ])
+                    ->action(function (array $data) {
+                        $targetDate = Carbon::parse($data['tanggal']);
+
+                        DB::transaction(function () use ($data, $targetDate) {
+                            foreach ($data['blok_ids'] as $blokId) {
+                                $blok = Blok::findOrFail($blokId);
+
+                                $exists = ManyGawanganManual::where('blok_id', $blokId)
+                                    // ->whereMonth('tanggal', $targetDate->month)
+                                    // ->whereYear('tanggal', $targetDate->year)
+                                    
+                                    ->exists();
+
+                                if ($exists) {
+                                    ManyGawanganManual::where('blok_id', $blokId)
+                                        // ->whereMonth('tanggal', $targetDate->month)
+                                        // ->whereYear('tanggal', $targetDate->year)
+                                        ->update([
+                                            'tanggal' => $targetDate,
+                                            'rencana_gawangan' => $blok->luas_lahan,
+                                            'realisasi_gawangan' => null
+                                        ]);
+                                } else {
+                                    ManyGawanganManual::create([
+                                        'blok_id' => $blokId,
+                                        'tanggal' => $targetDate,
+                                        'rencana_gawangan' => $blok->luas_lahan,
+                                        'realisasi_gawangan' => null
+                                    ]);
+                                }
+                            }
+                        });
+
+                        Notification::make()
+                            ->title('Data Berhasil Dibuat/Diperbarui')
+                            ->success()
+                            ->send();
+                    }),
                 Action::make('export')
                     ->label('Export Excel')
                     ->action(fn() => Excel::download(new ManyGawanganManualsExport, 'Rencana Pekerjaan Many Gawangan Manual.xlsx'))
                     ->color('success'),
+
             ]);
     }
 

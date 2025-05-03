@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('many_gawangan_manuals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('blok_id')->constrained()->cascadeOnDelete();
-            $table->date('tanggal');
-            $table->float('rencana_gawangan');
+            $table->date('tanggal')->nullable();
+            $table->float('rencana_gawangan')->nullable();
             $table->float('realisasi_gawangan')->nullable();
             $table->softDeletes();
             $table->timestamps();

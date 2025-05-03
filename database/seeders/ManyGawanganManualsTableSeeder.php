@@ -14,35 +14,29 @@ class ManyGawanganManualsTableSeeder extends Seeder
      */
     public function run()
     {
-        $blokIds = Blok::pluck('id')->toArray();
+        // Kosongkan tabel terlebih dahulu
+        ManyGawanganManual::truncate();
 
-        if (empty($blokIds)) {
+        // Ambil semua blok yang tersedia
+        $bloks = Blok::all();
+
+        if ($bloks->isEmpty()) {
             $this->command->info('Tidak ada data blok yang tersedia!');
             return;
         }
 
-        for ($i = 0; $i < 35; $i++) {
-            $blokId = $blokIds[array_rand($blokIds)];
-            $blok = Blok::find($blokId);
+        $createdCount = 0;
 
+        foreach ($bloks as $blok) {
             ManyGawanganManual::create([
-                'blok_id' => $blokId,
-                'tanggal' => now()->subDays(rand(1, 365))->format('Y-m-d'),
-                'rencana_gawangan' => $blok->luas_lahan,
-                'realisasi_gawangan' => $blok->luas_lahan,
+                'blok_id' => $blok->id,
+                'tanggal' => null,
+                'rencana_gawangan' => null,
+                'realisasi_gawangan' => null,
             ]);
+            $createdCount++;
         }
 
-        $this->command->info("Berhasil membuat 35 data ManyGawanganManual!");
+        $this->command->info("Berhasil membuat {$createdCount} data ManyGawanganManual (hanya blok_id)!");
     }
-
-    // protected function calculateRealisasi($rencana)
-    // {
-    //     // Realisasi sekitar rencana dengan variasi ±20% (minimal 1)
-    //     $variasi = $rencana * 0.2;
-    //     return rand(
-    //         max(1, $rencana - $variasi),
-    //         $rencana + $variasi
-    //     );
-    // }
 }
