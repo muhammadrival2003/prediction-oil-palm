@@ -16,4 +16,14 @@ class EditBlok extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function getRedirectUrl(): string
+    {
+        return route('filament.admin.resources.bloks.index');
+    }
+
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return 'Blok Baru Berhasil Diubah';
+    }
 }

@@ -80,6 +80,7 @@ class AdminPanelProvider extends PanelProvider
             )
             ->plugins([
                 FilamentApexChartsPlugin::make()
-            ]);
+            ])
+            ->breadcrumbs(false);;
     }
 }
