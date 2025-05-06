@@ -7,9 +7,11 @@ use App\Models\TahunTanam;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\View\View;
+use Filament\Notifications\Actions\Action;
 
 class TahunTanamBlok extends Page
 {
+    protected $listeners = ['undoDeleteBlok' => 'undoDeleteBlok'];
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static string $view = 'filament.pages.tahun-tanam-blok.tahun-tanam-blok';
 
@@ -34,6 +36,21 @@ class TahunTanamBlok extends Page
             ->get();
     }
 
+    public function undoDeleteBlok($recordId)
+    {
+        $record = Blok::withTrashed()->find($recordId);
+
+        if ($record) {
+            $record->restore();
+
+            Notification::make()
+                ->success()
+                ->title('Blok Dikembalikan')
+                ->body("Blok {$record->nama_blok} berhasil dikembalikan.")
+                ->send();
+        }
+    }
+
     public function deleteBlok($id)
     {
         try {
@@ -42,9 +59,16 @@ class TahunTanamBlok extends Page
             $blok->delete();
 
             Notification::make()
-                ->title('Berhasil!')
-                ->body('Blok berhasil dihapus')
                 ->success()
+                ->title('Blok Dihapus')
+                ->body("Blok {$blok->nama_blok} dipindahkan ke trash.")
+                ->persistent()
+                ->actions([
+                    Action::make('undo')
+                        ->color('gray')
+                        ->label('Batalkan')
+                        ->dispatch('undoDeleteBlok', ['recordId' => $blok->id]),
+                ])
                 ->send();
 
             // Redirect ke route dengan tahun_tanam_id

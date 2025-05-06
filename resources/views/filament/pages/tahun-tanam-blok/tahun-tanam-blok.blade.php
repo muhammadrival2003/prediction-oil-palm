@@ -37,7 +37,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div class="flex justify-end space-x-2">
                                 <button
-                                    x-on:click="window.location.href='{{ route('filament.admin.resources.bloks.edit', $blok->id) }}'"
+                                    x-on:click="window.location.href='{{ route('filament.admin.resources.bloks.edit', $blok->id) }}?tahun_tanam_id={{ request('tahun_tanam_id') }}'"
                                     class="p-1.5 hover:bg-yellow-100 text-yellow-600 rounded-full"
                                     title="Edit">
                                     <x-heroicon-o-pencil class="w-5 h-5" />
@@ -49,7 +49,7 @@
                                     <x-heroicon-o-trash class="w-4 h-4" />
                                 </button>
                                 <x-filament::modal id="confirm-delete-{{ $blok->id }}" heading="Hapus?" subheading="Apakah Anda yakin ingin menghapus blok {{ $blok->nama_blok }}?">
-                                    <x-slot name="footer">
+                                    <x-slot name="footer" disabled>
                                         <x-filament::button class="text-xs" color="danger" wire:click="deleteBlok({{ $blok->id }})">
                                             Ya, Hapus
                                         </x-filament::button>
