@@ -23,7 +23,7 @@ class EditBlok extends EditRecord
 
         if (request()->has('tahun_tanam_id')) {
             $nameRoute = 'filament.admin.pages.tahun-tanam-blok';
-            $routeParams = ['tahun_tanam_id' => request('tahun_tanam_id')];
+            $routeParams = ['tahun_tanam_id' => request('tahun_tanam_id'), 'afdeling_id' => request('afdeling_id')];
         } else {
             $nameRoute = 'filament.admin.resources.bloks.index';
             $routeParams = [];

@@ -1,7 +1,7 @@
 <x-filament-panels::page>
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2">
         <!-- Card Tahun Tanam -->
-        <a href="{{ route('filament.admin.pages.tahun-tanam') }}"
+        <a href="{{ route('filament.admin.pages.tahun-tanam', ['afdeling_id' => request('afdeling_id')]) }}"
             class="group relative block overflow-hidden rounded-xl bg-white p-6 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
 
             <!-- Title -->

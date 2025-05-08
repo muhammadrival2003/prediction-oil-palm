@@ -13,6 +13,18 @@ class TahunTanamsTableSeeder extends Seeder
      */
     public function run(): void
     {
-        TahunTanam::factory()->count(10)->create();
+        // Data contoh tahunTanam
+        $tahunTanams = [
+            ['tahun_tanam' => '2001', 'afdeling_id' => 5],
+            ['tahun_tanam' => '2003', 'afdeling_id' => 5],
+            ['tahun_tanam' => '2005', 'afdeling_id' => 5],
+            ['tahun_tanam' => '2011', 'afdeling_id' => 5],
+            ['tahun_tanam' => '2012', 'afdeling_id' => 5],
+            ['tahun_tanam' => '2017', 'afdeling_id' => 5],
+        ];
+
+        foreach ($tahunTanams as $tahunTanam) {
+            TahunTanam::create($tahunTanam);
+        }
     }
 }

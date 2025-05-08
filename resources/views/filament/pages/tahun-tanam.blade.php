@@ -1,3 +1,4 @@
+
 <x-filament::page wire:navigate>
     <x-filament::card class="!rounded-xl">
         <div class="px-6 py-4">
@@ -11,14 +12,14 @@
                         size="sm"
                         color="gray"
                         tag="a"
-                        href="{{ route('filament.admin.pages.afdeling5') }}">
+                        href="{{ route('filament.admin.pages.menu', ['afdeling_id' => $this->afdeling_id]) }}">
                         Kembali
                     </x-filament::button>
                     <x-filament::button
                         icon="heroicon-o-plus"
                         size="sm"
                         tag="a"
-                        href="{{ route('filament.admin.resources.tahun-tanams.create') }}">
+                        href="{{ route('filament.admin.resources.tahun-tanams.create', ['afdeling_id' => $this->afdeling_id]) }}">
                         Tambah Tahun
                     </x-filament::button>
                 </div>
@@ -69,7 +70,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @foreach($tahunTanams as $tahun)
                 <div class="relative group bg-gradient-to-br rounded-lg border overflow-hidden transition-all duration-300 hover:scale-[1.02] shadow-sm hover:shadow-lg cursor-pointer"
-                    onclick="window.location.href='{{ route('filament.admin.pages.tahun-tanam-blok', ['tahun_tanam_id' => $tahun->id]) }}'">
+                    onclick="window.location.href='{{ route('filament.admin.pages.tahun-tanam-blok', ['tahun_tanam_id' => $tahun->id, 'afdeling_id' => $this->afdeling_id]) }}'">
                     <!-- BG Image Card -->
                     <!-- <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=500')] opacity-20 group-hover:opacity-30 transition-opacity"></div> -->
                     <div class="relative p-6">

@@ -10,12 +10,12 @@
     </div>
     <div>
         <a
-            href="{{ route('filament.admin.pages.tahun-tanam') }}"
+            href="{{ route('filament.admin.pages.tahun-tanam', ['afdeling_id' => $this->afdeling_id]) }}"
             class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
             Kembali
         </a>
         <a
-            href="{{ route('filament.admin.resources.bloks.create', ['tahun_tanam_id' => request('tahun_tanam_id')]) }}"
+            href="{{ route('filament.admin.resources.bloks.create', ['tahun_tanam_id' => request('tahun_tanam_id'), 'afdeling_id' => $this->afdeling_id]) }}"
             class="inline-flex items-center px-4 py-2 bg-primary-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-700 focus:bg-primary-700 active:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition ease-in-out duration-150">
             Tambah Blok
         </a>

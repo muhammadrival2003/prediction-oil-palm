@@ -26,9 +26,11 @@ class TahunTanamBlok extends Page
 
     public $bloks;
     public $tahunTanam;
+    public $afdeling_id;
 
     public function mount(): void
     {
+        $this->afdeling_id = request('afdeling_id'); 
         $tahunTanamId = request()->input('tahun_tanam_id');
         $this->tahunTanam = TahunTanam::find($tahunTanamId);
         $this->bloks = Blok::with('tahunTanam')

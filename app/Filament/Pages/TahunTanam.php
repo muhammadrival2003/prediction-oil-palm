@@ -34,15 +34,20 @@ class TahunTanam extends Page
     public $totalBlok;
     public $totalPokok;
     public $averageBlokPerTahun;
+    public $afdeling_id; 
 
-    public function mount()
+    public function mount() 
     {
-        $this->tahunTanams = ModelsTahunTanam::withCount([
-            'bloks',
-            'bloks as total_pokok' => function ($query) {
-                $query->select(FacadesDB::raw('sum(jumlah_pokok)'));
-            }
-        ])->get();
+        $this->afdeling_id = request('afdeling_id'); 
+
+        // Modifikasi query untuk filter berdasarkan afdeling_id
+        $this->tahunTanams = ModelsTahunTanam::where('afdeling_id', $this->afdeling_id)
+            ->withCount([
+                'bloks',
+                'bloks as total_pokok' => function ($query) {
+                    $query->select(FacadesDB::raw('sum(jumlah_pokok)'));
+                }
+            ])->get();
 
         $this->totalBlok = $this->tahunTanams->sum('bloks_count');
         $this->totalPokok = $this->tahunTanams->sum('total_pokok');
@@ -136,7 +141,7 @@ class TahunTanam extends Page
                 ->send();
 
             return $this->redirect(
-                route('filament.admin.pages.tahun-tanam'),
+                route('filament.admin.pages.tahun-tanam', ['afdeling' => $this->afdeling_id]),
                 navigate: true // Untuk SPA (Single Page Application)
             );
         } catch (\Exception $e) {

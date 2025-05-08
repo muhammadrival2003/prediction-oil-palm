@@ -37,7 +37,11 @@
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div class="flex justify-end space-x-2">
                                 <button
-                                    x-on:click="window.location.href='{{ route('filament.admin.resources.bloks.edit', $blok->id) }}?tahun_tanam_id={{ request('tahun_tanam_id') }}'"
+                                    x-on:click="window.location.href='{{ route('filament.admin.resources.bloks.edit', [
+                                        'record' => $blok->id,
+                                        'tahun_tanam_id' => request('tahun_tanam_id'),
+                                        'afdeling_id' => request('afdeling_id') // 👈 Tambahkan ini
+                                    ]) }}'"
                                     class="p-1.5 hover:bg-yellow-100 text-yellow-600 rounded-full"
                                     title="Edit">
                                     <x-heroicon-o-pencil class="w-5 h-5" />

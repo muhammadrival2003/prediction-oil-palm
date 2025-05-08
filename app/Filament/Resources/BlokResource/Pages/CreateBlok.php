@@ -13,6 +13,7 @@ class CreateBlok extends CreateRecord
 
     // protected static ?string $title = 'Tambah Blok Baru';
 
+
     public function getHeading(): string
     {
         return 'Tambah Blok Baru'; // Judul lebih deskriptif
@@ -39,19 +40,19 @@ class CreateBlok extends CreateRecord
 
         if (request()->has('tahun_tanam_id')) {
             $nameRoute = 'filament.admin.pages.tahun-tanam-blok';
-            $routeParams = ['tahun_tanam_id' => request('tahun_tanam_id')];
+            $routeParams = ['tahun_tanam_id' => request('tahun_tanam_id'), 'afdeling_id' => request('afdeling_id')];
         } else {
             $nameRoute = 'filament.admin.resources.bloks.index';
             $routeParams = [];
         }
-
         return [
+            // dd(request()->all()),
             Actions\Action::make('kembali')
                 ->label('Kembali')
                 ->color('gray')
                 ->url(route($nameRoute, $routeParams))
                 ->icon('heroicon-o-arrow-left'),
-        ];
+        ];;
     }
 
     protected function getRedirectUrl(): string

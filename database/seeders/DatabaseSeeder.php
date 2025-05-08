@@ -23,7 +23,13 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@gmail.com',
         ]);
 
-        TahunTanam::factory(10)->create();
+        $this->call([
+            AfdelingTableSeeder::class,
+            TahunTanamsTableSeeder::class,
+            // Seeder lainnya...
+        ]);
+
+        // TahunTanam::factory(10)->create();
         // Blok::factory(10)->create();
         // ManyGawanganManual::factory(35)->create();
     }
