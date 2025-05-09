@@ -14,6 +14,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\Select;
 
 class TahunTanamResource extends Resource
 {
@@ -22,6 +23,10 @@ class TahunTanamResource extends Resource
     public static function getNavigationLabel(): string
     {
         return __('TahunTanam');
+    }
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
     }
 
     // Hidden Resource Navigation
@@ -48,11 +53,35 @@ class TahunTanamResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                TextInput::make('tahun_tanam')
-                    ->required(),
-            ]);
+        // Ambil parameter dari URL atau request
+        $afdelingId = request('afdeling_id');
+
+        // Schema dasar
+        $schema = [
+            TextInput::make('tahun_tanam')
+                ->label('Tahun Tanam')
+                ->required()
+                ->numeric()
+                ->minValue(2000)
+                ->maxValue(now()->year + 1),
+        ];
+
+        // Kondisi untuk field afdeling_id
+        if ($afdelingId) {
+            // Jika ada parameter, buat hidden field dengan nilai default
+            $schema[] = Forms\Components\Hidden::make('afdeling_id')
+                ->default($afdelingId);
+        } else {
+            // Jika tidak ada parameter, tampilkan select field
+            $schema[] = Select::make('afdeling_id')
+                ->label('Afdeling')
+                ->relationship('afdeling', 'nama')
+                ->required()
+                ->searchable()
+                ->preload();
+        }
+
+        return $form->schema($schema);
     }
 
     public static function table(Table $table): Table

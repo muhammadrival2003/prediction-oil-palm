@@ -54,7 +54,7 @@
                                 </button>
                                 <x-filament::modal id="confirm-delete-{{ $blok->id }}" heading="Hapus?" subheading="Apakah Anda yakin ingin menghapus blok {{ $blok->nama_blok }}?">
                                     <x-slot name="footer" disabled>
-                                        <x-filament::button class="text-xs" color="danger" wire:click="deleteBlok({{ $blok->id }})">
+                                        <x-filament::button class="text-xs" color="danger" wire:click="deleteBlok({{ $blok->id }},{{ request('afdeling_id') }})">
                                             Ya, Hapus
                                         </x-filament::button>
                                         <x-filament::button class="text-xs" color="gray" wire:click="$dispatch('close-modal', { id: 'confirm-delete-{{ $blok->id }}' })">

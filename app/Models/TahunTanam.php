@@ -11,7 +11,8 @@ class TahunTanam extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'tahun_tanam'
+        'tahun_tanam',
+        'afdeling_id'
     ];
 
     public function bloks()

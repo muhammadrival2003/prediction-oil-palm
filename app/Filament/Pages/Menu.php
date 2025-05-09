@@ -15,6 +15,12 @@ class Menu extends Page
     {
         return false;
     }
+    public $afdeling_id;
+
+    public function mount()
+    {
+        $this->afdeling_id = request('afdeling_id');
+    }
 
     public function getHeaderActions(): array
     {

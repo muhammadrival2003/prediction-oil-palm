@@ -34,11 +34,10 @@ class TahunTanam extends Page
     public $totalBlok;
     public $totalPokok;
     public $averageBlokPerTahun;
-    public $afdeling_id; 
-
-    public function mount() 
+    public $afdeling_id;
+    public function mount()
     {
-        $this->afdeling_id = request('afdeling_id'); 
+        $this->afdeling_id = request('afdeling_id');
 
         // Modifikasi query untuk filter berdasarkan afdeling_id
         $this->tahunTanams = ModelsTahunTanam::where('afdeling_id', $this->afdeling_id)
@@ -131,8 +130,12 @@ class TahunTanam extends Page
     public function deleteTahunTanam($id)
     {
         try {
-            $tahun = ModelsTahunTanam::findOrFail($id);
-            $tahun->delete();
+            $tahunTanam = ModelsTahunTanam::findOrFail($id);
+            $afdeling_id = $tahunTanam->afdeling_id;
+            $tahunTanam->delete();
+
+            // Memuat ulang semua data
+            $this->mount();
 
             Notification::make()
                 ->title('Berhasil!')
@@ -140,10 +143,11 @@ class TahunTanam extends Page
                 ->success()
                 ->send();
 
-            return $this->redirect(
-                route('filament.admin.pages.tahun-tanam', ['afdeling' => $this->afdeling_id]),
-                navigate: true // Untuk SPA (Single Page Application)
-            );
+
+            return redirect()->route(
+                    'filament.admin.pages.tahun-tanam',
+                    ['afdeling_id' => $afdeling_id],
+                );
         } catch (\Exception $e) {
             Notification::make()
                 ->title('Gagal!')

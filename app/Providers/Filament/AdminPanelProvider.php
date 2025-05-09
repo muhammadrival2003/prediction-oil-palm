@@ -3,6 +3,8 @@
 namespace App\Providers\Filament;
 
 // use Doctrine\DBAL\Schema\View;
+
+use App\Filament\Pages\TahunTanam;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -81,6 +83,6 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 FilamentApexChartsPlugin::make()
             ])
-            ->breadcrumbs(false);;
+            ->breadcrumbs(false);
     }
 }

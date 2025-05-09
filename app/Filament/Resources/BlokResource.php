@@ -55,6 +55,11 @@ class BlokResource extends Resource
         return static::getModel()::count();
     }
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+
     public static function getNavigationBadgeTooltip(): ?string
     {
         return 'Jumlah Data Blok';
@@ -152,7 +157,7 @@ class BlokResource extends Resource
     {
         return parent::getEloquentQuery()
             ->when(request()->has('tahun_tanam_id'), function (Builder $query) {
-                $query->where('tahun_tanam_id', request('tahun_tanam_id'));
+                $query->where('tahun_tanam_id', [request('tahun_tanam_id')]);
             });
     }
 }

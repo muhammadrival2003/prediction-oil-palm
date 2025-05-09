@@ -30,7 +30,7 @@ class TahunTanamBlok extends Page
 
     public function mount(): void
     {
-        $this->afdeling_id = request('afdeling_id'); 
+        $this->afdeling_id = request('afdeling_id');
         $tahunTanamId = request()->input('tahun_tanam_id');
         $this->tahunTanam = TahunTanam::find($tahunTanamId);
         $this->bloks = Blok::with('tahunTanam')
@@ -56,8 +56,14 @@ class TahunTanamBlok extends Page
     public function deleteBlok($id)
     {
         try {
+            // $afdeling_id = request('afdeling_id');
             $blok = Blok::findOrFail($id);
-            $tahunTanamId = $blok->tahun_tanam_id; // Ambil tahun_tanam_id sebelum dihapus
+            $tahunTanamId = $blok->tahun_tanam_id;
+            $tahunTanam = TahunTanam::findOrFail($tahunTanamId);
+            $afdeling_id = $tahunTanam->afdeling_id;
+
+
+
             $blok->delete();
 
             Notification::make()
@@ -73,9 +79,10 @@ class TahunTanamBlok extends Page
                 ])
                 ->send();
 
-            // Redirect ke route dengan tahun_tanam_id
+            // Tambahkan afdeling_id ke redirect
             return redirect()->route('filament.admin.pages.tahun-tanam-blok', [
-                'tahun_tanam_id' => $tahunTanamId
+                'tahun_tanam_id' => $tahunTanamId,
+                'afdeling_id' => $afdeling_id // 👈 Tambahkan ini
             ]);
         } catch (\Exception $e) {
             Notification::make()
@@ -84,9 +91,10 @@ class TahunTanamBlok extends Page
                 ->danger()
                 ->send();
 
-            // Tetap redirect meskipun error, tapi dengan tahun_tanam_id yang sama
+            // Tambahkan afdeling_id ke redirect error
             return redirect()->route('filament.admin.pages.tahun-tanam-blok', [
-                'tahun_tanam_id' => request('tahun_tanam_id')
+                'tahun_tanam_id' => request('tahun_tanam_id'),
+                'afdeling_id' => $this->afdeling_id // 👈 Tambahkan ini
             ]);
         }
     }
