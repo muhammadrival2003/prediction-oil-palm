@@ -7,7 +7,7 @@ use Filament\Pages\Page;
 
 class Afdeling extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationIcon = 'heroicon-o-map';
 
     protected static string $view = 'filament.pages.afdeling';
 

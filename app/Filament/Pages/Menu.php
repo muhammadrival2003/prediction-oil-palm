@@ -29,7 +29,6 @@ class Menu extends Page
                 ->label('Kembali')
                 ->color('gray')
                 ->url(route('filament.admin.pages.afdeling'))
-                ->icon('heroicon-o-arrow-left'),
         ];
     }
 }

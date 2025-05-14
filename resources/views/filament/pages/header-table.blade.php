@@ -6,7 +6,6 @@
                 {{ $tahunTanam->tahun_tanam }}
             </span>
         </h1>
-        <p class="text-sm">Berikut semua data {{ $subTitle }} pada {{ $title }} {{ $tahunTanam->tahun_tanam }}.</p>
     </div>
     <div>
         <a

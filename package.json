@@ -18,6 +18,8 @@
         "vite": "^6.0.11"
     },
     "dependencies": {
-        "apexcharts": "^4.6.0"
+        "@alpinejs/intersect": "^3.14.9",
+        "apexcharts": "^4.6.0",
+        "chart.js": "^4.4.9"
     }
 }

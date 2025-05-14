@@ -9,6 +9,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Container\Attributes\DB;
 use Illuminate\Support\Facades\DB as FacadesDB;
+use Illuminate\View\View;
 use Filament\Actions;
 
 use function Laravel\Prompts\confirm;
@@ -155,5 +156,15 @@ class TahunTanam extends Page
                 ->danger()
                 ->send();
         }
+    }
+
+    public function getHeaders(): ?View
+    {
+
+        return view('filament.pages.tahun-tanam.header-tahun-tanam', [
+            'totalTahunTanam' => $this->totalTahunTanam,
+            'totalBlok' => $this->totalBlok,
+            'totalPokok' => $this->totalPokok,
+        ]);
     }
 }
