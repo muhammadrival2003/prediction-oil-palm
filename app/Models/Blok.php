@@ -22,6 +22,10 @@ class Blok extends Model
         return $this->belongsTo(TahunTanam::class);
     }
 
+    public function activitylogs()
+    {
+        return $this->hasMany(ActivityLog::class);
+    }
     public function pemupukans()
     {
         return $this->hasMany(Pemupukan::class);

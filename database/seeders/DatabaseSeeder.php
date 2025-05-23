@@ -22,10 +22,17 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
         ]);
+        User::factory()->create([
+            'name' => 'user',
+            'email' => 'user@gmail.com',
+            'role' => 'user',
+        ]);
 
         $this->call([
             AfdelingTableSeeder::class,
             TahunTanamsTableSeeder::class,
+            BloksTableSeeder::class,
+            ProduksiSeeder::class,
             // Seeder lainnya...
         ]);
 

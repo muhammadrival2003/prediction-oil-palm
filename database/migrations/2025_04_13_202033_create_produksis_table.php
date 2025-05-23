@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('produksis', function (Blueprint $table) {
             $table->id();
             $table->foreignId('blok_id')->constrained()->cascadeOnDelete();
-            $table->dateTime('tanggal');
-            $table->decimal('hasil_produksi');
+            $table->integer('year');
+            $table->integer('month');
+            $table->float('rainfall'); // curah_hujan
+            $table->float('fertilizer'); // pemupukan
+            $table->float('production'); // hasil_produksi
             $table->softDeletes();
             $table->timestamps();
         });

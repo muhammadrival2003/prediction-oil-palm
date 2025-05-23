@@ -1,3 +1,24 @@
+<div class="flex flex-row justify-between">
+    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
+        Tahun Tanam
+    </h2>
+    <div class="flex flex-row gap-3">
+        <x-filament::button
+            size="sm"
+            color="gray"
+            tag="a"
+            href="{{ route('filament.admin.pages.afdeling.menu', ['afdeling_id' => $this->afdeling_id]) }}">
+            Kembali
+        </x-filament::button>
+        <x-filament::button
+            icon="heroicon-o-plus"
+            size="sm"
+            tag="a"
+            href="{{ route('filament.admin.resources.tahun-tanams.create', ['afdeling_id' => $this->afdeling_id]) }}">
+            Tambah Tahun
+        </x-filament::button>
+    </div>
+</div>
 <!-- Statistik -->
 <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
     <x-filament::card class="!bg-blue-50 dark:!bg-blue-900/50 !border-blue-200 dark:!border-blue-800">

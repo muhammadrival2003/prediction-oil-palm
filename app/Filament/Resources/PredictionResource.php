@@ -104,6 +104,7 @@ class PredictionResource extends Resource
                                 if (!$year || !$month) return 'Pilih tahun dan bulan';
 
                                 $result = $service->predict($year, $month);
+                                // dd($result);
 
                                 if ($result['status'] === 'error') {
                                     return "Error: " . $result['message'];

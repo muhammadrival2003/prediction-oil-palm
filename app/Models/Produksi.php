@@ -12,12 +12,27 @@ class Produksi extends Model
 
     protected $fillable = [
         'blok_id',
-        'tanggal',
-        'hasil_produksi'
+        'year',
+        'month',
+        'rainfall',
+        'fertilizer',
+        'production'
     ];
 
-    public function blok() 
+    public function blok()
     {
         return $this->belongsTo(Blok::class);
+    }
+
+    public static function getLast12Months()
+    {
+        return self::orderBy('year', 'desc')
+            ->orderBy('month', 'desc')
+            ->take(12)
+            ->get()
+            ->sortBy(function ($item) {
+                return $item->year * 100 + $item->month;
+            })
+            ->values();
     }
 }

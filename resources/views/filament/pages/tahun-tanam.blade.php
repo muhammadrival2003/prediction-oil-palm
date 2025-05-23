@@ -4,28 +4,6 @@
     @endif
     <x-filament::card class="!rounded-xl">
         <div class="px-6 py-4">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
-                    Tahun Tanam
-                </h2>
-                <div>
-                    <x-filament::button
-                        size="sm"
-                        color="gray"
-                        tag="a"
-                        href="{{ route('filament.admin.pages.menu', ['afdeling_id' => $this->afdeling_id]) }}">
-                        Kembali
-                    </x-filament::button>
-                    <x-filament::button
-                        icon="heroicon-o-plus"
-                        size="sm"
-                        tag="a"
-                        href="{{ route('filament.admin.resources.tahun-tanams.create', ['afdeling_id' => $this->afdeling_id]) }}">
-                        Tambah Tahun
-                    </x-filament::button>
-                </div>
-            </div>
-
             <!-- Data Tahun Tanam -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @foreach($tahunTanams as $tahun)

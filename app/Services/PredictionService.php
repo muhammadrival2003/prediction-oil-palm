@@ -2,93 +2,147 @@
 
 namespace App\Services;
 
-use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
+use App\Models\Produksi;
+use Illuminate\Support\Facades\Http;
 
 class PredictionService
 {
-    protected Client $client;
+    protected $apiBaseUrl;
 
     public function __construct()
     {
-        $this->client = new Client([
-            'base_uri' => 'http://localhost:5000/',
-            'timeout'  => 30,
+        $this->apiBaseUrl = env('FLASK_API_URL', 'http://localhost:5000');
+    }
+
+    public function addHistoricalData(array $data)
+    {
+        $response = Http::post("{$this->apiBaseUrl}/add_monthly_data", [
+            'month' => $data['month'],
+            'year' => $data['year'],
+            'curah_hujan' => $data['rainfall'],
+            'pemupukan' => $data['fertilizer'],
+            'hasil_produksi' => $data['production'],
         ]);
+
+        return $response->json();
     }
 
-    public function predict(int $year, int $month): array
+    public function predictNextMonth(array $input)
     {
-        $cacheKey = "prediction_{$year}_{$month}";
+        $response = Http::post("{$this->apiBaseUrl}/predict_next_month", [
+            'curah_hujan' => $input['rainfall'],
+            'pemupukan' => $input['fertilizer'],
+        ]);
 
-        return Cache::remember($cacheKey, now()->addHours(1), function () use ($year, $month) {
-            try {
-                $response = $this->client->post('/predict', [
-                    'json' => [
-                        'year' => $year,
-                        'month' => $month
-                    ]
-                ]);
-
-                $data = json_decode($response->getBody(), true);
-
-                return [
-                    'status' => 'success',
-                    'prediction' => $data['prediction'] ?? null,
-                    'last_values' => $data['last_values'] ?? []
-                ];
-            } catch (\Exception $e) {
-                Log::error('Prediction error: ' . $e->getMessage());
-                return [
-                    'status' => 'error',
-                    'message' => $e->getMessage()
-                ];
-            }
-        });
+        return $response->json();
     }
 
-    public function getHistoricalData(int $year, int $month): array
+    public function predictMultipleMonths(array $months)
     {
-        try {
-            $response = $this->client->post('/get-historical', [
-                'json' => [
-                    'year' => $year,
-                    'month' => $month
-                ],
-                'headers' => [
-                    'Accept' => 'application/json',
-                ],
-                'http_errors' => false
-            ]);
-            
-            $data = json_decode($response->getBody(), true);
-
-            if ($response->getStatusCode() !== 200) {
-                throw new \Exception($data['message'] ?? 'API Error');
-            }
-
-            // Validasi struktur data
-            if (!isset($data['data']['actual']) || !isset($data['data']['predictions'])) {
-                throw new \Exception('Invalid data structure from API');
-            }
-
-            // Format data untuk chart
+        $formattedMonths = array_map(function ($month) {
             return [
-                'status' => 'success',
-                'actual' => $data['data']['actual'],
-                'predictions' => $data['data']['predictions'],
-                'months' => $data['data']['months'] ?? array_keys($data['data']['actual'])
+                'curah_hujan' => $month['rainfall'],
+                'pemupukan' => $month['fertilizer'],
             ];
-        } catch (\Exception $e) {
-            Log::error('Historical data error: ' . $e->getMessage());
-            return [
-                'status' => 'error',
-                'message' => $e->getMessage(),
-                'actual' => [],
-                'predictions' => [],
-                'months' => []
-            ];
+        }, $months);
+
+        $response = Http::post("{$this->apiBaseUrl}/predict_multiple_months", [
+            'months' => $formattedMonths,
+        ]);
+
+        return $response->json();
+    }
+
+    public function getHistoricalData()
+    {
+        $response = Http::get("{$this->apiBaseUrl}/get_historical_data");
+        return $response->json();
+    }
+
+    public function evaluateModel()
+    {
+        $response = Http::get("{$this->apiBaseUrl}/evaluate");
+        return $response->json();
+    }
+    public function predictWithDatabaseData(array $input)
+    {
+        // Ambil 12 bulan terakhir dari database
+        $historicalData = Produksi::orderBy('year', 'desc')
+            ->orderBy('month', 'desc')
+            ->take(12)
+            ->get()
+            ->sortBy(function ($item) {
+                return $item->year * 100 + $item->month;
+            })
+            ->values();
+
+        if ($historicalData->count() < 12) {
+            throw new \Exception('Need at least 12 months of historical data');
         }
+
+        // Format data untuk Flask API
+        $formattedData = [
+            'months' => [
+                [
+                    'curah_hujan' => $input['rainfall'],
+                    'pemupukan' => $input['fertilizer']
+                ]
+            ],
+            'historical_data' => $historicalData->map(function ($item) {
+                return [
+                    'month' => $item->month,
+                    'year' => $item->year,
+                    'curah_hujan' => $item->rainfall,
+                    'pemupukan' => $item->fertilizer,
+                    'hasil_produksi' => $item->production
+                ];
+            })->toArray()
+        ];
+
+        $response = Http::post("{$this->apiBaseUrl}/predict_with_database", $formattedData);
+
+        // Tambahkan data historis ke response
+        $responseData = $response->json();
+        $responseData['used_historical_data'] = $historicalData;
+
+        return $responseData;
+    }
+
+    public function predictByMonth()
+    {
+        // Ambil 12 bulan terakhir dari database
+        $historicalData = Produksi::orderBy('year', 'desc')
+            ->orderBy('month', 'desc')
+            ->take(12)
+            ->get()
+            ->sortBy(function ($item) {
+                return $item->year * 100 + $item->month;
+            })
+            ->values();
+
+        if ($historicalData->count() < 12) {
+            throw new \Exception('Need at least 12 months of historical data');
+        }
+
+        // Format data untuk Flask API
+        $formattedData = [
+            'historical_data' => $historicalData->map(function ($item) {
+                return [
+                    'month' => $item->month,
+                    'year' => $item->year,
+                    'curah_hujan' => $item->rainfall,
+                    'pemupukan' => $item->fertilizer,
+                    'hasil_produksi' => $item->production
+                ];
+            })->toArray()
+        ];
+
+        $response = Http::post("{$this->apiBaseUrl}/predict_by_month", $formattedData);
+
+        // Tambahkan data historis ke response
+        $responseData = $response->json();
+        $responseData['used_historical_data'] = $historicalData;
+
+        return $responseData;
     }
 }

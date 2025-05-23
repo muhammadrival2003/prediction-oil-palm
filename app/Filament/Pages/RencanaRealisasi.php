@@ -26,6 +26,11 @@ class RencanaRealisasi extends Page
         return __('Rencana dan Realisasi');
     }
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+
     // protected static ?int $navigationSort = 3;
     // protected static ?string $navigationGroup = 'Data Aktual';
 
