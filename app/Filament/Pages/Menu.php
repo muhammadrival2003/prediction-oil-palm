@@ -11,6 +11,7 @@ class Menu extends Page
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static string $view = 'filament.pages.menu';
+    protected static ?string $title = '';
     protected static ?string $slug = 'afdeling/menu';
     public static function shouldRegisterNavigation(): bool
     {
@@ -23,13 +24,13 @@ class Menu extends Page
         $this->afdeling_id = request('afdeling_id');
     }
 
-    public function getHeaderActions(): array
-    {
-        return [
-            Action::make('kembali')
-                ->label('Kembali')
-                ->color('gray')
-                ->url(route('filament.admin.pages.afdeling'))
-        ];
-    }
+    // public function getHeaderActions(): array
+    // {
+    //     return [
+    //         Action::make('kembali')
+    //             ->label('Kembali')
+    //             ->color('gray')
+    //             ->url(route('filament.admin.pages.afdeling'))
+    //     ];
+    // }
 }

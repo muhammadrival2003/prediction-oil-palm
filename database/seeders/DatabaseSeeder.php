@@ -33,6 +33,8 @@ class DatabaseSeeder extends Seeder
             TahunTanamsTableSeeder::class,
             BloksTableSeeder::class,
             ProduksiSeeder::class,
+            HasilProduksiSeeder::class,
+            PemupukanSeeder::class,
             // Seeder lainnya...
         ]);
 

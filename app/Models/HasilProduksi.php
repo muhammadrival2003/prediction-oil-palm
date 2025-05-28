@@ -4,36 +4,37 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Pemupukan extends Model
+class HasilProduksi extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'blok_id',
         'tanggal',
-        'dosis',
-        'volume'
+        'rencana_produksi',
+        'realisasi_produksi'
     ];
 
-    public function blok()
+    public function blok(): BelongsTo
     {
         return $this->belongsTo(Blok::class);
     }
 
     protected static function booted()
     {
-        static::created(function ($pemupukan) {
-            self::updateDatasetSistem($pemupukan->tanggal);
+        static::created(function ($hasilProduksi) {
+            self::updateDatasetSistem($hasilProduksi->tanggal);
         });
 
-        static::updated(function ($pemupukan) {
-            self::updateDatasetSistem($pemupukan->tanggal);
+        static::updated(function ($hasilProduksi) {
+            self::updateDatasetSistem($hasilProduksi->tanggal);
         });
 
-        static::deleted(function ($pemupukan) {
-            self::updateDatasetSistem($pemupukan->tanggal);
+        static::deleted(function ($hasilProduksi) {
+            self::updateDatasetSistem($hasilProduksi->tanggal);
         });
     }
 
@@ -42,13 +43,13 @@ class Pemupukan extends Model
         $bulan = date('n', strtotime($tanggal));
         $tahun = date('Y', strtotime($tanggal));
 
-        $totalVolume = Pemupukan::whereMonth('tanggal', $bulan)
+        $totalProduksi = HasilProduksi::whereMonth('tanggal', $bulan)
             ->whereYear('tanggal', $tahun)
-            ->sum('volume');
+            ->sum('realisasi_produksi');
 
         DatasetSistem::updateOrCreate(
             ['bulan' => $bulan, 'tahun' => $tahun],
-            ['total_pemupukan' => $totalVolume]
+            ['total_hasil_produksi' => $totalProduksi]
         );
     }
 }

@@ -11,14 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pemupukans', function (Blueprint $table) {
+        Schema::create('hasil_produksis', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('blok_id')->constrained()->cascadeOnDelete();
+            $table->unsignedBigInteger('blok_id');
             $table->dateTime('tanggal');
-            $table->decimal('dosis');
-            $table->decimal('volume');
+            $table->integer('rencana_produksi')->default(0);
+            $table->integer('realisasi_produksi')->default(0);
             $table->softDeletes();
             $table->timestamps();
+
+            // Foreign key constraint
+            $table->foreign('blok_id')
+                  ->references('id')
+                  ->on('bloks')
+                  ->onDelete('cascade');
         });
     }
 
@@ -27,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pemupukans');
+        Schema::dropIfExists('hasil_produksis');
     }
 };

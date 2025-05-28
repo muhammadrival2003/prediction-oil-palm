@@ -1,13 +1,28 @@
 <x-filament-panels::page>
+    <!-- Header dengan Tombol Create -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Menu</h1>
+
+        </div>
+        <div class="flex space-x-2">
+            <a href="{{ route('filament.admin.pages.afdeling') }}" class="inline-flex items-center text-primary-600 hover:text-primary-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Kembali
+            </a>
+        </div>
+    </div>
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         <!-- Card Tahun Tanam -->
         <div x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false" class="relative">
             <!-- Glow effect -->
             <div x-show="hover" class="absolute inset-0 bg-primary-500/10 dark:bg-primary-400/10 rounded-2xl blur-lg scale-105 -z-10 transition-all duration-500"></div>
-            
+
             <a href="{{ route('filament.admin.pages.tahun-tanam', ['afdeling_id' => $this->afdeling_id]) }}"
                 class="group relative flex flex-col h-full overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 p-6 shadow-lg transition-all duration-500 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] border border-gray-200/50 dark:from-gray-800 dark:to-gray-900 dark:border-gray-700/50 hover:border-primary-400/30 dark:hover:border-primary-500/30">
-                
+
                 <!-- Animated gradient overlay -->
                 <div class="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-primary-500/10 to-primary-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"
                     :style="`background-position: ${hover ? '100% 100%' : '0% 0%'};`"></div>
@@ -18,7 +33,7 @@
                         :style="`transform: translateY(${hover ? '-5px' : '0'});`">
                         Tahun Tanam
                     </h3>
-                    
+
                     <!-- Animated icon -->
                     <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-500/10 dark:bg-primary-400/10 group-hover:bg-primary-500/20 transition-all duration-500"
                         :class="{'rotate-12': hover}">
@@ -35,12 +50,6 @@
                         :style="`transform: translateY(${hover ? '-3px' : '0'});`">
                         Kelola Data Tahun Tanam
                     </p>
-                    
-                    <!-- Stats badge (example) -->
-                    <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200 transition-all duration-500"
-                        :class="{'scale-105': hover}">
-                        <span class="mr-1">📅</span> 5 Tahun aktif
-                    </div>
                 </div>
 
                 <!-- Animated footer -->
@@ -69,10 +78,10 @@
         <!-- Card Pekerjaan -->
         <div x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false" class="relative">
             <div x-show="hover" class="absolute inset-0 bg-emerald-500/10 dark:bg-emerald-400/10 rounded-2xl blur-lg scale-105 -z-10 transition-all duration-500"></div>
-            
-            <a href="{{ route('filament.admin.pages.menu-pekerjaan')}}"
+
+            <a href="{{ route('filament.admin.pages.menu-pekerjaan', ['afdeling_id' => $this->afdeling_id]) }}"
                 class="group relative flex flex-col h-full overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 p-6 shadow-lg transition-all duration-500 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] border border-gray-200/50 dark:from-gray-800 dark:to-gray-900 dark:border-gray-700/50 hover:border-emerald-400/30 dark:hover:border-emerald-500/30">
-                
+
                 <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-emerald-500/10 to-emerald-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"
                     :style="`background-position: ${hover ? '100% 100%' : '0% 0%'};`"></div>
 
@@ -81,7 +90,7 @@
                         :style="`transform: translateY(${hover ? '-5px' : '0'});`">
                         Pekerjaan
                     </h3>
-                    
+
                     <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-emerald-500/10 dark:bg-emerald-400/10 group-hover:bg-emerald-500/20 transition-all duration-500"
                         :class="{'rotate-12': hover}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-600 dark:text-emerald-400 transition-transform duration-500"
@@ -96,11 +105,6 @@
                         :style="`transform: translateY(${hover ? '-3px' : '0'});`">
                         Kelola Data Pekerjaan
                     </p>
-                    
-                    <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200 transition-all duration-500"
-                        :class="{'scale-105': hover}">
-                        <span class="mr-1">🔧</span> 12 Pekerjaan aktif
-                    </div>
                 </div>
 
                 <div class="mt-auto pt-4">
@@ -128,10 +132,10 @@
         <!-- Card Hasil Produksi -->
         <div x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false" class="relative">
             <div x-show="hover" class="absolute inset-0 bg-amber-500/10 dark:bg-amber-400/10 rounded-2xl blur-lg scale-105 -z-10 transition-all duration-500"></div>
-            
-            <a href="{{ url('/admin/chemis') }}"
+
+            <a href="{{ route('filament.admin.pages.blok-produksi') }}"
                 class="group relative flex flex-col h-full overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 p-6 shadow-lg transition-all duration-500 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] border border-gray-200/50 dark:from-gray-800 dark:to-gray-900 dark:border-gray-700/50 hover:border-amber-400/30 dark:hover:border-amber-500/30">
-                
+
                 <div class="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-amber-500/10 to-amber-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"
                     :style="`background-position: ${hover ? '100% 100%' : '0% 0%'};`"></div>
 
@@ -140,7 +144,7 @@
                         :style="`transform: translateY(${hover ? '-5px' : '0'});`">
                         Hasil Produksi
                     </h3>
-                    
+
                     <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-amber-500/10 dark:bg-amber-400/10 group-hover:bg-amber-500/20 transition-all duration-500"
                         :class="{'rotate-12': hover}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600 dark:text-amber-400 transition-transform duration-500"
@@ -155,11 +159,6 @@
                         :style="`transform: translateY(${hover ? '-3px' : '0'});`">
                         Kelola Data Hasil Produksi
                     </p>
-                    
-                    <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 transition-all duration-500"
-                        :class="{'scale-105': hover}">
-                        <span class="mr-1">📊</span> 245 Data bulan ini
-                    </div>
                 </div>
 
                 <div class="mt-auto pt-4">

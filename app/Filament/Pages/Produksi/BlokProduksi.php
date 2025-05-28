@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Filament\Pages\Menu;
+namespace App\Filament\Pages\Produksi;
 
+use App\Models\Blok;
 use Filament\Pages\Page;
 
-class MenuPekerjaan extends Page
+class BlokProduksi extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
-    protected static string $view = 'filament.pages.menu.menu-pekerjaan';
+    protected static string $view = 'filament.pages.produksi.blok-produksi';
     protected static ?string $title = '';
-
-    public $afdeling_id;
 
     public static function shouldRegisterNavigation(): bool
     {
         return false;
     }
 
-    public function mount():void
+    public $bloks;
+
+    public function mount()
     {
-        $this->afdeling_id = request('afdeling_id');
-        
+        $this->bloks = Blok::all();
     }
 }
