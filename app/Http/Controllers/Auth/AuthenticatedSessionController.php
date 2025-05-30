@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
         //     $url = "agent/dashboard";
         // }
         if ($request->user()->role == "user") {
-            $url = "dashboard";
+            $url = "beranda";
         } else { 
             Auth::guard('web')->logout();
             return redirect()->route('login')->with('status', 'You are not authorized to access this page.');

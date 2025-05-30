@@ -98,7 +98,7 @@
                                     {{ $pemupukan->blok->jumlah_pokok }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ number_format($pemupukan->dosis, 0, ',', '.') }}
+                                    {{ ucfirst($pemupukan->dosis) }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {{ ucfirst($pemupukan->volume) }}

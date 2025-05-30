@@ -16,7 +16,7 @@ class UserController extends Controller
      *
      * @return response()
      */
-    public function dashboard()
+    public function beranda()
     {
         $data = [
             'totalTahunTanam' => TahunTanam::count('tahun_tanam'),
@@ -26,7 +26,7 @@ class UserController extends Controller
             'bloks' => Blok::all()
         ];
 
-        return view('user.dashboard')->with($data);
+        return view('user.beranda')->with($data);
     }
 
     public function storeProduksi(Request $request)
