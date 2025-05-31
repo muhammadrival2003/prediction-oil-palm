@@ -13,10 +13,12 @@
         "leandrocfe/filament-apex-charts": "^3.1",
         "maatwebsite/excel": "^3.1",
         "openspout/openspout": "^4.29",
-        "phpoffice/phpspreadsheet": "^1.29"
+        "phpoffice/phpspreadsheet": "^1.29",
+        "silviolleite/laravelpwa": "^2.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "jn-jairo/laravel-ngrok": "^3.0",
         "laravel/breeze": "^2.3",
         "laravel/pail": "^1.1",
         "laravel/pint": "^1.13",

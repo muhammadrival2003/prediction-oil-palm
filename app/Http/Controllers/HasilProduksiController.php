@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\Blok;
 use App\Models\HasilProduksi;
 use Illuminate\Http\Request;
@@ -29,6 +30,14 @@ class HasilProduksiController extends Controller
 
         $hasilProduksi = HasilProduksi::create($validated);
 
+        $this->logActivity(
+            auth()->id(),
+            $hasilProduksi->blok_id,
+            'updated',
+            'Memperbarui data produksi',
+            ['weight' => $validated['rencana_produksi']]
+        );
+
         // Update dataset sistem
         $this->updateDatasetSistem($hasilProduksi->tanggal);
 
@@ -48,5 +57,17 @@ class HasilProduksiController extends Controller
             ['bulan' => $bulan, 'tahun' => $tahun],
             ['total_hasil_produksi' => $totalProduksi]
         );
+    }
+
+    // Method baru untuk log aktivitas
+    private function logActivity($userId, $blokId, $type, $description, $data = [])
+    {
+        ActivityLog::create([
+            'user_id' => $userId,
+            'blok_id' => $blokId,
+            'activity_type' => $type,
+            'description' => $description,
+            'data' => $data
+        ]);
     }
 }

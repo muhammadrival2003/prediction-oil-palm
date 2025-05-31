@@ -14,11 +14,10 @@ return new class extends Migration
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->string('activity_type'); // 'created', 'updated', 'verified', etc.
-            $table->text('description');
-            $table->foreignId('blok_id')->constrained('bloks');
+            $table->foreignId('blok_id')->constrained();
+            $table->string('activity_type'); // created, updated, etc
+            $table->string('description');
             $table->json('data')->nullable();
-            $table->string('ip_address', 45)->nullable();
             $table->timestamps();
         });
     }

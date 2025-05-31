@@ -166,82 +166,83 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Data Entry -->
                 @include('user.dataentry')
+            </div>
 
-                <!-- Data Visualization Section -->
-                <div class="mt-8 grid grid-cols-1 lg:grid-cols-1 gap-6">
-                    <!-- Recent Records Section -->
-                    @include('user.recent-records')
+            <!-- Data Visualization Section -->
+            <div class="mt-8 grid grid-cols-1 lg:grid-cols-1 gap-6 border">
+                <!-- Recent Records Section -->
+                @include('user.recent-records')
+            </div>
+
+            <!-- Predictions Section -->
+            <div class="mt-8 bg-gradient-to-r from-indigo-500 to-indigo-600 p-6 rounded-xl shadow-lg text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-xl font-semibold">Production Forecast</h3>
+                        <p class="text-indigo-100">View predicted production for upcoming months</p>
+                    </div>
+                    <button id="togglePredictions" class="flex items-center space-x-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-full transition-colors">
+                        <span>Show Predictions</span>
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
                 </div>
 
-                <!-- Predictions Section -->
-                <div class="mt-8 bg-gradient-to-r from-indigo-500 to-indigo-600 p-6 rounded-xl shadow-lg text-white">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-xl font-semibold">Production Forecast</h3>
-                            <p class="text-indigo-100">View predicted production for upcoming months</p>
-                        </div>
-                        <button id="togglePredictions" class="flex items-center space-x-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-full transition-colors">
-                            <span>Show Predictions</span>
-                            <i class="fas fa-chevron-down text-xs"></i>
-                        </button>
-                    </div>
-
-                    <div id="predictionsCard" class="mt-4 hidden">
-                        <div class="bg-white/10 p-4 rounded-lg backdrop-blur-sm">
-                            <div class="grid grid-cols-3 gap-4 text-center">
-                                <div class="p-3">
-                                    <p class="text-sm text-indigo-200">Next Month</p>
-                                    <p class="text-xl font-bold">26,400 kg</p>
-                                    <p class="text-xs text-green-300">+8% expected</p>
-                                </div>
-                                <div class="p-3">
-                                    <p class="text-sm text-indigo-200">Next Quarter</p>
-                                    <p class="text-xl font-bold">82,500 kg</p>
-                                    <p class="text-xs text-green-300">+12% expected</p>
-                                </div>
-                                <div class="p-3">
-                                    <p class="text-sm text-indigo-200">Next Year</p>
-                                    <p class="text-xl font-bold">315,000 kg</p>
-                                    <p class="text-xs text-green-300">+15% expected</p>
-                                </div>
+                <div id="predictionsCard" class="mt-4 hidden">
+                    <div class="bg-white/10 p-4 rounded-lg backdrop-blur-sm">
+                        <div class="grid grid-cols-3 gap-4 text-center">
+                            <div class="p-3">
+                                <p class="text-sm text-indigo-200">Next Month</p>
+                                <p class="text-xl font-bold">26,400 kg</p>
+                                <p class="text-xs text-green-300">+8% expected</p>
+                            </div>
+                            <div class="p-3">
+                                <p class="text-sm text-indigo-200">Next Quarter</p>
+                                <p class="text-xl font-bold">82,500 kg</p>
+                                <p class="text-xs text-green-300">+12% expected</p>
+                            </div>
+                            <div class="p-3">
+                                <p class="text-sm text-indigo-200">Next Year</p>
+                                <p class="text-xl font-bold">315,000 kg</p>
+                                <p class="text-xs text-green-300">+15% expected</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <script>
-                function getActivityTitle(type) {
-                    const titles = {
-                        'created': 'Entri baru ditambahkan',
-                        'updated': 'Data diperbarui',
-                        'verified': 'Record diverifikasi',
-                        'pending': 'Menunggu verifikasi'
-                    };
-                    return titles[type] || 'Aktivitas';
-                }
-
-                function formatNumber(num) {
-                    return parseFloat(num).toLocaleString('id-ID');
-                }
-
-                function formatTime(dateString) {
-                    const date = new Date(dateString);
-                    const now = new Date();
-                    const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
-
-                    if (diffInHours < 1) {
-                        return 'Beberapa menit yang lalu';
-                    } else if (diffInHours < 24) {
-                        return `${diffInHours} jam yang lalu`;
-                    } else {
-                        return date.toLocaleDateString('id-ID', {
-                            day: 'numeric',
-                            month: 'short',
-                            year: 'numeric'
-                        });
-                    }
-                }
-            </script>
         </div>
+        <script>
+            function getActivityTitle(type) {
+                const titles = {
+                    'created': 'Entri baru ditambahkan',
+                    'updated': 'Data diperbarui',
+                    'verified': 'Record diverifikasi',
+                    'pending': 'Menunggu verifikasi'
+                };
+                return titles[type] || 'Aktivitas';
+            }
+
+            function formatNumber(num) {
+                return parseFloat(num).toLocaleString('id-ID');
+            }
+
+            function formatTime(dateString) {
+                const date = new Date(dateString);
+                const now = new Date();
+                const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
+
+                if (diffInHours < 1) {
+                    return 'Beberapa menit yang lalu';
+                } else if (diffInHours < 24) {
+                    return `${diffInHours} jam yang lalu`;
+                } else {
+                    return date.toLocaleDateString('id-ID', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                    });
+                }
+            }
+        </script>
+    </div>
     </div>
 </x-app-layout>

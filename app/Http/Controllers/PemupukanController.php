@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\Blok;
 use App\Models\Pemupukan;
 use Illuminate\Http\Request;
@@ -30,6 +31,14 @@ class PemupukanController extends Controller
 
         $pemupukan = Pemupukan::create($validated);
 
+        $this->logActivity(
+            auth()->id(),
+            $pemupukan->blok_id,
+            'updated',
+            'Memperbarui data pemupukan',
+            ['weight' => $validated['volume']]
+        );
+
         // Update dataset sistem
         $this->updateDatasetSistem($pemupukan->tanggal);
 
@@ -49,5 +58,17 @@ class PemupukanController extends Controller
             ['bulan' => $bulan, 'tahun' => $tahun],
             ['total_pemupukan' => $totalVolume]
         );
+    }
+
+    // Method baru untuk log aktivitas
+    private function logActivity($userId, $blokId, $type, $description, $data = [])
+    {
+        ActivityLog::create([
+            'user_id' => $userId,
+            'blok_id' => $blokId,
+            'activity_type' => $type,
+            'description' => $description,
+            'data' => $data
+        ]);
     }
 }
