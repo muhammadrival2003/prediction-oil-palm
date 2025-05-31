@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
 use App\Models\Blok;
+use App\Models\KaryawanLapangan;
 use App\Models\Produksi;
 use App\Models\TahunTanam;
 use Illuminate\Http\Request;
@@ -18,7 +19,8 @@ class UserController extends Controller
             'totalPokok' => Blok::sum('jumlah_pokok'),
             'totalProduksi' => Produksi::sum('production'),
             'bloks' => Blok::all(),
-            'recentActivities' => $this->getRecentActivities() // Tambahkan ini
+            'recentActivities' => $this->getRecentActivities(),
+            'karyawanLapangans' => $this->getKaryawanLapangans(1)
         ];
 
         return view('user.beranda')->with($data);
@@ -43,6 +45,34 @@ class UserController extends Controller
                     'color' => $this->getActivityColor($activity->activity_type)
                 ];
             });
+    }
+
+    private function getKaryawanLapangans($afdeling_id = null)
+    {
+        // Query dasar untuk karyawan lapangan (exclude posisi non-lapangan jika diperlukan)
+        $query = KaryawanLapangan::whereIn('jabatan', [
+            'MDR Panen',
+            'MDR Pemeliharaan',
+            'Petugas Timbang BRD',
+            'Mandor'
+        ])->with('afdeling');
+
+        // Filter berdasarkan afdeling_id jika diberikan
+        if ($afdeling_id) {
+            $query->where('afdeling_id', $afdeling_id);
+        }
+
+        // Ambil data dan format sesuai kebutuhan
+        return $query->get()->map(function ($karyawan) {
+            return [
+                'id' => $karyawan->id,
+                'nama' => $karyawan->nama,
+                'jabatan' => $karyawan->jabatan,
+                'afdeling' => $karyawan->afdeling->nama, // asumsi model Afdeling memiliki kolom 'nama'
+                'lokasi_kerja' => $karyawan->lokasi_kerja,
+                'lama_kerja' => $karyawan->tanggal_masuk->diffForHumans(),
+            ];
+        });
     }
 
     // Helper untuk icon aktivitas
@@ -92,5 +122,5 @@ class UserController extends Controller
     //     return redirect()->back()->with('success', "Data produksi blok {$blok->nama_blok} berhasil disimpan");
     // }
 
-    
+
 }

@@ -18,9 +18,19 @@ class BlokProduksi extends Page
     }
 
     public $bloks;
+    public $afdeling_id;
 
     public function mount()
     {
-        $this->bloks = Blok::all();
+        $afdeling_id = request('afdeling_id'); 
+        $this->afdeling_id = request('afdeling_id');
+
+        $this->bloks = Blok::whereHas('tahunTanam', function ($query) use ($afdeling_id) {
+            $query->where('afdeling_id', $afdeling_id);
+        })
+            ->with(['tahunTanam', 'pemupukans' => function ($query) {
+                $query->orderBy('tanggal', 'desc');
+            }])
+            ->get();
     }
 }

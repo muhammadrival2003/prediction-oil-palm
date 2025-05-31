@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\DatasetSistem;
 use App\Models\Produksi;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
@@ -43,7 +44,7 @@ class PredictionService
     public function predictByMonthAndYear(int $month, int $year)
     {
         // 1. Ambil data historis 12 bulan terakhir
-        $historicalData = Produksi::orderBy('year', 'desc')
+        $historicalData = DatasetSistem::orderBy('year', 'desc')
             ->orderBy('month', 'desc')
             ->take(12)
             ->get()
@@ -70,16 +71,19 @@ class PredictionService
         $prediction = null;
 
         for ($i = 0; $i < $monthsDiff; $i++) {
+            $historicalForApi = array_map(function ($item) {
+                // Pastikan semua nilai numerik adalah float
+                return [
+                    'month' => (int)$item['month'],
+                    'year' => (int)$item['year'],
+                    'curah_hujan' => (float)$item['total_curah_hujan'],
+                    'pemupukan' => (float)$item['total_pemupukan'],
+                    'hasil_produksi' => (float)$item['total_hasil_produksi']
+                ];
+            }, array_slice($tempData, -12));
+
             $response = Http::post("{$this->apiBaseUrl}/predict_by_month", [
-                'historical_data' => array_map(function ($item) {
-                    return [
-                        'month' => $item['month'],
-                        'year' => $item['year'],
-                        'curah_hujan' => $item['rainfall'],
-                        'pemupukan' => $item['fertilizer'],
-                        'hasil_produksi' => $item['production']
-                    ];
-                }, array_slice($tempData, -12)) // Ambil 12 bulan terakhir
+                'historical_data' => $historicalForApi
             ]);
 
             $prediction = $response->json();
@@ -88,9 +92,9 @@ class PredictionService
             $tempData[] = [
                 'month' => $prediction['month'],
                 'year' => $prediction['year'],
-                'rainfall' => $this->calculateAverage(array_slice($tempData, -3), 'rainfall'),
-                'fertilizer' => $this->calculateAverage(array_slice($tempData, -3), 'fertilizer'),
-                'production' => $prediction['prediction']
+                'total_curah_hujan' => $this->calculateAverage(array_slice($tempData, -3), 'total_curah_hujan'),
+                'total_pemupukan' => $this->calculateAverage(array_slice($tempData, -3), 'total_pemupukan'),
+                'total_hasil_produksi' => $prediction['prediction']
             ];
         }
 
@@ -99,6 +103,14 @@ class PredictionService
 
     private function calculateAverage(array $data, string $field): float
     {
-        return collect($data)->avg($field) ?? 0;
+        $values = collect($data)->pluck($field)->map(function ($value) {
+            // Pastikan nilai yang diolah adalah numerik
+            if (is_array($value)) {
+                return 0.0;
+            }
+            return is_numeric($value) ? (float)$value : 0.0;
+        });
+
+        return $values->avg() ?? 0.0;
     }
 }

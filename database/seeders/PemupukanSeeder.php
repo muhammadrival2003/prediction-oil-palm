@@ -93,15 +93,15 @@ class PemupukanSeeder extends Seeder
 
         for ($i = 0; $i < 24; $i++) {
             $currentDate = $startDate->copy()->addMonths($i);
-            $bulan = $currentDate->month;
-            $tahun = $currentDate->year;
+            $month = $currentDate->month;
+            $year = $currentDate->year;
 
-            $totalPemupukan = Pemupukan::whereMonth('tanggal', $bulan)
-                ->whereYear('tanggal', $tahun)
+            $totalPemupukan = Pemupukan::whereMonth('tanggal', $month)
+                ->whereYear('tanggal', $year)
                 ->sum('volume');
 
             \App\Models\DatasetSistem::updateOrCreate(
-                ['bulan' => $bulan, 'tahun' => $tahun],
+                ['month' => $month, 'year' => $year],
                 ['total_pemupukan' => $totalPemupukan]
             );
         }

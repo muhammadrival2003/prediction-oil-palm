@@ -15,8 +15,8 @@ class DatasetSistem extends Model
      * @var array
      */
     protected $fillable = [
-        'bulan',
-        'tahun',
+        'month',
+        'year',
         'total_curah_hujan',
         'total_pemupukan',
         'total_hasil_produksi',
@@ -28,8 +28,8 @@ class DatasetSistem extends Model
      * @var array
      */
     protected $casts = [
-        'bulan' => 'integer',
-        'tahun' => 'integer',
+        'month' => 'integer',
+        'year' => 'integer',
         'total_curah_hujan' => 'decimal:2',
         'total_pemupukan' => 'decimal:2',
         'total_hasil_produksi' => 'decimal:2',
@@ -42,7 +42,7 @@ class DatasetSistem extends Model
      */
     public function getNamaBulanAttribute()
     {
-        return \DateTime::createFromFormat('!m', $this->bulan)->format('F');
+        return \DateTime::createFromFormat('!m', $this->month)->format('F');
     }
 
     /**
@@ -52,6 +52,6 @@ class DatasetSistem extends Model
      */
     public function getPeriodeAttribute()
     {
-        return $this->nama_bulan . ' ' . $this->tahun;
+        return $this->nama_bulan . ' ' . $this->year;
     }
 }

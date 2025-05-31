@@ -74,15 +74,15 @@ class HasilProduksiSeeder extends Seeder
 
         for ($i = 0; $i < 24; $i++) {
             $currentDate = $startDate->copy()->addMonths($i);
-            $bulan = $currentDate->month;
-            $tahun = $currentDate->year;
+            $month = $currentDate->month;
+            $year = $currentDate->year;
 
-            $totalProduksi = HasilProduksi::whereMonth('tanggal', $bulan)
-                ->whereYear('tanggal', $tahun)
+            $totalProduksi = HasilProduksi::whereMonth('tanggal', $month)
+                ->whereYear('tanggal', $year)
                 ->sum('realisasi_produksi');
 
             \App\Models\DatasetSistem::updateOrCreate(
-                ['bulan' => $bulan, 'tahun' => $tahun],
+                ['month' => $month, 'year' => $year],
                 ['total_hasil_produksi' => $totalProduksi]
             );
         }

@@ -32,39 +32,38 @@ class Pemupukan extends Page
     public $pemupukans;
     public $isDeleteModalOpen = false;
     public $deleteId;
+    public $afdeling_id;
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('Form Pemupukan')
-                    ->schema([
-                        DatePicker::make('tanggal')
-                            ->label('Tanggal')
-                            ->required()
-                            ->closeOnDateSelection()
-                            ->native(false),
+                DatePicker::make('tanggal')
+                    ->label('Tanggal')
+                    ->required()
+                    ->closeOnDateSelection()
+                    ->native(false),
 
-                        TextInput::make('dosis')
-                            ->label('Dosis (kg/pokok)')
-                            ->numeric()
-                            ->required()
-                            ->minValue(0)
-                            ->step(0.01),
+                TextInput::make('dosis')
+                    ->label('Dosis (kg/pokok)')
+                    ->numeric()
+                    ->required()
+                    ->minValue(0)
+                    ->step(0.01),
 
-                        TextInput::make('volume')
-                            ->label('Volume (kg)')
-                            ->numeric()
-                            ->required()
-                            ->minValue(0)
-                            ->step(0.01)
-                    ])
+                TextInput::make('volume')
+                    ->label('Volume (kg)')
+                    ->numeric()
+                    ->required()
+                    ->minValue(0)
+                    ->step(0.01)
             ])
             ->statePath('data');
     }
 
     public function mount()
     {
+        $this->afdeling_id = request('afdeling_id');
         $this->blokId = request('blok_id');
         $this->loadData();
     }
@@ -169,6 +168,7 @@ class Pemupukan extends Page
                 ->send();
         });
 
+        $this->dispatch('close-modal', id: 'delete-modal');
         $this->isDeleteModalOpen = false;
         $this->deleteId = null;
         $this->loadData();
@@ -185,15 +185,15 @@ class Pemupukan extends Page
 
     protected function updateDatasetSistem($tanggal)
     {
-        $bulan = date('n', strtotime($tanggal));
-        $tahun = date('Y', strtotime($tanggal));
+        $month = date('n', strtotime($tanggal));
+        $year = date('Y', strtotime($tanggal));
 
-        $totalVolume = ModelsPemupukan::whereMonth('tanggal', $bulan)
-            ->whereYear('tanggal', $tahun)
+        $totalVolume = ModelsPemupukan::whereMonth('tanggal', $month)
+            ->whereYear('tanggal', $year)
             ->sum('volume');
 
         \App\Models\DatasetSistem::updateOrCreate(
-            ['bulan' => $bulan, 'tahun' => $tahun],
+            ['month' => $month, 'year' => $year],
             ['total_pemupukan' => $totalVolume]
         );
     }

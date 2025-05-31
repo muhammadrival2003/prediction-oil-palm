@@ -34,39 +34,38 @@ class HasilProduksi extends Page
     public $hasilProduksis;
     public $isDeleteModalOpen = false;
     public $deleteId;
+    public $afdeling_id;
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('Form Hasil Produksi')
-                    ->schema([
-                        DatePicker::make('tanggal')
-                            ->label('Tanggal')
-                            ->required()
-                            ->closeOnDateSelection()
-                            ->native(false),
+                DatePicker::make('tanggal')
+                    ->label('Tanggal')
+                    ->required()
+                    ->closeOnDateSelection()
+                    ->native(false),
 
-                        TextInput::make('rencana_produksi')
-                            ->label('Rencana Produksi (kg)')
-                            ->numeric()
-                            ->required()
-                            ->minValue(0)
-                            ->step(0.01),
+                TextInput::make('rencana_produksi')
+                    ->label('Rencana Produksi (kg)')
+                    ->numeric()
+                    ->required()
+                    ->minValue(0)
+                    ->step(0.01),
 
-                        TextInput::make('realisasi_produksi')
-                            ->label('Realisasi Produksi (kg)')
-                            ->numeric()
-                            ->required()
-                            ->minValue(0)
-                            ->step(0.01)
-                    ])
+                TextInput::make('realisasi_produksi')
+                    ->label('Realisasi Produksi (kg)')
+                    ->numeric()
+                    ->required()
+                    ->minValue(0)
+                    ->step(0.01)
             ])
             ->statePath('data');
     }
 
     public function mount()
     {
+        $this->afdeling_id = request('afdeling_id');
         $this->blokId = request('blok_id');
         $this->loadData();
     }
@@ -173,6 +172,7 @@ class HasilProduksi extends Page
                 ->send();
         });
 
+        $this->dispatch('close-modal', id: 'delete-modal');
         $this->isDeleteModalOpen = false;
         $this->deleteId = null;
         $this->loadData();
@@ -189,15 +189,15 @@ class HasilProduksi extends Page
 
     protected static function updateDatasetSistem($tanggal)
     {
-        $bulan = date('n', strtotime($tanggal));
-        $tahun = date('Y', strtotime($tanggal));
+        $month = date('n', strtotime($tanggal));
+        $year = date('Y', strtotime($tanggal));
 
-        $totalProduksi = ModelsHasilProduksi::whereMonth('tanggal', $bulan)
-            ->whereYear('tanggal', $tahun)
+        $totalProduksi = ModelsHasilProduksi::whereMonth('tanggal', $month)
+            ->whereYear('tanggal', $year)
             ->sum('realisasi_produksi');
 
         DatasetSistem::updateOrCreate(
-            ['bulan' => $bulan, 'tahun' => $tahun],
+            ['month' => $month, 'year' => $year],
             ['total_hasil_produksi' => $totalProduksi]
         );
     }

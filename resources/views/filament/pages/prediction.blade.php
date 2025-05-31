@@ -1,39 +1,6 @@
 <x-filament::page>
     <!-- Section Metrics dengan Desain Modern -->
     <div class="space-y-8">
-        <!-- Header Section -->
-        <div class="pb-4 border-b border-gray-200 dark:border-gray-700">
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Model Performance Dashboard</h1>
-            <p class="mt-2 text-gray-500 dark:text-gray-400">Real-time evaluation metrics for production model</p>
-        </div>
-
-        <!-- Grid Metrics -->
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            @foreach([
-                ['title' => 'MAE', 'value' => $evaluationMetrics['MAE'] ?? 'N/A', 'color' => 'blue', 'icon' => 'chart-line'],
-                ['title' => 'RMSE', 'value' => $evaluationMetrics['RMSE'] ?? 'N/A', 'color' => 'purple', 'icon' => 'wave-pulse'],
-                ['title' => 'R² Score', 'value' => $evaluationMetrics['R2_Score'] ?? 'N/A', 'color' => 'green', 'icon' => 'chart-pie'],
-                ['title' => 'Threshold MAE', 'value' => $evaluationMetrics['Threshold_MAE'] ?? 'N/A', 'color' => 'amber', 'icon' => 'gauge']
-            ] as $metric)
-            <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 group">
-                <div class="absolute inset-0 bg-gradient-to-r from-{{ $metric['color'] }}-500 to-{{ $metric['color'] }}-600 opacity-10 rounded-xl"></div>
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-300 mb-1">{{ $metric['title'] }}</p>
-                        <p class="text-3xl font-semibold text-gray-900 dark:text-white">{{ $metric['value'] }}</p>
-                    </div>
-                    <div class="p-3 bg-{{ $metric['color'] }}-100 dark:bg-{{ $metric['color'] }}-900/50 rounded-lg">
-                        <x-heroicon-o-{{ $metric['icon'] }} class="w-8 h-8 text-{{ $metric['color'] }}-600 dark:text-{{ $metric['color'] }}-300" />
-                    </div>
-                </div>
-                <div class="mt-4">
-                    <div class="h-1 bg-gray-200 rounded-full">
-                        <div class="h-1 bg-{{ $metric['color'] }}-500 rounded-full w-3/4"></div>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div>
 
         <!-- Form Section dengan Desain Modern -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">

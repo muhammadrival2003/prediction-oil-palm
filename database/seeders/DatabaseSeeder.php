@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
             ProduksiSeeder::class,
             HasilProduksiSeeder::class,
             PemupukanSeeder::class,
+            KaryawanLapanganSeeder::class,
             // Seeder lainnya...
         ]);
 

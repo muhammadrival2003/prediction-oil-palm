@@ -7,7 +7,7 @@
                 <p class="text-gray-500">Blok {{ $blokId }}</p>
             </div>
             <div class="flex space-x-2">
-                <a href="{{ route('filament.admin.pages.blok-produksi') }}" class="inline-flex items-center text-primary-600 hover:text-primary-800">
+                <a href="{{ route('filament.admin.pages.blok-produksi', ['afdeling_id' => $afdeling_id]) }}" class="inline-flex items-center text-primary-600 hover:text-primary-800">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
                     </svg>
@@ -184,11 +184,6 @@
 
         <x-slot name="footer">
             <div class="flex justify-end space-x-2">
-                <x-filament::button
-                    color="secondary"
-                    wire:click="$set('isDeleteModalOpen', false)">
-                    Batal
-                </x-filament::button>
 
                 <x-filament::button
                     color="danger"

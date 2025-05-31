@@ -11,11 +11,16 @@ class Afdeling extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'id',
         'nama'
     ];
 
     public function tahunTanams()
     {
         return $this->hasMany(TahunTanam::class, 'afdeling_id');
+    }
+    public function karyawanLapangans()
+    {
+        return $this->hasMany(KaryawanLapangan::class, 'afdeling_id');
     }
 }

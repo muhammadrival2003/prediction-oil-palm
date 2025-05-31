@@ -133,7 +133,7 @@
         <div x-data="{ hover: false }" @mouseenter="hover = true" @mouseleave="hover = false" class="relative">
             <div x-show="hover" class="absolute inset-0 bg-amber-500/10 dark:bg-amber-400/10 rounded-2xl blur-lg scale-105 -z-10 transition-all duration-500"></div>
 
-            <a href="{{ route('filament.admin.pages.blok-produksi') }}"
+            <a href="{{ route('filament.admin.pages.blok-produksi', ['afdeling_id' => $this->afdeling_id]) }}"
                 class="group relative flex flex-col h-full overflow-hidden rounded-2xl bg-gradient-to-br from-white to-gray-50 p-6 shadow-lg transition-all duration-500 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] border border-gray-200/50 dark:from-gray-800 dark:to-gray-900 dark:border-gray-700/50 hover:border-amber-400/30 dark:hover:border-amber-500/30">
 
                 <div class="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-amber-500/10 to-amber-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"
