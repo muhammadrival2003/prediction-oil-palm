@@ -47,15 +47,15 @@ class PemupukanController extends Controller
 
     protected function updateDatasetSistem($tanggal)
     {
-        $bulan = date('n', strtotime($tanggal));
-        $tahun = date('Y', strtotime($tanggal));
+        $month = date('n', strtotime($tanggal));
+        $year = date('Y', strtotime($tanggal));
 
-        $totalVolume = Pemupukan::whereMonth('tanggal', $bulan)
-            ->whereYear('tanggal', $tahun)
+        $totalVolume = Pemupukan::whereMonth('tanggal', $month)
+            ->whereYear('tanggal', $year)
             ->sum('volume');
 
         \App\Models\DatasetSistem::updateOrCreate(
-            ['bulan' => $bulan, 'tahun' => $tahun],
+            ['month' => $month, 'year' => $year],
             ['total_pemupukan' => $totalVolume]
         );
     }

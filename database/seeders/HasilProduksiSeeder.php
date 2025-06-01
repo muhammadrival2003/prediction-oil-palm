@@ -32,11 +32,11 @@ class HasilProduksiSeeder extends Seeder
             $year = $currentDate->year;
 
             // Data produksi bervariasi berdasarkan musim (misal: lebih tinggi di bulan tertentu)
-            $baseProduction = rand(800, 1200);
+            $baseProduction = rand(1000000, 1500000);
             
             // Penyesuaian musim (contoh: produksi lebih tinggi di bulan 6-9)
             if ($month >= 6 && $month <= 9) {
-                $baseProduction = rand(1000, 1500);
+                $baseProduction = rand(1000000, 2000000);
             }
 
             foreach ($bloks as $blok) {
@@ -79,7 +79,7 @@ class HasilProduksiSeeder extends Seeder
 
             $totalProduksi = HasilProduksi::whereMonth('tanggal', $month)
                 ->whereYear('tanggal', $year)
-                ->sum('realisasi_produksi');
+                ->average('realisasi_produksi');
 
             \App\Models\DatasetSistem::updateOrCreate(
                 ['month' => $month, 'year' => $year],

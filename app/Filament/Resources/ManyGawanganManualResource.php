@@ -230,7 +230,7 @@ class ManyGawanganManualResource extends Resource
                     ->modalWidth('xs'),
                 ViewAction::make()
                     ->iconButton()
-                    ->color('primary')
+                    ->color('emerald')
                     ->infolist([
                         Section::make('Informasi Blok')
                             ->description('Detail informasi blok gawangan')

@@ -50,4 +50,8 @@ class Blok extends Model
     {
         return $this->hasMany(Prediksi::class);
     }
+    public function hasilProduksis()
+    {
+        return $this->hasMany(HasilProduksi::class);
+    }
 }

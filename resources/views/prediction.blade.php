@@ -40,7 +40,7 @@
             </div>
         </div>
         
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-emerald">
             <i class="fas fa-calculator"></i> Prediksi
         </button>
     </form>

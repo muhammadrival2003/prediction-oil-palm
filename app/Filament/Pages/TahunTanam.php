@@ -114,7 +114,7 @@ class TahunTanam extends Page
     {
         $currentYear = date('Y');
         if ($tahun->tahun_tanam == $currentYear) {
-            return 'primary';
+            return 'emerald';
         } elseif ($tahun->tahun_tanam == $currentYear - 1) {
             return 'success';
         } else {

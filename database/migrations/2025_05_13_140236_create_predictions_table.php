@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('year');
             $table->integer('month');
             $table->decimal('prediction', 12, 2);
-            $table->json('input_data');
+            // $table->json('input_data');
             $table->softDeletes();
             $table->timestamps();
         });

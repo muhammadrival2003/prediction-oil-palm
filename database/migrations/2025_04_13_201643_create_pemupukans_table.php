@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('blok_id')->constrained()->cascadeOnDelete();
             $table->dateTime('tanggal');
+            $table->decimal('rencana_dosis');
+            $table->decimal('rencana_volume');
             $table->decimal('dosis');
             $table->decimal('volume');
             $table->softDeletes();

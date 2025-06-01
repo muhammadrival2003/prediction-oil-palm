@@ -55,8 +55,8 @@ class PemupukanSeeder extends Seeder
                     // Dosis bervariasi antara 0.2 - 0.5 kg/pokok
                     $dosis = rand(20, 50) / 100; // Convert to 0.2 - 0.5
                     
-                    // Volume dihitung berdasarkan dosis dan luas blok (contoh: 100 pokok per blok)
-                    $volume = $dosis * 100; // Asumsi 100 pokok per blok
+                    // Volume dihitung berdasarkan dosis dan jumlah pokok
+                    $volume = $dosis * $blok->jumlah_pokok;
                     
                     // Tanggal pemupukan diacak dalam bulan tersebut
                     $tanggal = $currentMonth->copy()
@@ -66,6 +66,8 @@ class PemupukanSeeder extends Seeder
                     $data[] = [
                         'blok_id' => $blok->id,
                         'tanggal' => $tanggal,
+                        'rencana_dosis' => $dosis, // Nilai rencana sama dengan aktual
+                        'rencana_volume' => $volume, // Nilai rencana sama dengan aktual
                         'dosis' => $dosis,
                         'volume' => $volume,
                         'created_at' => now(),
@@ -98,7 +100,7 @@ class PemupukanSeeder extends Seeder
 
             $totalPemupukan = Pemupukan::whereMonth('tanggal', $month)
                 ->whereYear('tanggal', $year)
-                ->sum('volume');
+                ->average('volume');
 
             \App\Models\DatasetSistem::updateOrCreate(
                 ['month' => $month, 'year' => $year],

@@ -37,11 +37,11 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandName('Prediction Oil Palm')
+            ->brandName('PTPN IV Oil Palm')
             // ->brandLogo(fn (): View => view('filament.logo'))
             // ->brandLogo(asset('images/palm-svgrepo-com.svg'))
             ->colors([
-                'primary' => Color::Amber,
+                'emerald' => Color::Amber,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

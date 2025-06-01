@@ -10,6 +10,7 @@ class Afdeling extends Page
     protected static ?string $navigationIcon = 'heroicon-o-map';
 
     protected static string $view = 'filament.pages.afdeling';
+    protected static ?int $navigationSort = 3;
 
     public $afdelings;
 

@@ -37,7 +37,7 @@
                 @class([
                     'fi-topbar-item-icon h-5 w-5',
                     'text-gray-400 dark:text-gray-500' => ! $active,
-                    'text-primary-600 dark:text-primary-400' => $active,
+                    'text-emerald-600 dark:text-emerald-400' => $active,
                 ])
             />
         @endif
@@ -46,7 +46,7 @@
             @class([
                 'fi-topbar-item-label text-sm font-medium',
                 'text-gray-700 dark:text-gray-200' => ! $active,
-                'text-primary-600 dark:text-primary-400' => $active,
+                'text-emerald-600 dark:text-emerald-400' => $active,
             ])
         >
             {{ $slot }}
@@ -69,7 +69,7 @@
                 @class([
                     'fi-topbar-group-toggle-icon h-5 w-5',
                     'text-gray-400 dark:text-gray-500' => ! $active,
-                    'text-primary-600 dark:text-primary-400' => $active,
+                    'text-emerald-600 dark:text-emerald-400' => $active,
                 ])
             />
         @endif

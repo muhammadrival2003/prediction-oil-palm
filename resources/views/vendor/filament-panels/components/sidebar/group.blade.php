@@ -93,7 +93,7 @@
                         @class([
                             'h-6 w-6',
                             'text-gray-400 dark:text-gray-500' => ! $active,
-                            'text-primary-600 dark:text-primary-400' => $active,
+                            'text-emerald-600 dark:text-emerald-400' => $active,
                         ])
                     />
                 </button>
@@ -144,7 +144,7 @@
                             :badge="$item->getBadge()"
                             :badge-color="$item->getBadgeColor()"
                             :badge-tooltip="$item->getBadgeTooltip()"
-                            :color="$itemIsActive ? 'primary' : 'gray'"
+                            :color="$itemIsActive ? 'emerald' : 'gray'"
                             :href="$item->getUrl()"
                             :icon="$itemIsActive ? ($item->getActiveIcon() ?? $item->getIcon()) : $item->getIcon()"
                             tag="a"

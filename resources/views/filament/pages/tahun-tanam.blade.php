@@ -33,7 +33,7 @@
                             {{ $this->getDescription($tahun) }}
                         </p> -->
                 <div class="mt-3 pt-4 border-t border-dark dark:border-{{ $this->getColor($tahun) }}-700 flex justify-center items-center">
-                    <span class="inline-block px-5 py-1 text-xs font-semibold rounded-full bg-primary-100  text-primary-800 dark:bg-{{ $this->getColor($tahun) }}-800 dark:text-{{ $this->getColor($tahun) }}-100">
+                    <span class="inline-block px-5 py-1 text-xs font-semibold rounded-full bg-emerald-100  text-emerald-800 dark:bg-{{ $this->getColor($tahun) }}-800 dark:text-{{ $this->getColor($tahun) }}-100">
                         {{ $tahun->bloks_count }} Blok
                     </span>
                 </div>

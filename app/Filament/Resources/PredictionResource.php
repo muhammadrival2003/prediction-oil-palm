@@ -24,12 +24,16 @@ class PredictionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
 
-    protected static bool $shouldRegisterNavigation = false;
+    // protected static bool $shouldRegisterNavigation = false;
+    protected static ?string $navigationLabel = 'Hasil Prediksi';
+
+    protected static ?string $navigationGroup = 'Prediksi';
+
+    protected static ?int $navigationSort = 3;
+
 
     public static function form(Form $form): Form
     {
-        $service = new PredictionService();
-
         return $form
             ->schema([
                 Section::make('Parameter Prediksi')
@@ -68,65 +72,6 @@ class PredictionResource extends Resource
                             ->required(),
                     ])
                     ->columns(2),
-
-                // Section::make('Visualisasi Data')
-                //     ->schema([
-                //         PredictionChart::make('performance_chart')
-                //             ->predictionData(function (Get $get) use ($service) {
-                //                 $year = 2024;
-                //                 $month = 10;
-
-                //                 if (!$year || !$month) return [];
-
-                //                 $data = $service->getHistoricalData($year, $month);
-
-                //                 // Format untuk chart: ['Bulan' => nilai]
-                //                 return $data['predictions'];
-                //             })
-                //             ->actualData(function (Get $get) use ($service) {
-                //                 $year = 2024;
-                //                 $month = 10;
-
-                //                 if (!$year || !$month) return [];
-
-                //                 $data = $service->getHistoricalData($year, $month);
-
-                //                 // Format untuk chart: ['Bulan' => nilai]
-                //                 return $data['actual'];
-                //             })
-                //     ]),
-
-                Section::make('Hasil Prediksi')
-                    ->schema([
-                        \Filament\Forms\Components\Placeholder::make('prediction_result')
-                            ->content(function (Get $get) use ($service) {
-                                $year = $get('year');
-                                $month = $get('month');
-
-                                if (!$year || !$month) return 'Pilih tahun dan bulan';
-
-                                $result = $service->predict($year, $month);
-                                // dd($result);
-
-                                if ($result['status'] === 'error') {
-                                    return "Error: " . $result['message'];
-                                }
-
-                                return number_format($result['prediction'], 0, ',', '.') . ' ton';
-                            })
-                    ])
-                    ->hidden(function (Get $get) use ($service) {
-                        $year = $get('year');
-                        $month = $get('month');
-
-                        // Sembunyikan section jika tahun/bulan tidak dipilih
-                        if (!$year || !$month) return true;
-
-                        $result = $service->predict($year, $month);
-
-                        // Sembunyikan section jika prediksi error atau tidak ada
-                        return $result['status'] !== 'success' || !isset($result['prediction']);
-                    })
             ]);
     }
 
@@ -134,18 +79,32 @@ class PredictionResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('month')
+                    ->label('Bulan')
+                    ->formatStateUsing(function ($state) {
+                        return [
+                            1 => 'Januari',
+                            2 => 'Februari',
+                            3 => 'Maret',
+                            4 => 'April',
+                            5 => 'Mei',
+                            6 => 'Juni',
+                            7 => 'Juli',
+                            8 => 'Agustus',
+                            9 => 'September',
+                            10 => 'Oktober',
+                            11 => 'November',
+                            12 => 'Desember'
+                        ][$state] ?? 'Unknown';
+                    }),
                 TextColumn::make('year')
                     ->label('Tahun'),
-                TextColumn::make('month')
-                    ->label('Bulan'),
                 TextColumn::make('prediction')
                     ->label('Hasil Prediksi')
                     ->formatStateUsing(fn(string $state): string => number_format($state, 0, ',', '.') . ' ton')
             ])
             ->actions([
-                EditAction::make()
-                    ->iconButton(),
-                DeleteAction::make()
+                //
             ]);
     }
 

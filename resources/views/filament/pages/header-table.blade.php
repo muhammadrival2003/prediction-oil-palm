@@ -2,7 +2,7 @@
     <div>
         <h1 class="text-lg sm:text-xl font-medium text-gray-600 dark:text-gray-300">
             {{ $title }}
-            <span class="font-bold text-primary-600 dark:text-primary-400">
+            <span class="font-bold text-emerald-600 dark:text-emerald-400">
                 {{ $tahunTanam->tahun_tanam }}
             </span>
         </h1>
@@ -25,7 +25,7 @@
                 'tahun_tanam_id' => request('tahun_tanam_id'), 
                 'afdeling_id' => $this->afdeling_id
             ]) }}"
-            color="primary"
+            color="emerald"
             size="sm"
             icon="heroicon-o-plus"
             class="w-full sm:w-auto justify-center">

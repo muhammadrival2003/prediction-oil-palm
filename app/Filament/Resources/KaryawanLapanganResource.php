@@ -15,7 +15,8 @@ use Illuminate\Database\Eloquent\Builder;
 class KaryawanLapanganResource extends Resource
 {
     protected static ?string $model = KaryawanLapangan::class;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {
@@ -60,7 +61,7 @@ class KaryawanLapanganResource extends Resource
 
                 Tables\Columns\BadgeColumn::make('jabatan')
                     ->colors([
-                        'primary' => 'MDR Panen',
+                        'emerald' => 'MDR Panen',
                         'success' => 'MDR Pemeliharaan',
                         'warning' => 'Petugas Timbang BRD',
                         'danger' => 'Mandor',

@@ -46,11 +46,12 @@ class PredictionService
         // 1. Ambil data historis 12 bulan terakhir
         $historicalData = DatasetSistem::orderBy('year', 'desc')
             ->orderBy('month', 'desc')
-            ->take(12)
+            ->take(24)
             ->get()
             ->sortBy(fn($item) => $item->year * 100 + $item->month)
             ->values();
 
+        // dd($historicalData);
         if ($historicalData->count() < 12) {
             throw new \Exception('Butuh data historis 12 bulan terakhir.');
         }
@@ -81,6 +82,7 @@ class PredictionService
                     'hasil_produksi' => (float)$item['total_hasil_produksi']
                 ];
             }, array_slice($tempData, -12));
+
 
             $response = Http::post("{$this->apiBaseUrl}/predict_by_month", [
                 'historical_data' => $historicalForApi

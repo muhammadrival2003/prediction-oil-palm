@@ -142,7 +142,7 @@
             <x-slot name="footer">
                 <div class="flex justify-end space-x-2">
                     <x-filament::button
-                        color="primary"
+                        color="emerald"
                         wire:click="closeModal">
                         Batal
                     </x-filament::button>

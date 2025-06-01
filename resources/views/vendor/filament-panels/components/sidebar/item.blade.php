@@ -48,8 +48,8 @@
         @endif
         @class([
             'fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75',
-            'hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5' => filled($url),
-            'bg-gray-100 dark:bg-white/5' => $active,
+            'hover:bg-emerald-100 focus-visible:bg-emerald-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5' => filled($url),
+            'bg-emerald-100 dark:bg-white/5' => $active,
         ])
     >
         @if (filled($icon) && ((! $subGrouped) || $sidebarCollapsible))
@@ -59,7 +59,7 @@
                 @class([
                     'fi-sidebar-item-icon h-6 w-6',
                     'text-gray-400 dark:text-gray-500' => ! $active,
-                    'text-primary-600 dark:text-primary-400' => $active,
+                    'text-emerald-600 dark:text-emerald-400' => $active,
                 ])
             />
         @endif
@@ -86,8 +86,8 @@
                 <div
                     @class([
                         'relative h-1.5 w-1.5 rounded-full',
-                        'bg-gray-400 dark:bg-gray-500' => ! $active,
-                        'bg-primary-600 dark:bg-primary-400' => $active,
+                        'bg-emerald-400 dark:bg-emerald-500' => ! $active,
+                        'bg-white-600 dark:bg-white-400' => $active,
                     ])
                 ></div>
             </div>
@@ -102,8 +102,8 @@
             @endif
             @class([
                 'fi-sidebar-item-label flex-1 truncate text-sm font-medium',
-                'text-gray-700 dark:text-gray-200' => ! $active,
-                'text-primary-600 dark:text-primary-400' => $active,
+                'text-emerald-700 dark:text-emerald-200' => ! $active,
+                'text-emerald-600 dark:text-emerald-400' => $active,
             ])
         >
             {{ $slot }}

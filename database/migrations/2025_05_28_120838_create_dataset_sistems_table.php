@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedTinyInteger('month'); // 1-12 untuk Jan-Dec
             $table->unsignedSmallInteger('year'); // format 4 digit tahun
-            $table->decimal('total_curah_hujan', 8, 2)->nullable();
-            $table->decimal('total_pemupukan', 8, 2)->nullable();
-            $table->decimal('total_hasil_produksi', 8, 2)->nullable();
+            $table->decimal('total_curah_hujan', 11, 2)->nullable();
+            $table->decimal('total_pemupukan', 11, 2)->nullable();
+            $table->decimal('total_hasil_produksi', 11, 2)->nullable();
             $table->timestamps();
             
             // Optional: tambahkan index untuk bulan dan tahun jika sering di-query

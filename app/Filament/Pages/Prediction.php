@@ -2,6 +2,8 @@
 
 namespace App\Filament\Pages;
 
+use App\Models\DatasetSistem;
+use App\Models\Prediction as ModelsPrediction;
 use App\Services\PredictionService;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DatePicker;
@@ -22,7 +24,7 @@ class Prediction extends Page implements HasForms
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
     protected static string $view = 'filament.pages.prediction';
     protected static ?string $navigationLabel = 'Prediksi Produksi';
-    protected static ?string $title = 'Prediksi Produksi';
+    protected static ?string $title = 'Prediksi';
 
     protected static ?string $navigationGroup = 'Prediksi';
 
@@ -73,6 +75,20 @@ class Prediction extends Page implements HasForms
             // Panggil service untuk prediksi
             $this->monthPrediction = $predictionService->predictByMonthAndYear($month, $year);
 
+            // dd($this->monthPrediction['month']);
+
+            // Update atau buat data prediksi
+            ModelsPrediction::updateOrCreate(
+                [
+                    'year' => $this->monthPrediction['year'],
+                    'month' => $this->monthPrediction['month'],
+                ],
+                [
+                    'prediction' => $this->monthPrediction['prediction'],
+                    'deleted_at' => null // Pastikan data di-restore jika sebelumnya di-soft delete
+                ]
+            );
+
             // Notifikasi sukses
             Notification::make()
                 ->title('Prediksi Berhasil')
@@ -113,5 +129,15 @@ class Prediction extends Page implements HasForms
         ];
 
         return $months[$month] ?? 'Unknown';
+    }
+
+    public function getHistoricalData(int $month, int $year)
+    {
+        return DatasetSistem::orderBy('year', 'desc')
+            ->orderBy('month', 'desc')
+            ->take(12)
+            ->get()
+            ->sortBy(fn($item) => $item->year * 100 + $item->month)
+            ->values();
     }
 }

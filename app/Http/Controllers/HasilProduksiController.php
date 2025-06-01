@@ -46,15 +46,15 @@ class HasilProduksiController extends Controller
 
     protected function updateDatasetSistem($tanggal)
     {
-        $bulan = date('n', strtotime($tanggal));
-        $tahun = date('Y', strtotime($tanggal));
+        $month = date('n', strtotime($tanggal));
+        $year = date('Y', strtotime($tanggal));
 
-        $totalProduksi = HasilProduksi::whereMonth('tanggal', $bulan)
-            ->whereYear('tanggal', $tahun)
+        $totalProduksi = HasilProduksi::whereMonth('tanggal', $month)
+            ->whereYear('tanggal', $year)
             ->sum('realisasi_produksi');
 
         \App\Models\DatasetSistem::updateOrCreate(
-            ['bulan' => $bulan, 'tahun' => $tahun],
+            ['month' => $month, 'year' => $year],
             ['total_hasil_produksi' => $totalProduksi]
         );
     }
