@@ -23,7 +23,7 @@
             <div class="p-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-medium text-green-600 dark:text-green-300">Production Forecast</p>
+                        <p class="text-sm font-medium text-green-600 dark:text-green-300">Prediksi Hasil Produksi</p>
                         <h2 class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
                             {{ $this->getMonthName($monthPrediction['month']) }} {{ $monthPrediction['year'] }}
                         </h2>
@@ -35,7 +35,7 @@
                 <div class="mt-6">
                     <p class="text-4xl font-bold text-gray-900 dark:text-white">
                         {{ number_format($monthPrediction['prediction'], 0, ',', '.') }}
-                        <span class="text-lg text-gray-500 dark:text-gray-400">ton</span>
+                        <span class="text-lg text-gray-500 dark:text-gray-400">kg</span>
                     </p>
                     <div class="mt-4 flex items-center">
                         <span class="px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
@@ -52,7 +52,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
             <div class="p-6">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                    Data Historis 12 Bulan Terakhir
+                    Data Historis 12 Bulan Terakhir yang digunakan
                 </h3>
 
                 @php

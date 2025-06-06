@@ -44,36 +44,65 @@ class Prediction extends Page implements HasForms
     public $usedHistoricalData = [];
 
     public $monthPrediction;
+    public $selected_month;
+    public $selected_year;
 
     protected function getFormSchema(): array
     {
+        // Generate tahun options (5 tahun ke depan dari tahun sekarang)
+        $yearOptions = [];
+        $currentYear = date('Y');
+        for ($i = 0; $i < 5; $i++) {
+            $year = $currentYear + $i;
+            $yearOptions[$year] = $year;
+        }
+
         return [
-            Card::make('Prediksi Berdasarkan Bulan/Tahun')
+            Card::make('Prediksi Untuk Bulan')
                 ->schema([
-                    DatePicker::make('target_date')
-                        ->label('Pilih Bulan dan Tahun')
+                    Select::make('selected_month')
+                        ->label('Bulan')
                         ->required()
-                        ->displayFormat('F Y') // Format tampilan bulan dan tahun
-                        ->format('m/Y') // Format penyimpanan data
-                        ->closeOnDateSelection()
+                        ->options([
+                            1 => 'Januari',
+                            2 => 'Februari',
+                            3 => 'Maret',
+                            4 => 'April',
+                            5 => 'Mei',
+                            6 => 'Juni',
+                            7 => 'Juli',
+                            8 => 'Agustus',
+                            9 => 'September',
+                            10 => 'Oktober',
+                            11 => 'November',
+                            12 => 'Desember'
+                        ])
+                        ->native(false),
+
+                    Select::make('selected_year')
+                        ->label('Tahun')
+                        ->required()
+                        ->options($yearOptions)
                         ->native(false)
                 ])
         ];
     }
 
-    public $target_date;
+    // public $target_date;
 
     public function predictCustom(PredictionService $predictionService)
     {
-        $this->validate(['target_date' => 'required']);
+        $this->validate([
+            'selected_month' => 'required|numeric|between:1,12',
+            'selected_year' => 'required|numeric|min:' . date('Y')
+        ]);
 
         try {
-            $date = Carbon::parse($this->target_date);
-            $month = $date->month;
-            $year = $date->year;
-
             // Panggil service untuk prediksi
-            $this->monthPrediction = $predictionService->predictByMonthAndYear($month, $year);
+            $this->monthPrediction = $predictionService->predictByMonthAndYear(
+                $this->selected_month, 
+                $this->selected_year
+            );
 
             // dd($this->monthPrediction['month']);
 
@@ -92,7 +121,7 @@ class Prediction extends Page implements HasForms
             // Notifikasi sukses
             Notification::make()
                 ->title('Prediksi Berhasil')
-                ->body("Hasil prediksi {$this->getMonthName($month)} {$year}: {$this->monthPrediction['prediction']} ton")
+                ->body("Hasil prediksi {$this->getMonthName($this->selected_month)} {$this->selected_year}: {$this->monthPrediction['prediction']} kg")
                 ->success()
                 ->send();
         } catch (\Exception $e) {
@@ -107,7 +136,11 @@ class Prediction extends Page implements HasForms
     public function mount(PredictionService $predictionService)
     {
         $this->evaluationMetrics = $predictionService->evaluateModel();
-        $this->historicalData = $predictionService->getHistoricalData();
+        $this->historicalData = $this->getHistoricalData($this->selected_month, $this->selected_year);
+
+        // Set default value ke bulan dan tahun sekarang
+        $this->selected_month = date('n');
+        $this->selected_year = date('Y');
     }
 
     // Tambahkan method untuk mendapatkan data bulan
@@ -131,13 +164,13 @@ class Prediction extends Page implements HasForms
         return $months[$month] ?? 'Unknown';
     }
 
-    public function getHistoricalData(int $month, int $year)
+    public function getHistoricalData($month, $year)
     {
         return DatasetSistem::orderBy('year', 'desc')
             ->orderBy('month', 'desc')
             ->take(12)
             ->get()
-            ->sortBy(fn($item) => $item->year * 100 + $item->month)
+            ->sortBy(fn($item) => $year * 100 + $month)
             ->values();
     }
 }

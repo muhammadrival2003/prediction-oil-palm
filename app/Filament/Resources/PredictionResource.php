@@ -4,7 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Components\PredictionChart;
 use App\Filament\Resources\PredictionResource\Pages;
+use App\Models\Prediction;
 use App\Services\PredictionService;
+use Filament\Actions\StaticAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
@@ -14,18 +16,20 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use GuzzleHttp\Client;
 
 class PredictionResource extends Resource
 {
-    protected static ?string $model = null; // Tidak menggunakan model
+    protected static ?string $model = \App\Models\Prediction::class; // Tambahkan ini
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
 
     // protected static bool $shouldRegisterNavigation = false;
-    protected static ?string $navigationLabel = 'Hasil Prediksi';
+    protected static ?string $navigationLabel = 'Arsip Prediksi';
 
     protected static ?string $navigationGroup = 'Prediksi';
 
@@ -101,10 +105,10 @@ class PredictionResource extends Resource
                     ->label('Tahun'),
                 TextColumn::make('prediction')
                     ->label('Hasil Prediksi')
-                    ->formatStateUsing(fn(string $state): string => number_format($state, 0, ',', '.') . ' ton')
+                    ->formatStateUsing(fn(string $state): string => number_format($state, 0, ',', '.') . ' kg')
             ])
             ->actions([
-                //
+                ViewAction::make('view')
             ]);
     }
 
@@ -114,6 +118,7 @@ class PredictionResource extends Resource
             'index' => Pages\ListPredictions::route('/'),
             'create' => Pages\CreatePrediction::route('/create'),
             'edit' => Pages\EditPrediction::route('/{record}/edit'),
+            'view' => Pages\ViewDetailPrediction::route('/{record}'),
         ];
     }
 }
