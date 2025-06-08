@@ -13,7 +13,8 @@ class Prediction extends Model
         'year',
         'month',
         'prediction',
-        'input_data'
+        'input_data',
+        'confidence_score'
     ];
     
     protected $casts = [

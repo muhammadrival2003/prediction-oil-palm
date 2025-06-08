@@ -78,7 +78,7 @@ class DatasetSistemResource extends Resource
                     
                 Tables\Columns\TextColumn::make('total_hasil_produksi')
                     ->numeric(decimalPlaces: 2)
-                    ->suffix(' ton/ha'),
+                    ->suffix(' kg/ha'),
 
             ])
             ->filters([

@@ -3,7 +3,7 @@
     <div class="space-y-8">
 
         <!-- Form Section dengan Desain Modern -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg">
             <div class="p-6">
                 <form wire:submit.prevent="predictCustom" class="space-y-6">
                     {{ $this->form }}

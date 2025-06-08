@@ -89,6 +89,7 @@ class Prediction extends Page implements HasForms
     }
 
     // public $target_date;
+    public $intermediatePredictions = [];
 
     public function predictCustom(PredictionService $predictionService)
     {
@@ -98,27 +99,17 @@ class Prediction extends Page implements HasForms
         ]);
 
         try {
-            // Panggil service untuk prediksi
-            $this->monthPrediction = $predictionService->predictByMonthAndYear(
-                $this->selected_month, 
+            $result = $predictionService->predictByMonthAndYear(
+                $this->selected_month,
                 $this->selected_year
             );
 
-            // dd($this->monthPrediction['month']);
+            $this->monthPrediction = $result['target_prediction'];
+            $this->intermediatePredictions = $result['intermediate_predictions'];
+            $this->usedHistoricalData = $result['historical_data_used'];
 
-            // Update atau buat data prediksi
-            ModelsPrediction::updateOrCreate(
-                [
-                    'year' => $this->monthPrediction['year'],
-                    'month' => $this->monthPrediction['month'],
-                ],
-                [
-                    'prediction' => $this->monthPrediction['prediction'],
-                    'deleted_at' => null // Pastikan data di-restore jika sebelumnya di-soft delete
-                ]
-            );
+            // dd($this->intermediatePredictions);
 
-            // Notifikasi sukses
             Notification::make()
                 ->title('Prediksi Berhasil')
                 ->body("Hasil prediksi {$this->getMonthName($this->selected_month)} {$this->selected_year}: {$this->monthPrediction['prediction']} kg")

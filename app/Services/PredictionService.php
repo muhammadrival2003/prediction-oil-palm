@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\DatasetSistem;
+use App\Models\Prediction;
 use App\Models\Produksi;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
@@ -43,7 +44,7 @@ class PredictionService
 
     public function predictByMonthAndYear(int $month, int $year)
     {
-        // 1. Ambil data historis 12 bulan terakhir
+        // 1. Ambil data historis 24 bulan terakhir (2x lipat dari TIMESTEPS)
         $historicalData = DatasetSistem::orderBy('year', 'desc')
             ->orderBy('month', 'desc')
             ->take(24)
@@ -51,9 +52,8 @@ class PredictionService
             ->sortBy(fn($item) => $item->year * 100 + $item->month)
             ->values();
 
-        // dd($historicalData);
         if ($historicalData->count() < 12) {
-            throw new \Exception('Butuh data historis 12 bulan terakhir.');
+            throw new \Exception('Butuh data historis minimal 12 bulan terakhir.');
         }
 
         // 2. Hitung selisih bulan antara data terakhir dan target prediksi
@@ -69,20 +69,19 @@ class PredictionService
 
         // 3. Lakukan prediksi beruntun hingga mencapai bulan target
         $tempData = $historicalData->toArray();
+        $allPredictions = [];
         $prediction = null;
 
-        for ($i = 0; $i < $monthsDiff; $i++) {
+        for ($i = 0; $i <= $monthsDiff; $i++) {
             $historicalForApi = array_map(function ($item) {
-                // Pastikan semua nilai numerik adalah float
                 return [
                     'month' => (int)$item['month'],
                     'year' => (int)$item['year'],
                     'curah_hujan' => (float)$item['total_curah_hujan'],
                     'pemupukan' => (float)$item['total_pemupukan'],
-                    'hasil_produksi' => (float)$item['total_hasil_produksi']
+                    'hasil_produksi' => (float)($item['total_hasil_produksi'] ?? $item['prediction'] ?? 0)
                 ];
             }, array_slice($tempData, -12));
-
 
             $response = Http::post("{$this->apiBaseUrl}/predict_by_month", [
                 'historical_data' => $historicalForApi
@@ -90,17 +89,47 @@ class PredictionService
 
             $prediction = $response->json();
 
-            // Simpan prediksi sebagai data baru untuk iterasi berikutnya
+            // Hentikan jika sudah melebihi bulan target
+            $currentPredictionDate = Carbon::create($prediction['year'], $prediction['month'], 1);
+            if ($currentPredictionDate->gt($targetDate)) {
+                break;
+            }
+
+            // Simpan prediksi ke database sebagai data historis
+            $savedPrediction = Prediction::updateOrCreate(
+                [
+                    'year' => $prediction['year'],
+                    'month' => $prediction['month'],
+                ],
+                [
+                    'prediction' => $prediction['prediction'],
+                    'input_data' => [
+                        'curah_hujan' => $this->calculateAverage(array_slice($tempData, -3), 'total_curah_hujan'),
+                        'pemupukan' => $this->calculateAverage(array_slice($tempData, -3), 'total_pemupukan'),
+                    ],
+                    'confidence_score' => $prediction['confidence_score'] ?? null,
+                    'deleted_at' => null
+                ]
+            );
+
+            // Tambahkan prediksi ke array untuk iterasi berikutnya
             $tempData[] = [
                 'month' => $prediction['month'],
                 'year' => $prediction['year'],
                 'total_curah_hujan' => $this->calculateAverage(array_slice($tempData, -3), 'total_curah_hujan'),
                 'total_pemupukan' => $this->calculateAverage(array_slice($tempData, -3), 'total_pemupukan'),
-                'total_hasil_produksi' => $prediction['prediction']
+                'total_hasil_produksi' => $prediction['prediction'],
+                'is_predicted' => true
             ];
+
+            $allPredictions[] = $prediction;
         }
 
-        return $prediction;
+        return [
+            'target_prediction' => $prediction,
+            'intermediate_predictions' => $allPredictions,
+            'historical_data_used' => array_slice($tempData, 0, -$monthsDiff)
+        ];
     }
 
     private function calculateAverage(array $data, string $field): float
