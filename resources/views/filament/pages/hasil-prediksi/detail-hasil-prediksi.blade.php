@@ -1,7 +1,17 @@
 <x-filament::page>
     @php
-        // Akses data melalui predictionRecord yang dikirim dari controller
-        $prediction = $this->predictionRecord;
+    // Akses data melalui predictionRecord yang dikirim dari controller
+    $prediction = $this->predictionRecord;
+    // Asumsikan input_data sudah dalam bentuk array
+    $inputData = $prediction->input_data;
+    // Mengurutkan data berdasarkan tahun dan bulan
+    usort($inputData, function ($a, $b) {
+        // Urutkan berdasarkan tahun terlebih dahulu, kemudian bulan
+        if ($a['year'] === $b['year']) {
+            return $b['month'] <=> $a['month']; // Urutkan bulan dari terbesar ke terkecil
+        }
+            return $b['year'] <=> $a['year']; // Urutkan tahun dari terbesar ke terkecil
+    });
     @endphp
 
     @if($prediction)
@@ -11,13 +21,13 @@
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
                 Detail Prediksi
             </h2>
-            <a href="{{ route('filament.admin.resources.predictions.index') }}" 
-               class="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-transparent rounded-md font-semibold text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+            <a href="{{ route('filament.admin.resources.predictions.index') }}"
+                class="inline-flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 border border-transparent rounded-md font-semibold text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600 transition">
                 <x-heroicon-o-arrow-left class="w-5 h-5 mr-2" />
                 Kembali
             </a>
         </div>
-        
+
         <!-- Card Prediksi Utama -->
         <div class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 rounded-xl shadow-lg overflow-hidden">
             <div class="p-6">
@@ -51,20 +61,36 @@
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
             <div class="p-6">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                    Parameter Input Prediksi
+                    Data Historis 12 Bulan Terakhir yang digunakan
                 </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    @foreach($prediction->input_data as $key => $value)
-                    <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400 capitalize">
-                            {{ str_replace('_', ' ', $key) }}
-                        </p>
-                        <p class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">
-                            {{ is_numeric($value) ? number_format($value) : $value }}
-                        </p>
-                    </div>
-                    @endforeach
-                </div>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bulan/Tahun</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Curah Hujan (mm)</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pemupukan (kg)</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produksi (kg)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach($inputData as $data)
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {{ \Carbon\Carbon::createFromFormat('!m', $data['month'])->locale('id')->translatedFormat('F') }} {{ $data['year'] }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {{ number_format($data['curah_hujan'], 2, ',', '.') }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {{ number_format($data['pemupukan'], 2, ',', '.') }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {{ number_format($data['hasil_produksi'], 0, ',', '.') }}
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
         @endif

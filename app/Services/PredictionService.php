@@ -66,13 +66,14 @@ class PredictionService
         }
 
         $monthsDiff = $lastDate->diffInMonths($targetDate);
+        // dd($monthsDiff);
 
         // 3. Lakukan prediksi beruntun hingga mencapai bulan target
         $tempData = $historicalData->toArray();
         $allPredictions = [];
         $prediction = null;
 
-        for ($i = 0; $i <= $monthsDiff; $i++) {
+        for ($i = 1; $i <= $monthsDiff; $i++) {
             $historicalForApi = array_map(function ($item) {
                 return [
                     'month' => (int)$item['month'],
@@ -103,10 +104,7 @@ class PredictionService
                 ],
                 [
                     'prediction' => $prediction['prediction'],
-                    'input_data' => [
-                        'curah_hujan' => $this->calculateAverage(array_slice($tempData, -3), 'total_curah_hujan'),
-                        'pemupukan' => $this->calculateAverage(array_slice($tempData, -3), 'total_pemupukan'),
-                    ],
+                    'input_data' => $historicalForApi, // Simpan historical data ke input_data
                     'confidence_score' => $prediction['confidence_score'] ?? null,
                     'deleted_at' => null
                 ]
