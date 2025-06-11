@@ -26,7 +26,7 @@ class PredictionResource extends Resource
 {
     protected static ?string $model = \App\Models\Prediction::class; // Tambahkan ini
 
-    protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
+    protected static ?string $navigationIcon = 'heroicon-o-archive-box';
 
     // protected static bool $shouldRegisterNavigation = false;
     protected static ?string $navigationLabel = 'Arsip Prediksi';
@@ -104,12 +104,13 @@ class PredictionResource extends Resource
                 TextColumn::make('year')
                     ->label('Tahun'),
                 TextColumn::make('prediction')
-                    ->label('Hasil Prediksi')
-                    ->formatStateUsing(fn(string $state): string => number_format($state, 0, ',', '.') . ' kg')
+                    ->label('Hasil Prediksi (kg)')
+                    ->formatStateUsing(fn(string $state): string => number_format($state, 0, ',', '.'))
             ])
             ->actions([
                 ViewAction::make('view')
-            ]);
+            ])
+            ->paginated(false);;
     }
 
     public static function getPages(): array

@@ -2,13 +2,76 @@
     <!-- Section Metrics dengan Desain Modern -->
     <div class="space-y-8">
 
-        <!-- Form Section dengan Desain Modern -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg">
-            <div class="p-6">
+        <!-- Form Section with Modern Design -->
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="p-6 md:p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Prediksi Produksi</h2>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                            Masukkan parameter untuk memprediksi hasil produksi
+                        </p>
+                    </div>
+                    <div class="hidden md:block p-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/30">
+                        <x-heroicon-o-sparkles class="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                    </div>
+                </div>
+
                 <form wire:submit.prevent="predictCustom" class="space-y-6">
-                    {{ $this->form }}
-                    <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-                        <button type="submit" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 transition-all duration-200 shadow-sm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Month Select -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Bulan
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <select wire:model="selected_month" required
+                                    class="w-full pl-4 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 appearance-none">
+                                    @foreach([
+                                    1 => 'Januari',
+                                    2 => 'Februari',
+                                    3 => 'Maret',
+                                    4 => 'April',
+                                    5 => 'Mei',
+                                    6 => 'Juni',
+                                    7 => 'Juli',
+                                    8 => 'Agustus',
+                                    9 => 'September',
+                                    10 => 'Oktober',
+                                    11 => 'November',
+                                    12 => 'Desember'
+                                    ] as $value => $label)
+                                    <option value="{{ $value }}">{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Year Select -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Tahun
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <select wire:model="selected_year" required
+                                    class="w-full pl-4 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 appearance-none">
+                                    @php
+                                    $currentYear = date('Y');
+                                    for ($i = 0; $i < 5; $i++) {
+                                        $year=$currentYear + $i;
+                                        echo "<option value=\" $year\">$year</option>";
+                                        }
+                                        @endphp
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
+                        <button type="submit"
+                            class="w-full md:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 shadow-md transition-all duration-200">
                             <x-heroicon-o-sparkles class="w-5 h-5 mr-2" />
                             Generate Prediction
                         </button>
@@ -39,7 +102,7 @@
                     </p>
                     <div class="mt-4 flex items-center">
                         <span class="px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                            {{ $monthPrediction['confidence_score'] ?? 'N/A' }}% Confidence
+                            {{ number_format($monthPrediction['confidence_score'], 2) ?? 'N/A' }}% Confidence
                         </span>
                         <span class="ml-3 text-sm text-gray-500 dark:text-gray-400">
                             Last updated: {{ now()->format('d M Y H:i') }}

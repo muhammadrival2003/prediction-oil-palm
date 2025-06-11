@@ -64,39 +64,38 @@ class DatasetSistemResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('periode')
-                    ->sortable()
-                    ->searchable(['bulan', 'tahun']),
+                Tables\Columns\TextColumn::make('periode'),
                     
                 Tables\Columns\TextColumn::make('total_curah_hujan')
-                    ->numeric(decimalPlaces: 2)
-                    ->suffix(' mm'),
+                    ->label('Total Curah Hujan (mm)')
+                    ->numeric(decimalPlaces: 2),
+                    // ->suffix(' mm'),
                     
                 Tables\Columns\TextColumn::make('total_pemupukan')
-                    ->numeric(decimalPlaces: 2)
-                    ->suffix(' kg/ha'),
+                    ->label('Total Pemupukan (kg)')
+                    ->numeric(decimalPlaces: 2),
                     
                 Tables\Columns\TextColumn::make('total_hasil_produksi')
-                    ->numeric(decimalPlaces: 2)
-                    ->suffix(' kg/ha'),
+                    ->label('Total Hasil Produksi (kg)')
+                    ->numeric(decimalPlaces: 0),
 
             ])
-            ->filters([
-                Tables\Filters\SelectFilter::make('bulan')
-                    ->options(function() {
-                        return collect(range(1, 12))->mapWithKeys(function($month) {
-                            return [$month => \DateTime::createFromFormat('!m', $month)->format('F')];
-                        });
-                    }),
+            // ->filters([
+            //     Tables\Filters\SelectFilter::make('bulan')
+            //         ->options(function() {
+            //             return collect(range(1, 12))->mapWithKeys(function($month) {
+            //                 return [$month => \DateTime::createFromFormat('!m', $month)->format('F')];
+            //             });
+            //         }),
                     
-                Tables\Filters\Filter::make('tahun')
-                    ->form([Forms\Components\TextInput::make('tahun')->numeric()])
-                    ->query(function (Builder $query, array $data) {
-                        if ($data['tahun']) {
-                            $query->where('tahun', $data['tahun']);
-                        }
-                    })
-            ])
+            //     Tables\Filters\Filter::make('tahun')
+            //         ->form([Forms\Components\TextInput::make('tahun')->numeric()])
+            //         ->query(function (Builder $query, array $data) {
+            //             if ($data['tahun']) {
+            //                 $query->where('tahun', $data['tahun']);
+            //             }
+            //         })
+            // ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

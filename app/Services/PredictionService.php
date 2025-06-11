@@ -47,7 +47,7 @@ class PredictionService
         // 1. Ambil data historis 24 bulan terakhir (2x lipat dari TIMESTEPS)
         $historicalData = DatasetSistem::orderBy('year', 'desc')
             ->orderBy('month', 'desc')
-            ->take(24)
+            ->take(36)
             ->get()
             ->sortBy(fn($item) => $item->year * 100 + $item->month)
             ->values();

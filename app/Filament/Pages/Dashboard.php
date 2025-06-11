@@ -7,6 +7,7 @@ use App\Models\Blok;
 use App\Models\HasilProduksi;
 use App\Models\KaryawanLapangan;
 use Filament\Pages\Page;
+use App\Models\Prediction;
 
 class Dashboard extends Page
 {
@@ -86,5 +87,37 @@ class Dashboard extends Page
             'updated' => 'purple',
             default => 'gray'
         };
+    }
+
+    public function getChartDataProperty(): array
+    {
+        $historicalData = Prediction::orderBy('year', 'desc')
+            ->orderBy('month', 'desc')
+            ->take(12)
+            ->get()
+            ->sortBy(fn($item) => $item->year * 100 + $item->month)
+            ->values();
+
+        return [
+            'labels' => $historicalData->map(fn($item) => $this->getShortMonthName($item->month).' '.$item->year),
+            'prediction' => $historicalData->pluck('prediction'),
+        ];
+    }
+
+    private function getShortMonthName($month): string
+    {
+        return [
+            1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr', 
+            5 => 'Mei', 6 => 'Jun', 7 => 'Jul', 8 => 'Ags', 
+            9 => 'Sep', 10 => 'Okt', 11 => 'Nov', 12 => 'Des'
+        ][$month] ?? '';
+    }
+
+    // Jika perlu mengirim data tambahan ke view
+    protected function getViewData(): array
+    {
+        return array_merge(parent::getViewData(), [
+            'chartData' => $this->chartData,
+        ]);
     }
 }
