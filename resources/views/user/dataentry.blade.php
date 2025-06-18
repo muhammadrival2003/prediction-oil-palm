@@ -28,10 +28,10 @@
     </div>
 </div>
 
-<!-- Tambahkan ini di bagian Middle Column - Data Entry (gantikan form yang ada) -->
+<!-- Data Karyawan Lapangan -->
 <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col">
     <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-semibold text-gray-800">Data Karyawan Lapangan</h3>
+        <h3 class="text-xl font-semibold text-gray-800">Karyawan Lapangan</h3>
         <i class="fas fa-table text-purple-500"></i>
     </div>
 
