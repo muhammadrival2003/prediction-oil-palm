@@ -173,7 +173,6 @@
                 <!-- Recent Records Section -->
                 @include('user.recent-records')
             </div>
-
         </div>
         <script>
             function getActivityTitle(type) {

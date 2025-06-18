@@ -45,21 +45,21 @@
         width: 8px;
         height: 8px;
     }
-    
+
     .overflow-x-auto::-webkit-scrollbar-track {
         background: #f1f1f1;
         border-radius: 4px;
     }
-    
+
     .overflow-x-auto::-webkit-scrollbar-thumb {
         background: #cbd5e0;
         border-radius: 4px;
     }
-    
+
     .overflow-x-auto::-webkit-scrollbar-thumb:hover {
         background: #a0aec0;
     }
-    
+
     .status-badge {
         padding: 0.25rem 0.5rem;
         border-radius: 9999px;

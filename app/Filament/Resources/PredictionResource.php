@@ -108,7 +108,8 @@ class PredictionResource extends Resource
                     ->formatStateUsing(fn(string $state): string => number_format($state, 0, ',', '.'))
             ])
             ->actions([
-                ViewAction::make('view')
+                ViewAction::make('view'),
+                DeleteAction::make('delete'),
             ])
             ->paginated(false);;
     }

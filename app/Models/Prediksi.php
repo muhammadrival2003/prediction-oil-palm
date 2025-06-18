@@ -10,6 +10,8 @@ class Prediksi extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'prediksi';
+
     protected $fillable = [
         'blok_id',
         'tanggal',

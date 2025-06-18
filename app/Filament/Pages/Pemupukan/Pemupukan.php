@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages\Pemupukan;
 
+use App\Models\Blok;
 use Filament\Pages\Page;
 use App\Models\Pemupukan as ModelsPemupukan;
 use Filament\Forms\Components\DatePicker;
@@ -33,6 +34,7 @@ class Pemupukan extends Page
     public $isDeleteModalOpen = false;
     public $deleteId;
     public $afdeling_id;
+    public $blok;
 
     public function form(Form $form): Form
     {
@@ -65,6 +67,7 @@ class Pemupukan extends Page
     {
         $this->afdeling_id = request('afdeling_id');
         $this->blokId = request('blok_id');
+        $this->blok = Blok::findOrFail($this->blokId);
         $this->loadData();
     }
 

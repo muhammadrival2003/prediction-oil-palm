@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Models\ActivityLog;
 use App\Models\Blok;
+use App\Models\DatasetSistem;
 use App\Models\HasilProduksi;
 use App\Models\KaryawanLapangan;
 use Filament\Pages\Page;
@@ -91,25 +92,61 @@ class Dashboard extends Page
 
     public function getChartDataProperty(): array
     {
-        $historicalData = Prediction::orderBy('year', 'desc')
+        // Get prediction data
+        $predictions = Prediction::orderBy('year', 'desc')
             ->orderBy('month', 'desc')
             ->take(12)
             ->get()
             ->sortBy(fn($item) => $item->year * 100 + $item->month)
             ->values();
 
+        // Get actual production data from DatasetSistem
+        $actualProductions = DatasetSistem::orderBy('year', 'desc')
+            ->orderBy('month', 'desc')
+            ->take(12)
+            ->get()
+            ->sortBy(fn($item) => $item->year * 100 + $item->month)
+            ->values();
+
+        // Prepare data only for months where both prediction and actual data exist
+        $labels = [];
+        $predictionData = [];
+        $actualData = [];
+
+        foreach ($predictions as $prediction) {
+            $actual = $actualProductions->firstWhere(function ($item) use ($prediction) {
+                return $item->month == $prediction->month && $item->year == $prediction->year;
+            });
+
+            if ($actual) {
+                $labels[] = $this->getShortMonthName($prediction->month) . ' ' . $prediction->year;
+                $predictionData[] = $prediction->prediction;
+                $actualData[] = $actual->total_hasil_produksi;
+            }
+        }
+
         return [
-            'labels' => $historicalData->map(fn($item) => $this->getShortMonthName($item->month).' '.$item->year),
-            'prediction' => $historicalData->pluck('prediction'),
+            'labels' => $labels,
+            'prediction' => $predictionData,
+            'actual' => $actualData,
         ];
     }
 
     private function getShortMonthName($month): string
     {
         return [
-            1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr', 
-            5 => 'Mei', 6 => 'Jun', 7 => 'Jul', 8 => 'Ags', 
-            9 => 'Sep', 10 => 'Okt', 11 => 'Nov', 12 => 'Des'
+            1 => 'Jan',
+            2 => 'Feb',
+            3 => 'Mar',
+            4 => 'Apr',
+            5 => 'Mei',
+            6 => 'Jun',
+            7 => 'Jul',
+            8 => 'Ags',
+            9 => 'Sep',
+            10 => 'Okt',
+            11 => 'Nov',
+            12 => 'Des'
         ][$month] ?? '';
     }
 

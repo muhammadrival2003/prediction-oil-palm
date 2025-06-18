@@ -158,13 +158,13 @@ class TahunTanam extends Page
         }
     }
 
-    public function getHeaders(): ?View
-    {
+    // public function getHeaders(): ?View
+    // {
 
-        return view('filament.pages.tahun-tanam.header-tahun-tanam', [
-            'totalTahunTanam' => $this->totalTahunTanam,
-            'totalBlok' => $this->totalBlok,
-            'totalPokok' => $this->totalPokok,
-        ]);
-    }
+    //     return view('filament.pages.tahun-tanam.header-tahun-tanam', [
+    //         'totalTahunTanam' => $this->totalTahunTanam,
+    //         'totalBlok' => $this->totalBlok,
+    //         'totalPokok' => $this->totalPokok,
+    //     ]);
+    // }
 }

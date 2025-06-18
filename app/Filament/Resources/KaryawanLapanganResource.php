@@ -53,20 +53,21 @@ class KaryawanLapanganResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('afdeling.nama')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('nama')
                     ->searchable()
                     ->sortable(),
 
                 Tables\Columns\BadgeColumn::make('jabatan')
-                    ->colors([
-                        'emerald' => 'MDR Panen',
-                        'success' => 'MDR Pemeliharaan',
-                        'warning' => 'Petugas Timbang BRD',
-                        'danger' => 'Mandor',
-                        'secondary' => 'Asisten Kebun',
-                    ])
+                    // ->colors([
+                    //     'emerald' => 'MDR Panen',
+                    //     'success' => 'MDR Pemeliharaan',
+                    //     'warning' => 'Petugas Timbang BRD',
+                    //     'danger' => 'Mandor',
+                    //     'gray' => 'Asisten Kebun',
+                    // ])
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('tanggal_masuk')
@@ -85,13 +86,9 @@ class KaryawanLapanganResource extends Resource
                 Tables\Filters\SelectFilter::make('jabatan')
                     ->options(KaryawanLapangan::JABATAN),
 
-                Tables\Filters\Filter::make('mdr_panen')
-                    ->label('MDR Panen')
-                    ->query(fn(Builder $query): Builder => $query->mdrPanen()),
-
-                Tables\Filters\Filter::make('mdr_pemeliharaan')
-                    ->label('MDR Pemeliharaan')
-                    ->query(fn(Builder $query): Builder => $query->mdrPemeliharaan()),
+                // Tables\Filters\Filter::make('mdr_pemeliharaan')
+                //     ->label('MDR Pemeliharaan')
+                //     ->query(fn(Builder $query): Builder => $query->mdrPemeliharaan()),
 
                 Tables\Filters\Filter::make('tanggal_masuk')
                     ->form([

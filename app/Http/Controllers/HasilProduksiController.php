@@ -35,7 +35,7 @@ class HasilProduksiController extends Controller
             $hasilProduksi->blok_id,
             'updated',
             'Memperbarui data produksi',
-            ['weight' => $validated['rencana_produksi']]
+            ['weight' => $validated['realisasi_produksi']]
         );
 
         // Update dataset sistem
