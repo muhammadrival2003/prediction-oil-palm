@@ -1,63 +1,78 @@
 <x-filament::page>
-    <!-- Headers -->
-    <div class="flex flex-row justify-between">
-        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
-            Tahun Tanam
-        </h2>
-        <div class="flex flex-row gap-3">
-            <a href="{{ route('filament.admin.pages.afdeling.menu', ['afdeling_id' => $this->afdeling_id]) }}" class="inline-flex items-center text-emerald-600 hover:text-emerald-800">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-                </svg>
-                Kembali
-            </a>
-            <x-filament::button
-                icon="heroicon-o-plus"
-                size="sm"
-                tag="a"
-                href="{{ route('filament.admin.resources.tahun-tanams.create', ['afdeling_id' => $this->afdeling_id]) }}">
-                Tambah Tahun
-            </x-filament::button>
+    <!-- Bradcrumb -->
+    <x-filament::breadcrumbs :breadcrumbs="[
+    '/admin/afdeling' => 'Afdeling',
+    '/admin/afdeling/menu' => 'Menu',
+    '#' => 'Tahun Tanam',
+    ]" />
+
+    <!-- Enhanced Header with Gradient Background -->
+    <div class="bg-gradient-to-r from-emerald-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 mb-6 shadow-sm border border-gray-200/50 dark:border-gray-700/50">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Menu Afdeling</h1>
+                <p class="text-sm text-emerald-600 dark:text-emerald-400 mt-1">
+                    Pilih Menu untuk mengelola Data Tahun Tanam
+                </p>
+            </div>
+            <div>
+                <a href="{{ route('filament.admin.pages.afdeling.menu',  ['afdeling_id' => $this->afdeling_id]) }}"
+                    class="inline-flex items-center text-sm px-4 py-2 me-2 bg-white dark:bg-gray-800 border border-emerald-200 dark:border-emerald-800 rounded-lg text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors duration-300 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                    </svg>
+                    Kembali
+                </a>
+                <x-filament::button
+                    icon="heroicon-o-plus"
+                    size="sm"
+                    tag="a"
+                    class="inline-flex items-center text-sm px-4 py-2"
+                    href="{{ route('filament.admin.resources.tahun-tanams.create', ['afdeling_id' => $this->afdeling_id]) }}">
+                    Tambah Tahun
+                </x-filament::button>
+            </div>
         </div>
     </div>
+
     <!-- Statistik Cards with Emerald Accents -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-gradient-to-br from-white to-emerald-50 dark:from-gray-800 dark:to-emerald-900/20 rounded-xl shadow-sm p-6 border-l-4 border-blue-500">
-                <div class="flex items-center space-x-4">
-                    <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-800">
-                        <x-heroicon-o-calendar class="h-6 w-6 text-blue-600 dark:text-blue-300" />
-                    </div>
-                    <div>
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Tahun Tanam</p>
-                        <p class="mt-1 text-2xl font-semibold text-blue-600 dark:text-blue-300">{{ $totalTahunTanam }}</p>
-                    </div>
+        <div class="bg-gradient-to-br from-white to-emerald-50 dark:from-gray-800 dark:to-emerald-900/20 rounded-xl shadow-sm p-6 border-l-4 border-blue-500">
+            <div class="flex items-center space-x-4">
+                <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-800">
+                    <x-heroicon-o-calendar class="h-6 w-6 text-blue-600 dark:text-blue-300" />
                 </div>
-            </div>
-
-            <div class="bg-gradient-to-br from-white to-emerald-50 dark:from-gray-800 dark:to-emerald-900/20 rounded-xl shadow-sm p-6 border-l-4 border-emerald-500">
-                <div class="flex items-center space-x-4">
-                    <div class="p-3 rounded-full bg-emerald-100 dark:bg-emerald-800">
-                        <x-heroicon-o-map-pin class="h-6 w-6 text-emerald-600 dark:text-emerald-300" />
-                    </div>
-                    <div>
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Blok</p>
-                        <p class="mt-1 text-2xl font-semibold text-emerald-600 dark:text-emerald-300">{{ $totalBlok }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gradient-to-br from-white to-emerald-50 dark:from-gray-800 dark:to-emerald-900/20 rounded-xl shadow-sm p-6 border-l-4 border-amber-500">
-                <div class="flex items-center space-x-4">
-                    <div class="p-3 rounded-full bg-amber-100 dark:bg-amber-800">
-
-                    </div>
-                    <div>
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Pokok</p>
-                        <p class="mt-1 text-2xl font-semibold text-amber-600 dark:text-amber-300">{{ $totalPokok }}</p>
-                    </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Tahun Tanam</p>
+                    <p class="mt-1 text-2xl font-semibold text-blue-600 dark:text-blue-300">{{ $totalTahunTanam }}</p>
                 </div>
             </div>
         </div>
+
+        <div class="bg-gradient-to-br from-white to-emerald-50 dark:from-gray-800 dark:to-emerald-900/20 rounded-xl shadow-sm p-6 border-l-4 border-emerald-500">
+            <div class="flex items-center space-x-4">
+                <div class="p-3 rounded-full bg-emerald-100 dark:bg-emerald-800">
+                    <x-heroicon-o-map-pin class="h-6 w-6 text-emerald-600 dark:text-emerald-300" />
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Blok</p>
+                    <p class="mt-1 text-2xl font-semibold text-emerald-600 dark:text-emerald-300">{{ $totalBlok }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-white to-emerald-50 dark:from-gray-800 dark:to-emerald-900/20 rounded-xl shadow-sm p-6 border-l-4 border-amber-500">
+            <div class="flex items-center space-x-4">
+                <div class="p-3 rounded-full bg-amber-100 dark:bg-amber-800">
+
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Pokok</p>
+                    <p class="mt-1 text-2xl font-semibold text-amber-600 dark:text-amber-300">{{ $totalPokok }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- End Headers -->
 
     <!-- Enhanced Data Tahun Tanam Cards -->
