@@ -33,6 +33,9 @@ class HasilProduksiSeeder extends Seeder
         $batchSize = 500; // Ukuran batch untuk insert
         $currentBatch = 0;
 
+        // Hitung jumlah blok untuk distribusi produksi
+        $jumlahBlok = $bloks->count();
+
         // Loop untuk setiap hari dalam periode 36 bulan
         $currentDate = $startDate->copy();
         while ($currentDate->lte($endDate)) {
@@ -40,26 +43,36 @@ class HasilProduksiSeeder extends Seeder
             $year = $currentDate->year;
             $dayOfWeek = $currentDate->dayOfWeek; // 0 = Sunday, 6 = Saturday
 
-            // Base produksi harian dengan range 10.000 - 20.000 kg
-            $baseProduction = rand(10000, 20000);
+            // Hitung target produksi bulanan (dalam kg)
+            // Range bulanan: 5.000.000 - 20.000.000 kg
+            $targetProduksiBulanan = rand(5000000, 20000000);
             
+            // Hitung jumlah hari dalam bulan ini
+            $daysInMonth = $currentDate->daysInMonth;
+            
+            // Hitung target produksi harian rata-rata
+            $avgDailyTarget = $targetProduksiBulanan / $daysInMonth;
+            
+            // Base produksi harian dengan variasi
+            $baseProduction = $avgDailyTarget * (rand(80, 120) / 100); // Variasi 80-120% dari rata-rata
+
             // Penyesuaian berdasarkan musim
             if ($month >= 6 && $month <= 9) {
-                // Musim panen utama - produksi lebih tinggi (15.000 - 20.000 kg)
-                $baseProduction = rand(15000, 20000);
+                // Musim panen utama - produksi lebih tinggi (100-120% dari normal)
+                $baseProduction *= (rand(100, 120) / 100);
             } elseif ($month >= 12 || $month <= 2) {
-                // Musim hujan - produksi sedang (12.000 - 18.000 kg)
-                $baseProduction = rand(12000, 18000);
+                // Musim hujan - produksi sedang (90-110% dari normal)
+                $baseProduction *= (rand(90, 110) / 100);
             } else {
-                // Musim lainnya - produksi normal (10.000 - 17.000 kg)
-                $baseProduction = rand(10000, 17000);
+                // Musim lainnya - produksi normal (85-105% dari normal)
+                $baseProduction *= (rand(85, 105) / 100);
             }
 
             // Penyesuaian berdasarkan hari dalam seminggu
             if ($dayOfWeek == 0) { // Minggu - produksi lebih rendah (70-90% dari normal)
-                $baseProduction = (int)($baseProduction * (rand(70, 90) / 100));
+                $baseProduction *= (rand(70, 90) / 100);
             } elseif ($dayOfWeek == 6) { // Sabtu - produksi sedang (80-95% dari normal)
-                $baseProduction = (int)($baseProduction * (rand(80, 95) / 100));
+                $baseProduction *= (rand(80, 95) / 100);
             }
 
             // Variasi cuaca acak (simulasi hari hujan, cerah, dll)
@@ -69,16 +82,16 @@ class HasilProduksiSeeder extends Seeder
             foreach ($bloks as $blok) {
                 // Variasi produksi per blok berdasarkan karakteristik blok
                 $blokFactor = rand(90, 110) / 100; // 0.9 - 1.1
-                $productionVariance = rand(-1500, 1500); // Variasi ±1.5 kg
+                $productionVariance = rand(-5000, 5000); // Variasi ±5 kg
                 
-                $realisasiProduksi = (int)(($baseProduction * $blokFactor) + $productionVariance);
+                $realisasiProduksi = (int)(($baseProduction * $blokFactor / $jumlahBlok) + $productionVariance);
                 
-                // Pastikan tidak keluar dari range 10.000 - 20.000 kg
-                $realisasiProduksi = max(10000, min(20000, $realisasiProduksi));
+                // Pastikan produksi tidak negatif
+                $realisasiProduksi = max(0, $realisasiProduksi);
                 
                 // Rencana produksi biasanya sedikit berbeda dari realisasi
-                $planVariance = rand(-1000, 1000); // Variasi ±1 kg
-                $rencanaProduksi = max(10000, min(20000, $realisasiProduksi + $planVariance));
+                $planVariance = rand(-3000, 3000); // Variasi ±3 kg
+                $rencanaProduksi = max(0, $realisasiProduksi + $planVariance);
 
                 $data[] = [
                     'blok_id' => $blok->id,
@@ -144,7 +157,7 @@ class HasilProduksiSeeder extends Seeder
                 ['total_hasil_produksi' => $totalProduksi]
             );
 
-            $this->command->info("Dataset sistem diperbarui untuk {$currentDate->format('F Y')}");
+            $this->command->info("Dataset sistem diperbarui untuk {$currentDate->format('F Y')}: {$totalProduksi} kg");
             
             $currentDate->addMonth();
         }
