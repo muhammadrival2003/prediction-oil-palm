@@ -21,16 +21,28 @@ class DatasetSistemResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
+    // Tambahkan array untuk mapping bulan
+    protected static array $bulanIndo = [
+        1 => 'Januari',
+        2 => 'Februari',
+        3 => 'Maret',
+        4 => 'April',
+        5 => 'Mei',
+        6 => 'Juni',
+        7 => 'Juli',
+        8 => 'Agustus',
+        9 => 'September',
+        10 => 'Oktober',
+        11 => 'November',
+        12 => 'Desember'
+    ];
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('bulan')
-                    ->options(function() {
-                        return collect(range(1, 12))->mapWithKeys(function($month) {
-                            return [$month => \DateTime::createFromFormat('!m', $month)->format('F')];
-                        });
-                    })
+                    ->options(self::$bulanIndo) // Gunakan array bulan Indo
                     ->required()
                     ->native(false),
                     
@@ -64,12 +76,27 @@ class DatasetSistemResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('periode'),
+                Tables\Columns\TextColumn::make('periode')
+                    ->formatStateUsing(function ($state) {
+                        // Asumsi $state dalam format "Bulan Tahun" (contoh: "January 2023")
+                        $parts = explode(' ', $state);
+                        if (count($parts) === 2) {
+                            $monthName = $parts[0];
+                            $year = $parts[1];
+                            
+                            // Cari bulan yang cocok dalam array
+                            foreach (self::$bulanIndo as $num => $bulan) {
+                                if (\DateTime::createFromFormat('!m', $num)->format('F') === $monthName) {
+                                    return $bulan . ' ' . $year;
+                                }
+                            }
+                        }
+                        return $state;
+                    }),
                     
                 Tables\Columns\TextColumn::make('total_curah_hujan')
                     ->label('Total Curah Hujan (mm)')
                     ->numeric(decimalPlaces: 2),
-                    // ->suffix(' mm'),
                     
                 Tables\Columns\TextColumn::make('total_pemupukan')
                     ->label('Total Pemupukan (kg)')
@@ -78,24 +105,7 @@ class DatasetSistemResource extends Resource
                 Tables\Columns\TextColumn::make('total_hasil_produksi')
                     ->label('Total Hasil Produksi (kg)')
                     ->numeric(decimalPlaces: 0),
-
             ])
-            // ->filters([
-            //     Tables\Filters\SelectFilter::make('bulan')
-            //         ->options(function() {
-            //             return collect(range(1, 12))->mapWithKeys(function($month) {
-            //                 return [$month => \DateTime::createFromFormat('!m', $month)->format('F')];
-            //             });
-            //         }),
-                    
-            //     Tables\Filters\Filter::make('tahun')
-            //         ->form([Forms\Components\TextInput::make('tahun')->numeric()])
-            //         ->query(function (Builder $query, array $data) {
-            //             if ($data['tahun']) {
-            //                 $query->where('tahun', $data['tahun']);
-            //             }
-            //         })
-            // ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

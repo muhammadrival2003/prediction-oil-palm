@@ -110,8 +110,7 @@ class CurahHujanResource extends Resource
                     }),
             ])
             ->headerActions([
-                ImportAction::make()
-                    ->importer(CurahHujanImporter::class)
+                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

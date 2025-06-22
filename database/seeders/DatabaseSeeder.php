@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
             BloksTableSeeder::class,
             ProduksiSeeder::class,
             HasilProduksiSeeder::class,
-            CurahHujanSeeder::class,
+            // CurahHujanSeeder::class,
             PemupukanSeeder::class,
             KaryawanLapanganSeeder::class,
             // Seeder lainnya...

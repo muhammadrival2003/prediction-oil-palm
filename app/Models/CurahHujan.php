@@ -19,9 +19,24 @@ class CurahHujan extends Model
         'tanggal' => 'date',
     ];
 
-    public function blok() 
+    public function blok()
     {
         return $this->belongsTo(Blok::class);
+    }
+
+    protected static function booted()
+    {
+        static::created(function ($curahHujan) {
+            self::updateDatasetSistem($curahHujan->tanggal);
+        });
+
+        static::updated(function ($curahHujan) {
+            self::updateDatasetSistem($curahHujan->tanggal);
+        });
+
+        static::deleted(function ($curahHujan) {
+            self::updateDatasetSistem($curahHujan->tanggal);
+        });
     }
 
     protected static function updateDatasetSistem($tanggal)
