@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('curah_hujans', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('tanggal');
+            $table->date('tanggal');
             $table->decimal('curah_hujan');
             $table->softDeletes();
             $table->timestamps();

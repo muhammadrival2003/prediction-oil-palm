@@ -39,9 +39,9 @@ class CurahHujanSeeder extends Seeder
 
     protected function updateAllDatasetSistem()
     {
-        $startDate = Carbon::now()->subMonths(23)->startOfMonth();
+        $startDate = Carbon::now()->subMonths(36)->startOfMonth();
 
-        for ($i = 0; $i < 24; $i++) {
+        for ($i = 0; $i < 36; $i++) {
             $currentDate = $startDate->copy()->addMonths($i);
             $month = $currentDate->month;
             $year = $currentDate->year;
