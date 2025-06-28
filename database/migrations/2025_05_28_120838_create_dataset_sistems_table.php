@@ -13,15 +13,14 @@ return new class extends Migration
     {
         Schema::create('dataset_sistems', function (Blueprint $table) {
             $table->id();
-            $table->unsignedTinyInteger('month'); // 1-12 untuk Jan-Dec
-            $table->unsignedSmallInteger('year'); // format 4 digit tahun
+            $table->date('tanggal');
             $table->decimal('total_curah_hujan', 11, 2)->nullable();
             $table->decimal('total_pemupukan', 11, 2)->nullable();
             $table->decimal('total_hasil_produksi', 11, 2)->nullable();
             $table->timestamps();
             
             // Optional: tambahkan index untuk bulan dan tahun jika sering di-query
-            $table->index(['month', 'year']);
+            // $table->index(['month', 'year']);
         });
     }
 

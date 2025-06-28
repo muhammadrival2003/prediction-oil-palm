@@ -19,6 +19,9 @@ class PredictionService
 
     public function addHistoricalData(array $data)
     {
+        // Konversi month dan year ke tanggal (pertama bulan)
+        $tanggal = Carbon::create($data['year'], $data['month'], 1);
+
         $response = Http::post("{$this->apiBaseUrl}/add_monthly_data", [
             'month' => $data['month'],
             'year' => $data['year'],
@@ -45,11 +48,10 @@ class PredictionService
     public function predictByMonthAndYear(int $month, int $year)
     {
         // 1. Ambil data historis 24 bulan terakhir (2x lipat dari TIMESTEPS)
-        $historicalData = DatasetSistem::orderBy('year', 'desc')
-            ->orderBy('month', 'desc')
+        $historicalData = DatasetSistem::orderBy('tanggal', 'desc')
             ->take(12)
             ->get()
-            ->sortBy(fn($item) => $item->year * 100 + $item->month)
+            ->sortBy('tanggal')
             ->values();
 
         if ($historicalData->count() < 12) {
@@ -58,7 +60,7 @@ class PredictionService
 
         // 2. Hitung selisih bulan antara data terakhir dan target prediksi
         $lastData = $historicalData->last();
-        $lastDate = Carbon::create($lastData->year, $lastData->month, 1);
+        $lastDate = Carbon::parse($lastData->tanggal);
         $targetDate = Carbon::create($year, $month, 1);
 
         if ($targetDate->lte($lastDate)) {
@@ -66,18 +68,18 @@ class PredictionService
         }
 
         $monthsDiff = $lastDate->diffInMonths($targetDate);
-        // dd($monthsDiff);
 
         // 3. Lakukan prediksi beruntun hingga mencapai bulan target
         $tempData = $historicalData->toArray();
         $allPredictions = [];
         $prediction = null;
 
-        for ($i = 1; $i <= $monthsDiff; $i++) {
+        for ($i = 0; $i <= $monthsDiff; $i++) {
             $historicalForApi = array_map(function ($item) {
+                $tanggal = Carbon::parse($item['tanggal']);
                 return [
-                    'month' => (int)$item['month'],
-                    'year' => (int)$item['year'],
+                    'month' => (int)$tanggal->format('m'),
+                    'year' => (int)$tanggal->format('Y'),
                     'curah_hujan' => (float)$item['total_curah_hujan'],
                     'pemupukan' => (float)$item['total_pemupukan'],
                     'hasil_produksi' => (float)($item['total_hasil_produksi'] ?? $item['prediction'] ?? 0)
@@ -104,7 +106,7 @@ class PredictionService
                 ],
                 [
                     'prediction' => $prediction['prediction'],
-                    'input_data' => $historicalForApi, // Simpan historical data ke input_data
+                    'input_data' => $historicalForApi,
                     'confidence_score' => $prediction['confidence_score'] ?? null,
                     'deleted_at' => null
                 ]
@@ -112,8 +114,7 @@ class PredictionService
 
             // Tambahkan prediksi ke array untuk iterasi berikutnya
             $tempData[] = [
-                'month' => $prediction['month'],
-                'year' => $prediction['year'],
+                'tanggal' => $currentPredictionDate->format('Y-m-d'),
                 'total_curah_hujan' => $this->calculateAverage(array_slice($tempData, -3), 'total_curah_hujan'),
                 'total_pemupukan' => $this->calculateAverage(array_slice($tempData, -3), 'total_pemupukan'),
                 'total_hasil_produksi' => $prediction['prediction'],
@@ -133,7 +134,6 @@ class PredictionService
     private function calculateAverage(array $data, string $field): float
     {
         $values = collect($data)->pluck($field)->map(function ($value) {
-            // Pastikan nilai yang diolah adalah numerik
             if (is_array($value)) {
                 return 0.0;
             }

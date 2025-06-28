@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Exports\DatasetSistemExporter;
+use App\Filament\Imports\DatasetSistemImporter;
 use App\Filament\Resources\DatasetSistemResource\Pages;
 use App\Filament\Resources\DatasetSistemResource\RelationManagers;
 use App\Models\DatasetSistem;
@@ -10,6 +12,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Tables\Actions\ExportAction;
+use Filament\Tables\Actions\ImportAction;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -45,25 +49,25 @@ class DatasetSistemResource extends Resource
                     ->options(self::$bulanIndo) // Gunakan array bulan Indo
                     ->required()
                     ->native(false),
-                    
+
                 Forms\Components\TextInput::make('tahun')
                     ->numeric()
                     ->required()
                     ->minValue(2000)
                     ->maxValue(2100),
-                    
+
                 Forms\Components\TextInput::make('total_curah_hujan')
                     ->numeric()
                     ->required()
                     ->step(0.01)
                     ->suffix('mm'),
-                    
+
                 Forms\Components\TextInput::make('total_pemupukan')
                     ->numeric()
                     ->required()
                     ->step(0.01)
                     ->suffix('kg/ha'),
-                    
+
                 Forms\Components\TextInput::make('total_hasil_produksi')
                     ->numeric()
                     ->required()
@@ -75,36 +79,58 @@ class DatasetSistemResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('tanggal', 'asc') // Urutkan tahun descending secara default
             ->columns([
-                Tables\Columns\TextColumn::make('periode')
-                    ->formatStateUsing(function ($state) {
-                        // Asumsi $state dalam format "Bulan Tahun" (contoh: "January 2023")
-                        $parts = explode(' ', $state);
-                        if (count($parts) === 2) {
-                            $monthName = $parts[0];
-                            $year = $parts[1];
-                            
-                            // Cari bulan yang cocok dalam array
-                            foreach (self::$bulanIndo as $num => $bulan) {
-                                if (\DateTime::createFromFormat('!m', $num)->format('F') === $monthName) {
-                                    return $bulan . ' ' . $year;
-                                }
-                            }
-                        }
-                        return $state;
-                    }),
-                    
+                Tables\Columns\TextColumn::make('tanggal')
+                    ->date(),
+
                 Tables\Columns\TextColumn::make('total_curah_hujan')
                     ->label('Total Curah Hujan (mm)')
                     ->numeric(decimalPlaces: 2),
-                    
+
                 Tables\Columns\TextColumn::make('total_pemupukan')
                     ->label('Total Pemupukan (kg)')
                     ->numeric(decimalPlaces: 2),
-                    
+
                 Tables\Columns\TextColumn::make('total_hasil_produksi')
                     ->label('Total Hasil Produksi (kg)')
                     ->numeric(decimalPlaces: 0),
+            ])
+            // ->filters([
+            //     // Filter Periode (Bulan dan Tahun)
+            //     Tables\Filters\Filter::make('periode')
+            //         ->form([
+            //             Forms\Components\Select::make('month')
+            //                 ->options(self::$bulanIndo)
+            //                 ->label('Bulan'),
+
+            //             Forms\Components\Select::make('year')
+            //                 ->options(function () {
+            //                     return DatasetSistem::query()
+            //                         ->select('year')
+            //                         ->distinct()
+            //                         ->orderBy('year', 'desc')
+            //                         ->pluck('year', 'year');
+            //                 })
+            //                 ->label('Tahun'),
+            //         ])
+            //         ->query(function (Builder $query, array $data): Builder {
+            //             return $query
+            //                 ->when(
+            //                     $data['month'],
+            //                     fn(Builder $query, $month): Builder => $query->where('month', $month),
+            //                 )
+            //                 ->when(
+            //                     $data['year'],
+            //                     fn(Builder $query, $year): Builder => $query->where('year', $year),
+            //                 );
+            //         })
+            // ])
+            ->headerActions([
+                ImportAction::make()
+                    ->importer(DatasetSistemImporter::class),
+                ExportAction::make()
+                    ->exporter(DatasetSistemExporter::class)
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
