@@ -38,18 +38,30 @@ class HasilProduksi extends Model
         });
     }
 
+    // Models/HasilProduksi.php
     protected static function updateDatasetSistem($tanggal)
     {
         $month = date('n', strtotime($tanggal));
         $year = date('Y', strtotime($tanggal));
 
-        $totalProduksi = HasilProduksi::whereMonth('tanggal', $month)
+        $totalProduksi = self::whereMonth('tanggal', $month)
             ->whereYear('tanggal', $year)
             ->sum('realisasi_produksi');
 
-        DatasetSistem::updateOrCreate(
-            ['month' => $month, 'year' => $year],
-            ['total_hasil_produksi' => $totalProduksi]
-        );
+        // Cari record dengan bulan dan tahun yang sama
+        $existingRecord = DatasetSistem::whereMonth('tanggal', $month)
+            ->whereYear('tanggal', $year)
+            ->first();
+
+        if ($existingRecord) {
+            // Update record yang sudah ada
+            $existingRecord->update(['total_hasil_produksi' => $totalProduksi]);
+        } else {
+            // Buat record baru dengan tanggal pertama bulan tersebut
+            DatasetSistem::create([
+                'tanggal' => date('Y-m-01', strtotime($tanggal)),
+                'total_hasil_produksi' => $totalProduksi
+            ]);
+        }
     }
 }

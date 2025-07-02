@@ -101,8 +101,7 @@ class Dashboard extends Page
             ->values();
 
         // Get actual production data from DatasetSistem
-        $actualProductions = DatasetSistem::orderBy('year', 'desc')
-            ->orderBy('month', 'desc')
+        $actualProductions = DatasetSistem::orderBy('tanggal', 'desc')
             ->take(12)
             ->get()
             ->sortBy(fn($item) => $item->year * 100 + $item->month)

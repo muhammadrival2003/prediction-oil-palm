@@ -1,0 +1,6 @@
+projectKey=testing_prediction_oil_palm
+serverUrl=http://localhost:9001
+serverVersion=25.6.0.109173
+dashboardUrl=http://localhost:9001/dashboard?id=testing_prediction_oil_palm
+ceTaskId=49886e82-f683-4a2e-87ef-60cfec25646e
+ceTaskUrl=http://localhost:9001/api/ce/task?id=49886e82-f683-4a2e-87ef-60cfec25646e

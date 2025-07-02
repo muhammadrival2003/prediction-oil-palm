@@ -1,18 +1,16 @@
 <x-filament::page>
-    <!-- Section Metrics dengan Desain Modern -->
     <div class="space-y-8">
-
-        <!-- Form Section with Modern Design -->
-        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <!-- Prediction Form Card -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden transition-all duration-300 hover:shadow-md">
             <div class="p-6 md:p-8">
                 <div class="flex items-center justify-between mb-6">
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Prediksi Produksi</h2>
+                        <h2 class="text-2xl font-bold text-gray-800 dark:text-white tracking-tight">Production Prediction</h2>
                         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                            Masukkan parameter untuk memprediksi hasil produksi
+                            Enter parameters to predict production output
                         </p>
                     </div>
-                    <div class="hidden md:block p-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/30">
+                    <div class="hidden md:flex items-center justify-center p-3 rounded-xl bg-emerald-50/50 dark:bg-emerald-900/20 backdrop-blur-sm">
                         <x-heroicon-o-sparkles class="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
                     </div>
                 </div>
@@ -21,22 +19,22 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Month Select -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Bulan
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Month
                                 <span class="text-red-500">*</span>
                             </label>
                             <div class="relative">
                                 <select wire:model="selected_month" required
-                                    class="w-full pl-4 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 appearance-none">
+                                    class="w-full pl-4 pr-10 py-3 text-sm border-gray-200 dark:border-gray-700 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 appearance-none transition-all duration-200">
                                     @foreach([
                                     1 => 'Januari',
                                     2 => 'Februari',
                                     3 => 'Maret',
                                     4 => 'April',
-                                    5 => 'Mei',
+                                    5 => 'Mai',
                                     6 => 'Juni',
                                     7 => 'Juli',
-                                    8 => 'Agustus',
+                                    8 => 'Augustus',
                                     9 => 'September',
                                     10 => 'Oktober',
                                     11 => 'November',
@@ -45,18 +43,21 @@
                                     <option value="{{ $value }}">{{ $label }}</option>
                                     @endforeach
                                 </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
+                                    <x-heroicon-o-chevron-down class="w-4 h-4" />
+                                </div>
                             </div>
                         </div>
 
                         <!-- Year Select -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Tahun
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Year
                                 <span class="text-red-500">*</span>
                             </label>
                             <div class="relative">
                                 <select wire:model="selected_year" required
-                                    class="w-full pl-4 pr-10 py-3 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 appearance-none">
+                                    class="w-full pl-4 pr-10 py-3 text-sm border-gray-200 dark:border-gray-700 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 appearance-none transition-all duration-200">
                                     @php
                                     $currentYear = date('Y');
                                     for ($i = 0; $i < 5; $i++) {
@@ -65,14 +66,17 @@
                                         }
                                         @endphp
                                 </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
+                                    <x-heroicon-o-chevron-down class="w-4 h-4" />
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
+                    <div class="pt-6 border-t border-gray-100 dark:border-gray-700">
                         <button type="submit"
-                            class="w-full md:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 shadow-md transition-all duration-200">
-                            <x-heroicon-o-sparkles class="w-5 h-5 mr-2" />
+                            class="w-full md:w-auto inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 shadow-sm hover:shadow-md transition-all duration-200">
+                            <x-heroicon-o-sparkles class="w-5 h-5 mr-2 -ml-1" />
                             Generate Prediction
                         </button>
                     </div>
@@ -80,102 +84,169 @@
             </div>
         </div>
 
-        <!-- Hasil Prediksi dengan Desain Modern -->
+        <!-- Prediction Results -->
         @if(isset($monthPrediction))
-        <div class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 rounded-xl shadow-lg overflow-hidden">
-            <div class="p-6">
-                <div class="flex items-center justify-between">
+        <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700 transition-all duration-300 hover:shadow-md">
+            <div class="p-6 md:p-8">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
-                        <p class="text-sm font-medium text-green-600 dark:text-green-300">Prediksi Hasil Produksi</p>
-                        <h2 class="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
+                        <p class="text-xs font-semibold tracking-wider text-emerald-600 dark:text-emerald-400 uppercase">Production Forecast</p>
+                        <h2 class="mt-1 text-2xl font-bold text-gray-800 dark:text-white">
                             {{ $this->getMonthName($monthPrediction['month']) }} {{ $monthPrediction['year'] }}
                         </h2>
                     </div>
-                    <div class="p-3 bg-green-100 dark:bg-green-900/50 rounded-lg">
-                        <!-- Icon or additional info -->
-                    </div>
-                </div>
-                <div class="mt-6">
-                    <p class="text-4xl font-bold text-gray-900 dark:text-white">
-                        {{ number_format($monthPrediction['prediction'], 0, ',', '.') }}
-                        <span class="text-lg text-gray-500 dark:text-gray-400">kg</span>
-                    </p>
-                    <div class="mt-4 flex items-center">
-                        <span class="px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                            {{ number_format($monthPrediction['confidence_score'], 2) ?? 'N/A' }}% Confidence
-                        </span>
-                        <span class="ml-3 text-sm text-gray-500 dark:text-gray-400">
-                            Last updated: {{ now()->format('d M Y H:i') }}
+
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-2 px-3 py-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
+                            <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                            <span class="text-xs font-medium text-emerald-700 dark:text-emerald-300">Live Prediction</span>
+                        </div>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">
+                            Updated: {{ now()->format('M d, Y H:i') }}
                         </span>
                     </div>
                 </div>
-            </div>
-        </div>
-        <!-- Tabel Data Historis 12 Bulan -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-            <div class="p-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                    Data Historis 12 Bulan Terakhir yang digunakan
-                </h3>
 
-                @php
-                // Ambil data historis 12 bulan terakhir
-                $historicalData = $this->getHistoricalData(
-                $monthPrediction['month'] ?? now()->month,
-                $monthPrediction['year'] ?? now()->year
-                );
-                @endphp
+                <!-- Prediction Metrics -->
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Main Prediction -->
+                    <div class="bg-white dark:bg-gray-700 p-5 rounded-xl border border-gray-100 dark:border-gray-600 shadow-xs">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Predicted Production</h3>
+                            <x-heroicon-o-scale class="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                        </div>
+                        <div class="mt-4">
+                            <p class="text-3xl font-bold text-gray-800 dark:text-white">
+                                {{ number_format($monthPrediction['prediction'] / 100, 0, ',', '.') }}
+                                <span class="text-lg font-medium text-gray-500 dark:text-gray-400">tons</span>
+                            </p>
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                {{ number_format($monthPrediction['prediction'], 0, ',', '.') }} kg
+                            </p>
+                        </div>
+                    </div>
 
-                @if($historicalData->count() > 0)
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead class="bg-gray-50 dark:bg-gray-700">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Bulan/Tahun
-                                </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Curah Hujan (mm)
-                                </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Pemupukan (kg)
-                                </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Produksi (Kg)
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                            @foreach($historicalData as $data)
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                                    {{ $this->getMonthName($data->month) }} {{ $data->year }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                    {{ number_format($data->total_curah_hujan) }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                    {{ number_format($data->total_pemupukan) }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                    {{ number_format($data->total_hasil_produksi, 0, ',', '.') }}
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                    <!-- Confidence Score -->
+                    <div class="bg-white dark:bg-gray-700 p-5 rounded-xl border border-gray-100 dark:border-gray-600 shadow-xs">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Confidence Level</h3>
+                            <x-heroicon-o-shield-check class="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-end gap-2">
+                                <p class="text-3xl font-bold text-gray-800 dark:text-white">
+                                    {{ number_format($monthPrediction['confidence_score'], 1) }}<span class="text-xl">%</span>
+                                </p>
+                                @if($monthPrediction['confidence_score'] > 80)
+                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                                    High
+                                </span>
+                                @elseif($monthPrediction['confidence_score'] > 60)
+                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                                    Medium
+                                </span>
+                                @else
+                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                                    Low
+                                </span>
+                                @endif
+                            </div>
+                            <div class="mt-3 w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                <div class="bg-emerald-500 h-2 rounded-full"
+                                    style="width: {{ $monthPrediction['confidence_score'] }}%"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                @else
-                <div class="text-center py-8 text-gray-500 dark:text-gray-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <p class="mt-2">Tidak ada data historis tersedia</p>
+
+                <!-- Historical Data Table -->
+                <div class="mt-8">
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+                        Historika Data (12 Bulan Terakhir)
+                    </h3>
+
+                    @php
+                    $historicalData = $this->getHistoricalData(
+                    $monthPrediction['month'] ?? now()->month,
+                    $monthPrediction['year'] ?? now()->year
+                    );
+                    @endphp
+
+                    @if($historicalData->count() > 0)
+                    <div class="overflow-hidden rounded-lg border border-gray-100 dark:border-gray-700 shadow-xs">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-700">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            Bulan/Tahun
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            Curah Hujan (mm)
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            Pemupukan (kg)
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            Hasil Produksi (kg)
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                            Diff. to Predicted
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    @foreach($historicalData as $data)
+                                    @php
+                                    $productionDiff = $monthPrediction['prediction'] - $data->total_hasil_produksi;
+                                    $productionDiffPercent = $data->total_hasil_produksi > 0 ? ($productionDiff / $data->total_hasil_produksi) * 100 : 0;
+                                    @endphp
+                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-white">
+                                            {{ $this->getMonthName($data->month) }} {{ $data->year }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                            {{ number_format($data->total_curah_hujan) }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                            {{ number_format($data->total_pemupukan) }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                            {{ number_format($data->total_hasil_produksi, 0, ',', '.') }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                            @if($productionDiff > 0)
+                                            <span class="inline-flex items-center text-green-600 dark:text-green-400">
+                                                <x-heroicon-o-arrow-trending-up class="w-4 h-4 mr-1" />
+                                                +{{ number_format($productionDiff / 100, 0, ',', '.') }}t
+                                            </span>
+                                            @elseif($productionDiff < 0)
+                                                <span class="inline-flex items-center text-red-600 dark:text-red-400">
+                                                <x-heroicon-o-arrow-trending-down class="w-4 h-4 mr-1" />
+                                                {{ number_format($productionDiff / 100, 0, ',', '.') }}t
+                                                </span>
+                                                @else
+                                                <span class="text-gray-500 dark:text-gray-400">-</span>
+                                                @endif
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    @else
+                    <div class="text-center py-12 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                        <div class="mx-auto w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center mb-4">
+                            <x-heroicon-o-document-magnifying-glass class="w-8 h-8 text-gray-400 dark:text-gray-500" />
+                        </div>
+                        <h4 class="text-lg font-medium text-gray-700 dark:text-gray-300">No historical data available</h4>
+                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">We couldn't find any historical production data</p>
+                    </div>
+                    @endif
                 </div>
-                @endif
             </div>
         </div>
         @endif
-
     </div>
 </x-filament::page>
