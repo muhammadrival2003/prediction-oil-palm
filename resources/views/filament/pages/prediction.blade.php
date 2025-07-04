@@ -104,6 +104,10 @@
                         <span class="text-xs text-gray-500 dark:text-gray-400">
                             Updated: {{ now()->format('M d, Y H:i') }}
                         </span>
+                        <a href="{{ route('filament.admin.pages.model-lstm', ['model_performance' => $this->model_performance]) }}"
+                            class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-emerald-200 dark:border-emerald-800 rounded-lg text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors duration-300 shadow-sm">
+                            Evaluasi Model
+                        </a>
                     </div>
                 </div>
 

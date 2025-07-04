@@ -47,7 +47,7 @@ class PredictionService
 
     public function predictByMonthAndYear(int $month, int $year)
     {
-        // 1. Ambil data historis 24 bulan terakhir (2x lipat dari TIMESTEPS)
+        // 1. Ambil data historis 12 bulan terakhir
         $historicalData = DatasetSistem::orderBy('tanggal', 'desc')
             ->take(12)
             ->get()
@@ -73,6 +73,7 @@ class PredictionService
         $tempData = $historicalData->toArray();
         $allPredictions = [];
         $prediction = null;
+        $modelPerformance = null;
 
         for ($i = 0; $i <= $monthsDiff; $i++) {
             $historicalForApi = array_map(function ($item) {
@@ -90,7 +91,21 @@ class PredictionService
                 'historical_data' => $historicalForApi
             ]);
 
-            $prediction = $response->json();
+            $predictionData = $response->json();
+
+            // Simpan model performance dari response pertama saja
+            if ($i === 0 && isset($predictionData['model_performance'])) {
+                $modelPerformance = $predictionData['model_performance'];
+            }
+
+            $prediction = [
+                'month' => $predictionData['month'],
+                'year' => $predictionData['year'],
+                'prediction' => $predictionData['prediction'],
+                'confidence_score' => $predictionData['confidence_score'] ?? null,
+                'unit' => $predictionData['unit'] ?? 'ton',
+                'last_actual_value' => $predictionData['last_actual_value'] ?? null
+            ];
 
             // Hentikan jika sudah melebihi bulan target
             $currentPredictionDate = Carbon::create($prediction['year'], $prediction['month'], 1);
@@ -127,7 +142,8 @@ class PredictionService
         return [
             'target_prediction' => $prediction,
             'intermediate_predictions' => $allPredictions,
-            'historical_data_used' => array_slice($tempData, 0, -$monthsDiff)
+            'historical_data_used' => array_slice($tempData, 0, -$monthsDiff),
+            'model_performance' => $modelPerformance
         ];
     }
 

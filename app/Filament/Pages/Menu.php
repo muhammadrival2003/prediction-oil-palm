@@ -23,14 +23,4 @@ class Menu extends Page
     {
         $this->afdeling_id = request('afdeling_id');
     }
-
-    // public function getHeaderActions(): array
-    // {
-    //     return [
-    //         Action::make('kembali')
-    //             ->label('Kembali')
-    //             ->color('gray')
-    //             ->url(route('filament.admin.pages.afdeling'))
-    //     ];
-    // }
 }

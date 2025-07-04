@@ -46,6 +46,7 @@ class Prediction extends Page implements HasForms
     public $monthPrediction;
     public $selected_month;
     public $selected_year;
+    public $model_performance;
 
     protected function getFormSchema(): array
     {
@@ -110,6 +111,7 @@ class Prediction extends Page implements HasForms
             $this->monthPrediction = $result['target_prediction'];
             $this->intermediatePredictions = $result['intermediate_predictions'] ?? [];
             $this->usedHistoricalData = $result['historical_data_used'] ?? [];
+            $this->model_performance = $result['model_performance'] ?? [];
 
             // Pastikan monthPrediction memiliki prediction
             $predictionValue = $this->monthPrediction['prediction'] ?? '0';
