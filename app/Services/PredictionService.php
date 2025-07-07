@@ -49,12 +49,12 @@ class PredictionService
     {
         // 1. Ambil data historis 12 bulan terakhir
         $historicalData = DatasetSistem::orderBy('tanggal', 'desc')
-            ->take(12)
+            ->take(6)
             ->get()
             ->sortBy('tanggal')
             ->values();
 
-        if ($historicalData->count() < 12) {
+        if ($historicalData->count() < 6) {
             throw new \Exception('Butuh data historis minimal 12 bulan terakhir.');
         }
 

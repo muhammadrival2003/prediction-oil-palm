@@ -24,7 +24,7 @@ class Prediction extends Page implements HasForms
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
     protected static string $view = 'filament.pages.prediction';
     protected static ?string $navigationLabel = 'Prediksi Produksi';
-    protected static ?string $title = 'Prediksi';
+    protected static ?string $title = '';
 
     protected static ?string $navigationGroup = 'Prediksi';
 
@@ -47,6 +47,7 @@ class Prediction extends Page implements HasForms
     public $selected_month;
     public $selected_year;
     public $model_performance;
+    public $totalData;
 
     protected function getFormSchema(): array
     {
@@ -103,7 +104,6 @@ class Prediction extends Page implements HasForms
                 $this->selected_year
             );
 
-            // Pastikan result memiliki target_prediction
             if (!isset($result['target_prediction'])) {
                 throw new \Exception('Tidak mendapatkan hasil prediksi dari server.');
             }
@@ -113,14 +113,37 @@ class Prediction extends Page implements HasForms
             $this->usedHistoricalData = $result['historical_data_used'] ?? [];
             $this->model_performance = $result['model_performance'] ?? [];
 
-            // Pastikan monthPrediction memiliki prediction
             $predictionValue = $this->monthPrediction['prediction'] ?? '0';
             $monthName = $this->getMonthName($this->selected_month);
+            $message = "Hasil prediksi {$monthName} {$this->selected_year}: {$predictionValue} kg";
 
+            // Membuat dan mengirim notifikasi database
+            $notification = Notification::make()
+                ->title('Prediksi Berhasil')
+                ->body($message)
+                ->success()
+                ->actions([
+                    Action::make('view_prediction')
+                        ->label('Lihat Detail')
+                        ->url(route('filament.admin.resources.predictions.index'))
+                        ->markAsRead(),
+                ])
+                ->toDatabase();
+
+            // Mengirim ke user yang terautentikasi
+            auth()->user()->notify($notification);
+
+            // Juga tampilkan notifikasi real-time
             Notification::make()
                 ->title('Prediksi Berhasil')
-                ->body("Hasil prediksi {$monthName} {$this->selected_year}: {$predictionValue} kg")
+                ->body($message)
                 ->success()
+                ->actions([
+                    Action::make('view_prediction')
+                        ->label('Lihat Detail')
+                        ->url(route('filament.admin.resources.predictions.index'))
+                        ->markAsRead(),
+                ])
                 ->send();
         } catch (\Exception $e) {
             Notification::make()
@@ -135,6 +158,7 @@ class Prediction extends Page implements HasForms
     {
         $this->evaluationMetrics = $predictionService->evaluateModel();
         $this->historicalData = $this->getHistoricalData();
+        $this->totalData = DatasetSistem::count();
 
         $this->selected_month = date('n');
         $this->selected_year = date('Y');
@@ -163,7 +187,7 @@ class Prediction extends Page implements HasForms
     public function getHistoricalData()
     {
         return DatasetSistem::orderBy('tanggal', 'desc')
-            ->take(12)
+            ->take(6)
             ->get()
             ->sortBy('tanggal')
             ->values();

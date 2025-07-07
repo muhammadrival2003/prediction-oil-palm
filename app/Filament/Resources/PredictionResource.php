@@ -15,8 +15,9 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\Action;
+use Filament\Notifications\Actions\Action;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -109,7 +110,49 @@ class PredictionResource extends Resource
             ])
             ->actions([
                 ViewAction::make('view'),
-                DeleteAction::make('delete'),
+                DeleteAction::make('delete')
+                    ->before(function (DeleteAction $action, Prediction $record) {
+                        // Simpan data yang akan dihapus untuk notifikasi
+                        $monthName = [
+                            1 => 'Januari',
+                            2 => 'Februari',
+                            3 => 'Maret',
+                            4 => 'April',
+                            5 => 'Mei',
+                            6 => 'Juni',
+                            7 => 'Juli',
+                            8 => 'Agustus',
+                            9 => 'September',
+                            10 => 'Oktober',
+                            11 => 'November',
+                            12 => 'Desember'
+                        ][$record->month] ?? 'Unknown';
+
+                        $predictionValue = number_format($record->prediction, 0, ',', '.');
+                        $message = "Prediksi {$monthName} {$record->year} ({$predictionValue} kg) telah dihapus";
+
+                        // Buat notifikasi database
+                        $notification = Notification::make()
+                            ->title('Prediksi Dihapus')
+                            ->body($message)
+                            ->danger()
+                            ->actions([
+                                Action::make('undo')
+                                    ->label('Batalkan')
+                                    ->color('gray'),
+                            ])
+                            ->toDatabase();
+
+                        // Kirim notifikasi ke user
+                        auth()->user()->notify($notification);
+                    })
+                    ->successNotification(
+                        Notification::make()
+                            ->success()
+                            ->title('Berhasil')
+                            ->body('Data Prediksi Berhasil dihapus.'),
+                    ) // Nonaktifkan notifikasi default
+                ,
             ])
             ->paginated(false);;
     }

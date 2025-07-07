@@ -3,9 +3,9 @@
         <!-- Header Section -->
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-                <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Model Performance Evaluation</h2>
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Evaluasi Performa Model</h2>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                    LSTM Model Metrics and Training Information
+                    Infromasi performa model LSTM yang telah dilatih dan diuji.
                 </p>
             </div>
 
@@ -14,7 +14,7 @@
                 <div class="flex items-center gap-2 px-3 py-2 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                     <x-heroicon-o-clock class="w-5 h-5 text-gray-500 dark:text-gray-400" />
                     <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Last Trained: {{ \Carbon\Carbon::parse($this->modelPerformance['last_training_date'])->format('M d, Y H:i') }}
+                        Terakhir Latih Model: {{ \Carbon\Carbon::parse($this->modelPerformance['last_training_date'])->format('M d, Y H:i') }}
                     </span>
                 </div>
                 <a href="{{ route('filament.admin.pages.prediction') }}"
@@ -25,7 +25,7 @@
                     Kembali
                 </a>
                 @endif
-            </div>
+            </div> 
         </div>
 
         <!-- Main Metrics Grid -->
@@ -182,7 +182,7 @@
         <!-- Performance Analysis Section -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div class="p-6">
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Performance Analysis</h3>
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Analisa Performa Model</h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <!-- Overfitting Check -->
@@ -191,7 +191,7 @@
                             <div class="p-2 rounded-lg bg-amber-50 dark:bg-amber-900/20">
                                 <x-heroicon-o-exclamation-triangle class="w-5 h-5 text-amber-600 dark:text-amber-400" />
                             </div>
-                            <h4 class="font-medium text-gray-800 dark:text-white">Overfitting Check</h4>
+                            <h4 class="font-medium text-gray-800 dark:text-white">Overfitting</h4>
                         </div>
                         @php
                         $trainRmse = $this->modelPerformance['training_metrics']['RMSE'] ?? 0;
@@ -231,7 +231,7 @@
                             <div class="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/20">
                                 <x-heroicon-o-star class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                             </div>
-                            <h4 class="font-medium text-gray-800 dark:text-white">Model Quality</h4>
+                            <h4 class="font-medium text-gray-800 dark:text-white">Kualitas Model</h4>
                         </div>
                         @php
                         $r2Score = $this->modelPerformance['testing_metrics']['R2'] ?? 0;
@@ -274,7 +274,7 @@
                             <div class="p-2 rounded-lg bg-rose-50 dark:bg-rose-900/20">
                                 <x-heroicon-o-magnifying-glass class="w-5 h-5 text-rose-600 dark:text-rose-400" />
                             </div>
-                            <h4 class="font-medium text-gray-800 dark:text-white">Error Analysis</h4>
+                            <h4 class="font-medium text-gray-800 dark:text-white">Error</h4>
                         </div>
                         @php
                         $mae = $this->modelPerformance['testing_metrics']['MAE'] ?? 0;
@@ -311,96 +311,6 @@
             </div>
         </div>
 
-        <!-- Recommendations Section -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
-            <div class="p-6">
-                <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Recommendations</h3>
-
-                <div class="space-y-3">
-                    @php
-                    $recommendations = [];
-
-                    // Overfitting recommendations
-                    if ($overfittingRatio > 1.2) {
-                    $recommendations[] = [
-                    'icon' => 'heroicon-o-shield-exclamation',
-                    'color' => 'text-purple-600 dark:text-purple-400',
-                    'title' => 'Reduce Overfitting',
-                    'actions' => [
-                    'Add dropout layers',
-                    'Increase L1/L2 regularization',
-                    'Use early stopping',
-                    'Collect more training data'
-                    ]
-                    ];
-                    }
-
-                    // Low R2 recommendations
-                    if ($r2Score < 0.6) {
-                        $recommendations[]=[ 'icon'=> 'heroicon-o-light-bulb',
-                        'color' => 'text-blue-600 dark:text-blue-400',
-                        'title' => 'Improve Model Accuracy',
-                        'actions' => [
-                        'Add more relevant features',
-                        'Try different model architectures',
-                        'Perform feature engineering',
-                        'Check for data quality issues'
-                        ]
-                        ];
-                        }
-
-                        // High error recommendations
-                        if ($relativeError >= 15) {
-                        $recommendations[] = [
-                        'icon' => 'heroicon-o-adjustments-horizontal',
-                        'color' => 'text-amber-600 dark:text-amber-400',
-                        'title' => 'Reduce Prediction Error',
-                        'actions' => [
-                        'Adjust model hyperparameters',
-                        'Use ensemble methods',
-                        'Investigate outliers',
-                        'Try different scaling/normalization'
-                        ]
-                        ];
-                        }
-
-                        // Default recommendation if no specific issues
-                        if (empty($recommendations)) {
-                        $recommendations[] = [
-                        'icon' => 'heroicon-o-check-circle',
-                        'color' => 'text-green-600 dark:text-green-400',
-                        'title' => 'Model Performing Well',
-                        'actions' => [
-                        'Continue monitoring performance',
-                        'Retrain periodically with new data',
-                        'Consider adding more features',
-                        'Experiment with different architectures'
-                        ]
-                        ];
-                        }
-                        @endphp
-
-                        @foreach($recommendations as $recommendation)
-                        <div class="p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-                            <div class="flex items-center gap-3 mb-3">
-                                <div class="p-2 rounded-lg bg-opacity-20 {{ str_replace('text', 'bg', $recommendation['color']) }}">
-                                    <x-dynamic-component :component="$recommendation['icon']" class="w-5 h-5 {{ $recommendation['color'] }}" />
-                                </div>
-                                <h4 class="font-medium text-gray-800 dark:text-white">{{ $recommendation['title'] }}</h4>
-                            </div>
-
-                            <ul class="space-y-2 pl-2">
-                                @foreach($recommendation['actions'] as $action)
-                                <li class="flex items-start gap-2">
-                                    <x-heroicon-o-arrow-right class="w-4 h-4 mt-0.5 text-gray-400 dark:text-gray-500 flex-shrink-0" />
-                                    <span class="text-sm text-gray-600 dark:text-gray-300">{{ $action }}</span>
-                                </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                        @endforeach
-                </div>
-            </div>
-        </div>
+        
     </div>
 </x-filament::page>

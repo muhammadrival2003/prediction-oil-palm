@@ -7,8 +7,14 @@
                     <div>
                         <h2 class="text-2xl font-bold text-gray-800 dark:text-white tracking-tight">Production Prediction</h2>
                         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                            Enter parameters to predict production output
+                            <!-- Enter parameters to predict production output -->
                         </p>
+                        <div>
+                            <p class="text-sm text-primary-600 dark:text-primary-300 mt-1">
+                                Total {{ $totalData }} data historis untuk prediksi.
+                                6 bulan terakhir yang digunakan
+                            </p>
+                        </div>
                     </div>
                     <div class="hidden md:flex items-center justify-center p-3 rounded-xl bg-emerald-50/50 dark:bg-emerald-900/20 backdrop-blur-sm">
                         <x-heroicon-o-sparkles class="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
@@ -101,9 +107,6 @@
                             <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
                             <span class="text-xs font-medium text-emerald-700 dark:text-emerald-300">Live Prediction</span>
                         </div>
-                        <span class="text-xs text-gray-500 dark:text-gray-400">
-                            Updated: {{ now()->format('M d, Y H:i') }}
-                        </span>
                         <a href="{{ route('filament.admin.pages.model-lstm', ['model_performance' => $this->model_performance]) }}"
                             class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-emerald-200 dark:border-emerald-800 rounded-lg text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors duration-300 shadow-sm">
                             Evaluasi Model
@@ -166,7 +169,7 @@
                 <!-- Historical Data Table -->
                 <div class="mt-8">
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
-                        Historika Data (12 Bulan Terakhir)
+                        Historikal Data (6 Bulan Terakhir)
                     </h3>
 
                     @php
@@ -194,9 +197,6 @@
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                             Hasil Produksi (kg)
                                         </th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                            Diff. to Predicted
-                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -217,21 +217,6 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                                             {{ number_format($data->total_hasil_produksi, 0, ',', '.') }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                            @if($productionDiff > 0)
-                                            <span class="inline-flex items-center text-green-600 dark:text-green-400">
-                                                <x-heroicon-o-arrow-trending-up class="w-4 h-4 mr-1" />
-                                                +{{ number_format($productionDiff / 100, 0, ',', '.') }}t
-                                            </span>
-                                            @elseif($productionDiff < 0)
-                                                <span class="inline-flex items-center text-red-600 dark:text-red-400">
-                                                <x-heroicon-o-arrow-trending-down class="w-4 h-4 mr-1" />
-                                                {{ number_format($productionDiff / 100, 0, ',', '.') }}t
-                                                </span>
-                                                @else
-                                                <span class="text-gray-500 dark:text-gray-400">-</span>
-                                                @endif
                                         </td>
                                     </tr>
                                     @endforeach
