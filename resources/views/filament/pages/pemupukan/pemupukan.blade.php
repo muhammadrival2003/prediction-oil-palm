@@ -50,9 +50,9 @@
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="bg-gradient-to-br from-white to-emerald-50 dark:from-gray-800 dark:to-emerald-900/20 rounded-xl shadow-sm p-6 border-l-4 border-blue-500">
-                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Pemupukan</p>
+                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Jumlah Pokok</p>
                 <p class="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">
-                    {{ $pemupukans->count() }} Kali
+                    {{ $this->blok->jumlah_pokok }} Pokok
                 </p>
             </div>
             <div class="bg-gradient-to-br from-white to-emerald-50 dark:from-gray-800 dark:to-emerald-900/20 rounded-xl shadow-sm p-6 border-l-4 border-emerald-500">
@@ -75,19 +75,19 @@
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Tanggal
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Jumlah Pokok
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Jenis Pupuk
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Dosis
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Volume (Kg)
                             </th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                            <th scope="col" class="px-6 py-3 text-center text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Aksi
                             </th>
                         </tr>
@@ -99,7 +99,7 @@
                                 {{ \Carbon\Carbon::parse($pemupukan->tanggal)->format('d M Y') }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                {{ $pemupukan->blok->jumlah_pokok }}
+                                {{ $pemupukan->jenisPupuk->nama }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                                 {{ ucfirst($pemupukan->dosis) }}
@@ -108,7 +108,7 @@
                                 {{ ucfirst($pemupukan->volume) }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex space-x-2 justify-end">
+                                <div class="flex space-x-2 justify-center">
                                     <x-filament::button
                                         wire:click="edit({{ $pemupukan->id }})"
                                         wire:loading.attr="disabled"

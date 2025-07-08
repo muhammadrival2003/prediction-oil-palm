@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
 use App\Models\Blok;
+use App\Models\DatasetSistem;
+use App\Models\JenisPupuk;
 use App\Models\Pemupukan;
 use Illuminate\Http\Request;
 
@@ -22,42 +24,65 @@ class PemupukanController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'blok_id' => 'required|exists:bloks,id',
-            'tanggal' => 'required|date',
-            'dosis' => 'required|numeric|min:0',
-            'volume' => 'required|numeric|min:0'
-        ]);
+        try {
+            $validated = $request->validate([
+                'blok_id' => 'required|exists:bloks,id',
+                'jenis_pupuk_id' => 'required|exists:jenis_pupuks,id',
+                'tanggal' => 'required|date',
+                'dosis' => 'required|numeric|min:0',
+                'volume' => 'required|numeric|min:0'
+            ]);
 
-        $pemupukan = Pemupukan::create($validated);
+            $pemupukan = Pemupukan::create($validated);
 
-        $this->logActivity(
-            auth()->id(),
-            $pemupukan->blok_id,
-            'updated',
-            'Memperbarui data pemupukan',
-            ['weight' => $validated['volume']]
-        );
+            $this->logActivity(
+                auth()->id(),
+                $pemupukan->blok_id,
+                'created',
+                'Menambahkan data pemupukan baru',
+                ['weight' => $validated['volume']]
+            );
 
-        // Update dataset sistem
-        $this->updateDatasetSistem($pemupukan->tanggal);
+            $this->updateDatasetSistem($pemupukan->tanggal);
 
-        return redirect()->back()->with('success', 'Data pemupukan berhasil disimpan');
+            return redirect()->back()
+                ->with('success', 'Data pemupukan berhasil disimpan!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->with('error', 'Terjadi kesalahan validasi!')
+                ->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Gagal menyimpan data: ' . $e->getMessage())
+                ->withInput();
+        }
     }
 
-    protected function updateDatasetSistem($tanggal)
+    protected static function updateDatasetSistem($tanggal)
     {
         $month = date('n', strtotime($tanggal));
         $year = date('Y', strtotime($tanggal));
 
-        $totalVolume = Pemupukan::whereMonth('tanggal', $month)
+        $totalProduksi = Pemupukan::whereMonth('tanggal', $month)
             ->whereYear('tanggal', $year)
             ->sum('volume');
 
-        \App\Models\DatasetSistem::updateOrCreate(
-            ['month' => $month, 'year' => $year],
-            ['total_pemupukan' => $totalVolume]
-        );
+        // Cari record dengan bulan dan tahun yang sama
+        $existingRecord = DatasetSistem::whereMonth('tanggal', $month)
+            ->whereYear('tanggal', $year)
+            ->first();
+
+        if ($existingRecord) {
+            // Update record yang sudah ada
+            $existingRecord->update(['total_pemupukan' => $totalProduksi]);
+        } else {
+            // Buat record baru dengan tanggal pertama bulan tersebut
+            DatasetSistem::create([
+                'tanggal' => date('Y-m-01', strtotime($tanggal)),
+                'total_pemupukan' => $totalProduksi
+            ]);
+        }
     }
 
     // Method baru untuk log aktivitas

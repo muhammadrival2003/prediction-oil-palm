@@ -12,6 +12,7 @@ class Pemupukan extends Model
 
     protected $fillable = [
         'blok_id',
+        'jenis_pupuk_id',
         'tanggal',
         'dosis',
         'volume'
@@ -20,6 +21,11 @@ class Pemupukan extends Model
     public function blok()
     {
         return $this->belongsTo(Blok::class);
+    }
+
+    public function jenisPupuk()
+    {
+        return $this->belongsTo(JenisPupuk::class, 'jenis_pupuk_id');
     }
 
     protected static function booted()
@@ -42,13 +48,24 @@ class Pemupukan extends Model
         $month = date('n', strtotime($tanggal));
         $year = date('Y', strtotime($tanggal));
 
-        $totalVolume = Pemupukan::whereMonth('tanggal', $month)
+        $totalProduksi = Pemupukan::whereMonth('tanggal', $month)
             ->whereYear('tanggal', $year)
             ->sum('volume');
 
-        DatasetSistem::updateOrCreate(
-            ['month' => $month, 'year' => $year],
-            ['total_pemupukan' => $totalVolume]
-        );
+        // Cari record dengan bulan dan tahun yang sama
+        $existingRecord = DatasetSistem::whereMonth('tanggal', $month)
+            ->whereYear('tanggal', $year)
+            ->first();
+
+        if ($existingRecord) {
+            // Update record yang sudah ada
+            $existingRecord->update(['total_pemupukan' => $totalProduksi]);
+        } else {
+            // Buat record baru dengan tanggal pertama bulan tersebut
+            DatasetSistem::create([
+                'tanggal' => date('Y-m-01', strtotime($tanggal)),
+                'total_pemupukan' => $totalProduksi
+            ]);
+        }
     }
 }

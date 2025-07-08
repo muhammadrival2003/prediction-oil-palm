@@ -4,9 +4,9 @@
         <div class="bg-gradient-to-r from-emerald-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 shadow-sm border border-gray-200/50 dark:border-gray-700/50">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Daftar Blok Produksi</h1>
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Daftar Blok</h1>
                     <p class="text-sm text-emerald-600 dark:text-emerald-400 mt-1">
-                        Kelola hasil produksi untuk setiap blok
+                        Pilih Blok untuk mengelola Hasil Produksi
                     </p>
                 </div>
                 <div>

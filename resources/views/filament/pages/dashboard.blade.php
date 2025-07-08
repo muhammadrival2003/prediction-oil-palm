@@ -398,7 +398,7 @@
                         <p class="mt-2">Tidak ada aktivitas terbaru</p>
                     </div>
                     @else
-                    <div class="relative h-96 overflow-y-auto pr-2" x-data="{ expanded: false }">
+                    <div class="relative h-96 overflow-y-auto">
                         <div class="space-y-4">
                             @foreach($recentActivities as $activity)
                             <div class="flex items-start p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg transition-colors duration-200">

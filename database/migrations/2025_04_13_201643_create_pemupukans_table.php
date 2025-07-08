@@ -14,13 +14,16 @@ return new class extends Migration
         Schema::create('pemupukans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('blok_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('jenis_pupuk_id')->constrained('jenis_pupuks')->onDelete('cascade');
             $table->dateTime('tanggal');
-            $table->decimal('rencana_dosis');
-            $table->decimal('rencana_volume');
+            $table->decimal('rencana_dosis')->nullable();
+            $table->decimal('rencana_volume')->nullable();
             $table->decimal('dosis');
             $table->decimal('volume');
             $table->softDeletes();
             $table->timestamps();
+
+            
         });
     }
 

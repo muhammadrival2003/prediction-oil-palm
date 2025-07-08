@@ -10,15 +10,10 @@
 
         <div>
             <label for="tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
-            <div class="relative">
-                <input id="tanggal" name="tanggal" type="date"
-                    class="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                    value="{{ old('tanggal', date('Y-m-d')) }}"
-                    required>
-                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                    <i class="fas fa-calendar text-gray-400"></i>
-                </div>
-            </div>
+            <input id="tanggal" name="tanggal" type="date"
+                class="w-full py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                value="{{ old('tanggal', date('Y-m-d')) }}"
+                required>
         </div>
 
         <div>

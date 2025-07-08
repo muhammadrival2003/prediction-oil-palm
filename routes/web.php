@@ -28,7 +28,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/activities', [ActivityController::class, 'index'])->name('activity.index');
     Route::get('/api/activities', [ActivityController::class, 'getActivities'])->name('activity.get');
     Route::post('/hasil-produksi', [HasilProduksiController::class, 'store'])->name('hasil-produksi.store');
-Route::post('/pemupukan', [PemupukanController::class, 'store'])->name('pemupukan.store');
+    Route::post('/pemupukan', [PemupukanController::class, 'store'])->name('pemupukan.store');
 });
 
 require __DIR__ . '/auth.php';

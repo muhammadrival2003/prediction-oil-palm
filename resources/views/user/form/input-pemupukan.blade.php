@@ -10,15 +10,10 @@
 
         <div>
             <label for="tanggal_pemupukan" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Pemupukan</label>
-            <div class="relative">
-                <input id="tanggal_pemupukan" name="tanggal" type="date"
-                    class="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                    value="{{ old('tanggal', date('Y-m-d')) }}"
-                    required>
-                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                    <i class="fas fa-calendar text-gray-400"></i>
-                </div>
-            </div>
+            <input id="tanggal_pemupukan" name="tanggal" type="date"
+                class="w-full py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                value="{{ old('tanggal', date('Y-m-d')) }}"
+                required>
         </div>
 
         <div>
@@ -30,6 +25,20 @@
                 @foreach($bloks as $blok)
                 <option value="{{ $blok->id }}" {{ old('blok_id') == $blok->id ? 'selected' : '' }}>
                     {{ $blok->nama_blok }}
+                </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div>
+            <label for="jenis_pupuk" class="block text-sm font-medium text-gray-700 mb-1">Jenis Pupuk</label>
+            <select id="jenis_pupuk" name="jenis_pupuk_id"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                required>
+                <option value="">Pilih Jenis Pupuk</option>
+                @foreach($jenisPupuks as $jenisPupuk)
+                <option value="{{ $jenisPupuk->id }}" {{ old('jenis_pupuk_id') == $jenisPupuk->id ? 'selected' : '' }}>
+                    {{ $jenisPupuk->nama }}
                 </option>
                 @endforeach
             </select>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ActivityLog;
 use App\Models\Blok;
+use App\Models\JenisPupuk;
 use App\Models\KaryawanLapangan;
 use App\Models\Produksi;
 use App\Models\TahunTanam;
@@ -20,7 +21,8 @@ class UserController extends Controller
             'totalProduksi' => Produksi::sum('production'),
             'bloks' => Blok::all(),
             'recentActivities' => $this->getRecentActivities(),
-            'karyawanLapangans' => $this->getKaryawanLapangans(1)
+            'karyawanLapangans' => $this->getKaryawanLapangans(1),
+            'jenisPupuks' => JenisPupuk::all()
         ];
 
         return view('user.beranda')->with($data);
