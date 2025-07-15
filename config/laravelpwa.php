@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'name' => 'LaravelPWA',
+    'name' => 'Prediction Oil Palm',
     'manifest' => [
-        'name' => env('APP_NAME', 'My PWA App'),
-        'short_name' => 'PWA',
+        'name' => env('APP_NAME', 'Prediciton Oil Palm'),
+        'short_name' => 'Prediction Oil Palm',
         'start_url' => '/',
         'background_color' => '#ffffff',
         'theme_color' => '#000000',

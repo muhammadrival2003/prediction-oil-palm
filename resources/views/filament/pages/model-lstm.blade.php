@@ -259,7 +259,7 @@
                         }
                         @endphp
                         <p class="text-sm {{ $color }} font-medium mb-2 flex items-center gap-1">
-                            <x-dynamic-component :component="$icon" class="w-4 h-4" />
+                            
                             {{ $status }}
                         </p>
                         <p class="text-xs text-gray-500 dark:text-gray-400">{{ $description }}</p>

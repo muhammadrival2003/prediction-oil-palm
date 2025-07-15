@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class DatasetSistemResource extends Resource
 {
     protected static ?string $model = DatasetSistem::class;
-    protected static ?string $navigationIcon = 'heroicon-o-cloud';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'Prediksi';
 
     protected static ?int $navigationSort = 1;

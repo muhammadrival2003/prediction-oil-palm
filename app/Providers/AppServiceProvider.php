@@ -6,6 +6,7 @@ use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Container\Attributes\Config;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Notifications\DatabaseNotification;
 
@@ -22,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
+    public function boot(\Illuminate\Http\Request $request): void
     {
         FilamentColor::register([
             'danger' => Color::Red,
@@ -34,13 +35,16 @@ class AppServiceProvider extends ServiceProvider
             'emerald' => Color::Emerald,
         ]);
 
-        FilamentIcon::register([
-            'panels::topbar.global-search.field' => 'fas-magnifying-glass',
-            // 'panels::sidebar.group.collapse-button' => view('icons.chevron-up')
-        ]);
+        if (!empty( env('NGROK_URL') ) && $request->server->has('HTTP_X_ORIGINAL_HOST')) {
+            $this->app['url']->forceRootUrl(env('NGROK_URL'));
+        }
         config([
             'excel.exports.sheets.orientation' => 'landscape',
         ]);
+
+        if (env('APP_ENV') !== 'production') {
+            URL::forceRootUrl(env('APP_URL'));
+        }
 
         // // Fix untuk query JSON di PostgreSQL
         // DatabaseNotification::addGlobalScope('postgres-fix', function ($builder) {

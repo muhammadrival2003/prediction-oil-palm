@@ -14,6 +14,9 @@ class UserController extends Controller
 {
     public function beranda()
     {
+        // Dapatkan afdeling_id dari user yang login
+        $afdeling_id = auth()->user()->afdeling_id;
+
         $data = [
             'totalTahunTanam' => TahunTanam::count('tahun_tanam'),
             'totalBlok' => Blok::count('nama_blok'),
@@ -21,8 +24,9 @@ class UserController extends Controller
             'totalProduksi' => Produksi::sum('production'),
             'bloks' => Blok::all(),
             'recentActivities' => $this->getRecentActivities(),
-            'karyawanLapangans' => $this->getKaryawanLapangans(1),
-            'jenisPupuks' => JenisPupuk::all()
+            'karyawanLapangans' => $this->getKaryawanLapangans($afdeling_id),
+            'jenisPupuks' => JenisPupuk::all(),
+            'afdeling_id' => $afdeling_id
         ];
 
         return view('user.beranda')->with($data);
@@ -51,7 +55,6 @@ class UserController extends Controller
 
     private function getKaryawanLapangans($afdeling_id = null)
     {
-        // Query dasar untuk karyawan lapangan (exclude posisi non-lapangan jika diperlukan)
         $query = KaryawanLapangan::whereIn('jabatan', [
             'MDR Panen',
             'MDR Pemeliharaan',
@@ -59,18 +62,17 @@ class UserController extends Controller
             'Mandor'
         ])->with('afdeling');
 
-        // Filter berdasarkan afdeling_id jika diberikan
+        // Filter berdasarkan afdeling_id jika tersedia
         if ($afdeling_id) {
             $query->where('afdeling_id', $afdeling_id);
         }
 
-        // Ambil data dan format sesuai kebutuhan
         return $query->get()->map(function ($karyawan) {
             return [
                 'id' => $karyawan->id,
                 'nama' => $karyawan->nama,
                 'jabatan' => $karyawan->jabatan,
-                'afdeling' => $karyawan->afdeling->nama, // asumsi model Afdeling memiliki kolom 'nama'
+                'afdeling' => $karyawan->afdeling->nama,
                 'lokasi_kerja' => $karyawan->lokasi_kerja,
                 'lama_kerja' => $karyawan->tanggal_masuk->diffForHumans(),
             ];

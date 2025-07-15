@@ -20,7 +20,7 @@ class CurahHujanResource extends Resource
 {
     protected static ?string $model = CurahHujan::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-cloud';
 
     protected static ?string $navigationGroup = 'Prediksi';
 

@@ -24,12 +24,6 @@
                             <p class="mt-1 text-3xl font-bold text-gray-900 dark:text-white">
                                 {{ number_format($totalBlok, 0) }}
                             </p>
-                            <div class="mt-2 flex items-center text-sm text-emerald-600 dark:text-emerald-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                                </svg>
-                                <span>+2.5% dari bulan lalu</span>
-                            </div>
                         </div>
                         <div class="p-3 rounded-full bg-emerald-100 dark:bg-emerald-800/50 text-emerald-600 dark:text-emerald-300">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -55,12 +49,6 @@
                             <p class="mt-1 text-3xl font-bold text-gray-900 dark:text-white">
                                 {{ number_format($totalProduksi, 0, ',', '.') }} <span class="text-xl">kg</span>
                             </p>
-                            <div class="mt-2 flex items-center text-sm text-emerald-600 dark:text-emerald-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                                </svg>
-                                <span>+15% dari bulan lalu</span>
-                            </div>
                         </div>
                         <div class="p-3 rounded-full bg-emerald-100 dark:bg-emerald-800/50 text-emerald-600 dark:text-emerald-300">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -86,11 +74,6 @@
                             <p class="mt-1 text-3xl font-bold text-gray-900 dark:text-white">
                                 {{ number_format($totalLuasLahan, 2, ',', '.') }} <span class="text-xl">ha</span>
                             </p>
-                            <div class="mt-2">
-                                <p class="text-sm font-medium text-emerald-600 dark:text-emerald-400">
-                                    Produktivitas: {{ number_format($produksiPerBlok, 2) }} kg/ha
-                                </p>
-                            </div>
                         </div>
                         <div class="p-3 rounded-full bg-emerald-100 dark:bg-emerald-800/50 text-emerald-600 dark:text-emerald-300">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">

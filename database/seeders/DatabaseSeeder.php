@@ -18,15 +18,7 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@gmail.com',
-        ]);
-        User::factory()->create([
-            'name' => 'user',
-            'email' => 'user@gmail.com',
-            'role' => 'user',
-        ]);
+        
 
         $this->call([
             AfdelingTableSeeder::class,
@@ -44,5 +36,16 @@ class DatabaseSeeder extends Seeder
         // TahunTanam::factory(10)->create();
         // Blok::factory(10)->create();
         // ManyGawanganManual::factory(35)->create();
+
+        User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
+        ]);
+        User::factory()->create([
+            'name' => 'Supriyatno',
+            'email' => 'yatno@gmail.com',
+            'role' => 'user',
+            'afdeling_id' => 5,
+        ]);
     }
 }

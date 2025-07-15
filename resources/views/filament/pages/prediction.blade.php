@@ -12,7 +12,7 @@
                         <div>
                             <p class="text-sm text-primary-600 dark:text-primary-300 mt-1">
                                 Total {{ $totalData }} data historis untuk prediksi.
-                                6 bulan terakhir yang digunakan
+                                12 bulan terakhir yang digunakan
                             </p>
                         </div>
                     </div>
@@ -26,7 +26,7 @@
                         <!-- Month Select -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Month
+                                Bulan
                                 <span class="text-red-500">*</span>
                             </label>
                             <div class="relative">
@@ -58,7 +58,7 @@
                         <!-- Year Select -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Year
+                                Tahun
                                 <span class="text-red-500">*</span>
                             </label>
                             <div class="relative">
@@ -66,7 +66,7 @@
                                     class="w-full pl-4 pr-10 py-3 text-sm border-gray-200 dark:border-gray-700 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 appearance-none transition-all duration-200">
                                     @php
                                     $currentYear = date('Y');
-                                    for ($i = 0; $i < 5; $i++) {
+                                    for ($i = 0; $i < 10; $i++) {
                                         $year=$currentYear + $i;
                                         echo "<option value=\" $year\">$year</option>";
                                         }

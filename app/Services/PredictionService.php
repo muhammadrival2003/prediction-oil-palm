@@ -49,7 +49,7 @@ class PredictionService
     {
         // 1. Ambil data historis 12 bulan terakhir
         $historicalData = DatasetSistem::orderBy('tanggal', 'desc')
-            ->take(6)
+            ->take(12)
             ->get()
             ->sortBy('tanggal')
             ->values();

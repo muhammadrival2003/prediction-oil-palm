@@ -23,4 +23,9 @@ class Afdeling extends Model
     {
         return $this->hasMany(KaryawanLapangan::class, 'afdeling_id');
     }
+    
+    public function users()
+    {
+        return $this->hasMany(User::class, 'afdeling_id');
+    }
 }

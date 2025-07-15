@@ -24,6 +24,7 @@ class User extends Authenticatable implements FilamentUser
         'email',
         'password',
         'role',
+        'afdeling_id',
     ];
 
     /**
@@ -60,5 +61,10 @@ class User extends Authenticatable implements FilamentUser
     public function activitylogs()
     {
         return $this->hasMany(ActivityLog::class);
+    }
+
+    public function afdeling()
+    {
+        return $this->belongsTo(Afdeling::class, 'afdeling_id');
     }
 }

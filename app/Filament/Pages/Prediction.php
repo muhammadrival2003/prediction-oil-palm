@@ -186,7 +186,7 @@ class Prediction extends Page implements HasForms
 
     public function getHistoricalData()
     {
-        return DatasetSistem::orderBy('tanggal', 'desc')
+        return DatasetSistem::orderBy('tanggal', 'asc')
             ->take(6)
             ->get()
             ->sortBy('tanggal')

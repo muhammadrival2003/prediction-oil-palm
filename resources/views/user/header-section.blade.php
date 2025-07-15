@@ -2,7 +2,7 @@
     <div>
         <h1 class="text-3xl font-bold text-gray-800">PTPN IV Regional 6 KSO</h1>
         <h2 class="text-xl text-gray-600">Selamat Datang, <span class="font-semibold text-indigo-600">{{ Auth::user()->name }}</span></h2>
-        <p class="text-gray-500">Afdeling V</p>
+        <p class="text-gray-500">Kebun Lama - Afdeling {{ $afdeling_id }}</p>
     </div>
     <div class="flex items-center space-x-2">
         <span class="relative flex h-3 w-3">
