@@ -93,7 +93,7 @@
                         @class([
                             'h-6 w-6',
                             'text-gray-400 dark:text-gray-500' => ! $active,
-                            'text-emerald-600 dark:text-emerald-400' => $active,
+                            '' => $active,
                         ])
                     />
                 </button>

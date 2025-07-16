@@ -1,3 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Import modern sidebar styles */
+@import './modern-sidebar.css';

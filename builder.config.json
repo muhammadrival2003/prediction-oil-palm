@@ -1,0 +1,6 @@
+{
+  "command": "npm run dev",
+  "serverUrl": "https://b4f49ffe7861.ngrok-free.app/",
+  "authenticateProxy": false,
+  "commitMode": "commits"
+}

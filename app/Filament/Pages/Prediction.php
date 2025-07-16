@@ -91,12 +91,17 @@ class Prediction extends Page implements HasForms
 
     public $intermediatePredictions = [];
 
-    public function predictCustom(PredictionService $predictionService)
+    protected function getValidationRules(): array
     {
-        $this->validate([
-            'selected_month' => 'required|numeric|between:1,12',
-            'selected_year' => 'required|numeric|min:' . date('Y')
-        ]);
+        return [
+            'selected_month' => ['required', 'numeric', 'between:1,12'],
+            'selected_year' => ['required', 'numeric', 'min:' . date('Y')]
+        ];
+    }
+
+    public function predictCustom(PredictionService $predictionService): void
+    {
+        $this->validate($this->getValidationRules());
 
         try {
             $result = $predictionService->predictByMonthAndYear(
@@ -154,7 +159,7 @@ class Prediction extends Page implements HasForms
         }
     }
 
-    public function mount(PredictionService $predictionService)
+    public function mount(PredictionService $predictionService): void
     {
         $this->evaluationMetrics = $predictionService->evaluateModel();
         $this->historicalData = $this->getHistoricalData();
@@ -164,7 +169,7 @@ class Prediction extends Page implements HasForms
         $this->selected_year = date('Y');
     }
 
-    public function getMonthName($month)
+    public function getMonthName($month): string
     {
         $months = [
             1 => 'Januari',
@@ -184,7 +189,7 @@ class Prediction extends Page implements HasForms
         return $months[$month] ?? 'Unknown';
     }
 
-    public function getHistoricalData()
+    public function getHistoricalData(): \Illuminate\Database\Eloquent\Collection
     {
         return DatasetSistem::orderBy('tanggal', 'asc')
             ->take(6)

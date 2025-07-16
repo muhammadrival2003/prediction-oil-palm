@@ -43,6 +43,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Emerald,
             ])
+            ->darkMode()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -77,7 +78,7 @@ class AdminPanelProvider extends PanelProvider
                         background: #FFFFFF !important; /* Ganti dengan warna yang Anda inginkan */
                     }
                     .dark .fi-sidebar {
-                        background: #18181B !important;
+                        background: #101827 !important;
                     }
                 </style>'
             )

@@ -1,12 +1,107 @@
 @import '../../../../vendor/filament/filament/resources/css/theme.css';
+@import '../../modern-sidebar.css';
 
-@config 'tailwind.config.js';
+@config '../../../../tailwind.config.js';
 
-/* .fi-simple-layout{
-    @apply bg-cyan-50;
+/* Enhanced Filament Admin Theme */
+
+/* Modern sidebar enhancements */
+:root {
+    --sidebar-width: 280px;
 }
 
-.fi-simple-main{
+/* Custom scrollbar utilities for Tailwind */
+@layer utilities {
+    .scrollbar-thin {
+        scrollbar-width: thin;
+    }
+    
+    .scrollbar-track-transparent {
+        scrollbar-color: transparent transparent;
+    }
+    
+    .scrollbar-thumb-gray-300 {
+        scrollbar-color: rgb(209 213 219) transparent;
+    }
+    
+    .dark .scrollbar-thumb-gray-600 {
+        scrollbar-color: rgb(75 85 99) transparent;
+    }
+    
+    .hover\:scrollbar-thumb-gray-400:hover {
+        scrollbar-color: rgb(156 163 175) transparent;
+    }
+    
+    .dark .hover\:scrollbar-thumb-gray-500:hover {
+        scrollbar-color: rgb(107 114 128) transparent;
+    }
+}
+
+/* Enhanced layout styling */
+.fi-simple-layout {
+    @apply bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900;
+}
+
+.fi-simple-main {
     @apply w-full;
-} */
+}
+
+/* Modern panel styling */
+.fi-panel {
+    @apply backdrop-blur-sm bg-white/80 dark:bg-gray-900/80 border border-gray-200/60 dark:border-gray-700/60;
+}
+
+/* Enhanced form styling */
+.fi-form {
+    @apply space-y-6;
+}
+
+.fi-form .fi-section {
+    @apply bg-gradient-to-r from-white via-gray-50/30 to-white dark:from-gray-900 dark:via-gray-800/30 dark:to-gray-900 rounded-xl border border-gray-200/60 dark:border-gray-700/60 shadow-sm;
+}
+
+/* Modern button enhancements */
+.fi-btn {
+    @apply transition-all duration-200 ease-in-out;
+}
+
+.fi-btn:hover {
+    @apply scale-105 shadow-lg;
+}
+
+/* Enhanced table styling */
+.fi-table {
+    @apply bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-xl border border-gray-200/60 dark:border-gray-700/60;
+}
+
+/* Modern notification styling */
+.fi-notification {
+    @apply backdrop-blur-xl bg-white/90 dark:bg-gray-900/90 border border-gray-200/60 dark:border-gray-700/60 shadow-2xl;
+}
+
+/* Dark mode navigation items */
+.dark .fi-sidebar-item-button {
+    @apply text-gray-200;
+}
+
+.dark .fi-sidebar-item-button:hover {
+    @apply bg-gradient-to-r from-emerald-900/20 to-emerald-800/20;
+}
+
+.dark .fi-sidebar-item-button.fi-active {
+    @apply bg-gradient-to-r from-emerald-900/30 to-emerald-800/20;
+}
+
+/* Force dark mode styles */
+html.dark .fi-sidebar-item-button {
+    color: rgb(229 231 235) !important;
+}
+
+html.dark .fi-sidebar-item-button:hover {
+    background: linear-gradient(to right, rgba(6, 78, 59, 0.2), rgba(6, 95, 70, 0.2)) !important;
+}
+
+html.dark .fi-sidebar-item-button[class*="fi-active"] {
+    background: linear-gradient(to right, rgba(6, 78, 59, 0.3), rgba(6, 95, 70, 0.2)) !important;
+}
 

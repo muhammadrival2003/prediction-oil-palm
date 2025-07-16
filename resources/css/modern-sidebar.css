@@ -1,0 +1,227 @@
+/* Modern Sidebar Enhancements */
+
+/* Custom scrollbar for webkit browsers */
+.fi-sidebar-nav::-webkit-scrollbar {
+    width: 6px;
+}
+
+.fi-sidebar-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.fi-sidebar-nav::-webkit-scrollbar-thumb {
+    background: rgba(156, 163, 175, 0.5);
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+}
+
+.fi-sidebar-nav::-webkit-scrollbar-thumb:hover {
+    background: rgba(156, 163, 175, 0.8);
+}
+
+.dark .fi-sidebar-nav::-webkit-scrollbar-thumb {
+    background: rgba(75, 85, 99, 0.6);
+}
+
+.dark .fi-sidebar-nav::-webkit-scrollbar-thumb:hover {
+    background: rgba(75, 85, 99, 0.9);
+}
+
+/* Enhanced backdrop blur for better glass effect */
+.fi-sidebar {
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+/* Smooth transitions for sidebar items */
+.fi-sidebar-item-button {
+    transform-origin: center;
+    will-change: transform, background-color, box-shadow;
+}
+
+.fi-sidebar-item-button:hover {
+    transform: translateX(2px) scale(1.02);
+}
+
+.fi-sidebar-item-button.fi-active {
+    transform: translateX(4px) scale(1.02);
+}
+
+/* Enhanced group button styling */
+.fi-sidebar-group-button {
+    position: relative;
+    overflow: hidden;
+}
+
+.fi-sidebar-group-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.fi-sidebar-group-button:hover::before {
+    left: 100%;
+}
+
+/* Remove outline from active navigation elements */
+.fi-sidebar-item-button:focus,
+.fi-sidebar-item-button.fi-active:focus,
+.fi-sidebar-group-button:focus,
+nav a:focus,
+.nav-link:focus,
+.responsive-nav-link:focus,
+.dropdown-link:focus,
+button:focus {
+    outline: none !important;
+}
+
+/* Modern focus states */
+.fi-sidebar-item-button:focus-visible,
+.fi-sidebar-group-button:focus-visible {
+    ring: 2px;
+    ring-color: rgba(16, 185, 129, 0.3);
+    ring-offset: 2px;
+    ring-offset-color: white;
+}
+
+.dark .fi-sidebar-item-button:focus-visible,
+.dark .fi-sidebar-group-button:focus-visible {
+    ring-offset-color: rgb(17, 24, 39);
+}
+
+/* Enhanced navigation header */
+.fi-sidebar-header {
+    position: relative;
+    overflow: hidden;
+}
+
+.fi-sidebar-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.3), transparent);
+}
+
+/* Responsive enhancements */
+@media (max-width: 1024px) {
+    .fi-sidebar {
+        backdrop-filter: blur(24px) saturate(200%);
+        -webkit-backdrop-filter: blur(24px) saturate(200%);
+    }
+}
+
+/* Animation for mobile menu */
+@media (max-width: 640px) {
+    .responsive-nav-menu {
+        animation: slideDown 0.3s ease-out;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
+
+/* Enhanced badge styling */
+.fi-sidebar .fi-badge {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Improved icon animations */
+.fi-sidebar-item-icon,
+.fi-sidebar-group-icon {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced dropdown styling */
+.fi-dropdown-panel {
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.dark .fi-dropdown-panel {
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+/* Modern loading states */
+.fi-sidebar-item-button.loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.fi-sidebar-item-button.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid rgba(16, 185, 129, 0.3);
+    border-top-color: rgb(16, 185, 129);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Enhanced accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .fi-sidebar-item-button,
+    .fi-sidebar-group-button,
+    .fi-sidebar-item-icon,
+    .fi-sidebar-group-icon {
+        transition: none;
+    }
+    
+    .fi-sidebar-item-button:hover {
+        transform: none;
+    }
+    
+    .fi-sidebar-group-button::before {
+        display: none;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .fi-sidebar {
+        border-right-width: 2px;
+        border-right-color: currentColor;
+    }
+    
+    .fi-sidebar-item-button,
+    .fi-sidebar-group-button {
+        border: 1px solid transparent;
+    }
+    
+    .fi-sidebar-item-button:hover,
+    .fi-sidebar-item-button:focus,
+    .fi-sidebar-group-button:hover,
+    .fi-sidebar-group-button:focus {
+        border-color: currentColor;
+    }
+}

@@ -47,9 +47,9 @@
             x-tooltip.html="tooltip"
         @endif
         @class([
-            'fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75',
-            'hover:bg-emerald-100 focus-visible:bg-emerald-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5' => filled($url),
-            'bg-emerald-100 dark:bg-white/5' => $active,
+            'fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-xl px-3 py-2.5 transition-all duration-200 ease-in-out motion-reduce:transition-none motion-reduce:transform-none group',
+            'hover:bg-gradient-to-r hover:from-emerald-50 hover:to-emerald-100/50 dark:hover:from-emerald-900/20 dark:hover:to-emerald-800/20 hover:shadow-sm hover:scale-[1.02] motion-reduce:hover:scale-100 motion-reduce:hover:shadow-none focus-visible:bg-emerald-100 dark:focus-visible:bg-emerald-900/30' => filled($url),
+            'bg-gradient-to-r from-emerald-100 to-emerald-50 dark:from-emerald-900/30 dark:to-black-100 shadow-sm ring-emerald-200/50 dark:ring-emerald-700/50 motion-reduce:shadow-none' => $active,
         ])
     >
         @if (filled($icon) && ((! $subGrouped) || $sidebarCollapsible))
@@ -57,9 +57,9 @@
                 :icon="($active && $activeIcon) ? $activeIcon : $icon"
                 :x-show="($subGrouped && $sidebarCollapsible) ? '! $store.sidebar.isOpen' : false"
                 @class([
-                    'fi-sidebar-item-icon h-6 w-6',
-                    'text-gray-400 dark:text-gray-500' => ! $active,
-                    'text-emerald-600 dark:text-emerald-400' => $active,
+                    'fi-sidebar-item-icon h-5 w-5 transition-all duration-200 ease-in-out',
+                    'text-gray-500 dark:text-gray-400 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 group-hover:scale-110' => ! $active,
+                    'text-emerald-600 dark:text-emerald-400 scale-110' => $active,
                 ])
             />
         @endif
@@ -101,9 +101,9 @@
                 x-transition:enter-end="opacity-100"
             @endif
             @class([
-                'fi-sidebar-item-label flex-1 truncate text-sm font-medium',
-                'text-emerald-700 dark:text-emerald-200' => ! $active,
-                'text-emerald-600 dark:text-emerald-400' => $active,
+                'fi-sidebar-item-label flex-1 truncate text-sm font-medium transition-colors duration-200 ease-in-out',
+                'text-gray-700 dark:text-gray-200 group-hover:text-emerald-700 dark:group-hover:text-emerald-300' => ! $active,
+                'text-emerald-700 dark:text-emerald-300 font-semibold' => $active,
             ])
         >
             {{ $slot }}

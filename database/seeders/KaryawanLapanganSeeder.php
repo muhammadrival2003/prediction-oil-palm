@@ -39,14 +39,14 @@ class KaryawanLapanganSeeder extends Seeder
             ],
             [
                 'afdeling_id' => 5,
-                'nama' => 'Dedi Kurniawan',
+                'nama' => 'Supriyaton',
                 'jabatan' => 'Mandor',
                 'tanggal_masuk' => Carbon::create(2018, 3, 5),
                 'lokasi_kerja' => 'Blok B1-B4'
             ],
             [
                 'afdeling_id' => 5,
-                'nama' => 'Eka Prasetyo',
+                'nama' => 'Heri Waluyo',
                 'jabatan' => 'Asisten Kebun',
                 'tanggal_masuk' => Carbon::create(2017, 11, 18),
                 'lokasi_kerja' => 'Blok C1-C6'
@@ -54,7 +54,10 @@ class KaryawanLapanganSeeder extends Seeder
         ];
 
         foreach ($karyawanData as $data) {
-            KaryawanLapangan::create($data);
+            KaryawanLapangan::updateOrCreate(
+                ['nama' => $data['nama']], 
+                $data 
+            );
         }
 
         $this->command->info('Seeder karyawan berhasil diisi!');
