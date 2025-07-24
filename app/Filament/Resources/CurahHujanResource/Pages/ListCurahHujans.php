@@ -16,10 +16,8 @@ class ListCurahHujans extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-             ->label('Buat'),
-            //  ImportAction::make()
-            //         ->label('Import')
-            //         ->importer(CurahHujanImporter::class)
+             ->label('Tambah')
+             ->icon('heroicon-o-plus'),
         ];
     }
 }

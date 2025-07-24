@@ -14,7 +14,8 @@ class ListDatasetSistems extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-                ->label('Buat')
+                ->label('Tambah')
+                ->icon('heroicon-o-plus'),
         ];
     }
 }

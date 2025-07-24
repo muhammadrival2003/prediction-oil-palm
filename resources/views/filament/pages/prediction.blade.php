@@ -210,10 +210,10 @@
                                             {{ $this->getMonthName($data->month) }} {{ $data->year }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                            {{ number_format($data->total_curah_hujan) }}
+                                            {{ number_format($data->total_curah_hujan, 2, ',', '.') }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                            {{ number_format($data->total_pemupukan) }}
+                                            {{ number_format($data->total_pemupukan, 0, ',', '.') }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                                             {{ number_format($data->total_hasil_produksi, 0, ',', '.') }}
