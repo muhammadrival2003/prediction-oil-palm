@@ -15,10 +15,11 @@ class Role
      */
     public function handle(Request $request, Closure $next, $role): Response
     {
-        if ($request->user()->role != $role) {
-            return redirect('dashboard');
+        if ($request->user()->role == 'user' && $role != 'user') {
+            return redirect('/beranda');
+        } else if ($request->user()->role == 'manager' && $role != 'manager') {
+            return redirect('/manager/laporan');
         }
-
         return $next($request);
     }
 }

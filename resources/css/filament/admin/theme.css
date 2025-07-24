@@ -62,11 +62,11 @@
 
 /* Modern button enhancements */
 .fi-btn {
-    @apply transition-all duration-200 ease-in-out;
+    @apply transition-all text-white duration-200 ease-in-out bg-emerald-700 dark:bg-emerald-900/20 rounded-xl border border-gray-200/60 dark:border-gray-700/60;
 }
 
 .fi-btn:hover {
-    @apply scale-105 shadow-lg;
+    @apply scale-105 bg-emerald-700 shadow-lg;
 }
 
 /* Enhanced table styling */

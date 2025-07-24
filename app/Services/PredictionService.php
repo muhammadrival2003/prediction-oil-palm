@@ -6,7 +6,9 @@ use App\Models\DatasetSistem;
 use App\Models\Prediction;
 use App\Models\Produksi;
 use Carbon\Carbon;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class PredictionService
 {
@@ -17,26 +19,50 @@ class PredictionService
         $this->apiBaseUrl = env('FLASK_API_URL', 'http://localhost:5000');
     }
 
-    public function addHistoricalData(array $data)
+    // public function addHistoricalData(array $data)
+    // {
+    //     // Konversi month dan year ke tanggal (pertama bulan)
+    //     $tanggal = Carbon::create($data['year'], $data['month'], 1);
+
+    //     $response = Http::post("{$this->apiBaseUrl}/add_monthly_data", [
+    //         'month' => $data['month'],
+    //         'year' => $data['year'],
+    //         'curah_hujan' => $data['rainfall'],
+    //         'pemupukan' => $data['fertilizer'],
+    //         'hasil_produksi' => $data['production'],
+    //     ]);
+
+    //     return $response->json();
+    // }
+
+    // public function getHistoricalData()
+    // {
+    //     $response = Http::get("{$this->apiBaseUrl}/get_historical_data");
+    //     return $response->json();
+    // }
+
+    public function getPrecipitationData(array $coordinates, string $startDate, string $endDate, int $scale = 5000)
     {
-        // Konversi month dan year ke tanggal (pertama bulan)
-        $tanggal = Carbon::create($data['year'], $data['month'], 1);
+        try {
+            $response = Http::timeout(60)->post("{$this->apiBaseUrl}/api/precipitation", [
+                'start_date' => $startDate,
+                'end_date' => $endDate,
+                'geometry' => [
+                    'type' => 'Polygon',
+                    'coordinates' => [$coordinates]
+                ],
+                'scale' => $scale
+            ]);
 
-        $response = Http::post("{$this->apiBaseUrl}/add_monthly_data", [
-            'month' => $data['month'],
-            'year' => $data['year'],
-            'curah_hujan' => $data['rainfall'],
-            'pemupukan' => $data['fertilizer'],
-            'hasil_produksi' => $data['production'],
-        ]);
+            if ($response->failed()) {
+                throw new \Exception('Failed to get precipitation data: ' . $response->body());
+            }
 
-        return $response->json();
-    }
-
-    public function getHistoricalData()
-    {
-        $response = Http::get("{$this->apiBaseUrl}/get_historical_data");
-        return $response->json();
+            return $response->json();
+        } catch (\Exception $e) {
+            Log::error('Error getting precipitation data: ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     public function evaluateModel()
@@ -54,7 +80,7 @@ class PredictionService
             ->sortBy('tanggal')
             ->values();
 
-        if ($historicalData->count() < 6) {
+        if ($historicalData->count() < 12) {
             throw new \Exception('Butuh data historis minimal 12 bulan terakhir.');
         }
 
@@ -68,6 +94,16 @@ class PredictionService
         }
 
         $monthsDiff = $lastDate->diffInMonths($targetDate);
+
+        // Tambahkan peringatan jika prediksi lebih dari 1 bulan
+        if ($monthsDiff > 1) {
+            Notification::make()
+                ->title('Peringatan Prediksi Jangka Panjang')
+                ->body('Prediksi yang dilakukan mungkin tidak akurat karena data sebelumnya merupakan data hasil generate, bukan data nyata.')
+                ->success()
+                ->seconds(20)
+                ->send();
+        }
 
         // 3. Lakukan prediksi beruntun hingga mencapai bulan target
         $tempData = $historicalData->toArray();

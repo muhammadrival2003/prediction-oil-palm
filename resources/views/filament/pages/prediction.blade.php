@@ -124,11 +124,11 @@
                         </div>
                         <div class="mt-4">
                             <p class="text-3xl font-bold text-gray-800 dark:text-white">
-                                {{ number_format($monthPrediction['prediction'] / 100, 0, ',', '.') }}
-                                <span class="text-lg font-medium text-gray-500 dark:text-gray-400">tons</span>
+                                {{ number_format($monthPrediction['prediction'], 0, ',', '.') }}
+                                <span class="text-lg font-medium text-gray-500 dark:text-gray-400">kg</span>
                             </p>
                             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                                {{ number_format($monthPrediction['prediction'], 0, ',', '.') }} kg
+                                {{ number_format($monthPrediction['prediction'] / 100, 0, ',', '.') }} ton
                             </p>
                         </div>
                     </div>
@@ -169,7 +169,7 @@
                 <!-- Historical Data Table -->
                 <div class="mt-8">
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
-                        Historikal Data (6 Bulan Terakhir)
+                        Historikal Data (12 Bulan Terakhir)
                     </h3>
 
                     @php

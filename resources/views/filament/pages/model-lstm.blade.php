@@ -25,7 +25,7 @@
                     Kembali
                 </a>
                 @endif
-            </div> 
+            </div>
         </div>
 
         <!-- Main Metrics Grid -->
@@ -53,7 +53,7 @@
                                 </div>
                             </div>
                             <p class="text-xl font-bold text-gray-800 dark:text-white">
-                                {{ number_format($this->modelPerformance['training_metrics']['RMSE'] ?? 0, 2) }}
+                                {{ str_replace(',', '.', number_format($this->modelPerformance['training_metrics']['RMSE'])) }}
                             </p>
                         </div>
 
@@ -69,7 +69,7 @@
                                 </div>
                             </div>
                             <p class="text-xl font-bold text-gray-800 dark:text-white">
-                                {{ number_format($this->modelPerformance['training_metrics']['MAE'] ?? 0, 2) }}
+                                {{ str_replace(',', '.', number_format($this->modelPerformance['training_metrics']['MAE'])) }}
                             </p>
                         </div>
 
@@ -86,7 +86,7 @@
                             </div>
                             <div class="flex items-center gap-2">
                                 <p class="text-xl font-bold text-gray-800 dark:text-white">
-                                    {{ number_format($this->modelPerformance['training_metrics']['R2'] ?? 0, 3) }}
+                                    {{ number_format($this->modelPerformance['training_metrics']['R2'] ?? 0, 2) }}
                                 </p>
                                 @php
                                 $r2Score = $this->modelPerformance['training_metrics']['R2'] ?? 0;
@@ -127,7 +127,7 @@
                                 </div>
                             </div>
                             <p class="text-xl font-bold text-gray-800 dark:text-white">
-                                {{ number_format($this->modelPerformance['testing_metrics']['RMSE'] ?? 0, 2) }}
+                                {{ str_replace(',', '.', number_format($this->modelPerformance['testing_metrics']['RMSE'])) }}
                             </p>
                         </div>
 
@@ -143,7 +143,7 @@
                                 </div>
                             </div>
                             <p class="text-xl font-bold text-gray-800 dark:text-white">
-                                {{ number_format($this->modelPerformance['testing_metrics']['MAE'] ?? 0, 2) }}
+                                {{ str_replace(',', '.', number_format($this->modelPerformance['testing_metrics']['MAE'])) }}
                             </p>
                         </div>
 
@@ -160,7 +160,7 @@
                             </div>
                             <div class="flex items-center gap-2">
                                 <p class="text-xl font-bold text-gray-800 dark:text-white">
-                                    {{ number_format($this->modelPerformance['testing_metrics']['R2'] ?? 0, 3) }}
+                                    {{ number_format($this->modelPerformance['testing_metrics']['R2'] ?? 0, 2) }}
                                 </p>
                                 @php
                                 $r2Score = $this->modelPerformance['testing_metrics']['R2'] ?? 0;
@@ -259,12 +259,12 @@
                         }
                         @endphp
                         <p class="text-sm {{ $color }} font-medium mb-2 flex items-center gap-1">
-                            
+
                             {{ $status }}
                         </p>
                         <p class="text-xs text-gray-500 dark:text-gray-400">{{ $description }}</p>
                         <p class="text-xs mt-2 text-gray-500 dark:text-gray-400">
-                            Based on Testing R²: {{ number_format($r2Score, 3) }}
+                            Based on Testing R²: {{ number_format($r2Score, 2) }}
                         </p>
                     </div>
 
@@ -311,6 +311,6 @@
             </div>
         </div>
 
-        
+
     </div>
 </x-filament::page>

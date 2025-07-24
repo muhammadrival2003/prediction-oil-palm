@@ -82,7 +82,8 @@ class DatasetSistemResource extends Resource
             ->defaultSort('tanggal', 'asc') // Urutkan tahun descending secara default
             ->columns([
                 Tables\Columns\TextColumn::make('tanggal')
-                    ->date(),
+                    ->date('F Y')
+                    ->label('Periode'),
 
                 Tables\Columns\TextColumn::make('total_curah_hujan')
                     ->label('Total Curah Hujan (mm)')
@@ -90,7 +91,7 @@ class DatasetSistemResource extends Resource
 
                 Tables\Columns\TextColumn::make('total_pemupukan')
                     ->label('Total Pemupukan (kg)')
-                    ->numeric(decimalPlaces: 2),
+                    ->numeric(decimalPlaces: 0),
 
                 Tables\Columns\TextColumn::make('total_hasil_produksi')
                     ->label('Total Hasil Produksi (kg)')
@@ -128,8 +129,10 @@ class DatasetSistemResource extends Resource
             // ])
             ->headerActions([
                 ImportAction::make()
+                    ->label('Import')
                     ->importer(DatasetSistemImporter::class),
                 ExportAction::make()
+                    ->label('Export')
                     ->exporter(DatasetSistemExporter::class)
             ])
             ->actions([

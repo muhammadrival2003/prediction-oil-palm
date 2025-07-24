@@ -118,7 +118,8 @@ class Prediction extends Page implements HasForms
             $this->usedHistoricalData = $result['historical_data_used'] ?? [];
             $this->model_performance = $result['model_performance'] ?? [];
 
-            $predictionValue = $this->monthPrediction['prediction'] ?? '0';
+            $predictionValue = number_format($this->monthPrediction['prediction'] ?? 0, 0, ',', '.');
+            
             $monthName = $this->getMonthName($this->selected_month);
             $message = "Hasil prediksi {$monthName} {$this->selected_year}: {$predictionValue} kg";
 
@@ -143,6 +144,7 @@ class Prediction extends Page implements HasForms
                 ->title('Prediksi Berhasil')
                 ->body($message)
                 ->success()
+                ->seconds(20)
                 ->actions([
                     Action::make('view_prediction')
                         ->label('Lihat Detail')
@@ -191,8 +193,8 @@ class Prediction extends Page implements HasForms
 
     public function getHistoricalData(): \Illuminate\Database\Eloquent\Collection
     {
-        return DatasetSistem::orderBy('tanggal', 'asc')
-            ->take(6)
+        return DatasetSistem::orderBy('tanggal', 'desc')
+            ->take(12)
             ->get()
             ->sortBy('tanggal')
             ->values();

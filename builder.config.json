@@ -1,6 +1,6 @@
 {
   "command": "npm run dev",
-  "serverUrl": "https://b4f49ffe7861.ngrok-free.app/",
+  "serverUrl": "http://127.0.0.1:9001/",
   "authenticateProxy": false,
   "commitMode": "commits"
 }

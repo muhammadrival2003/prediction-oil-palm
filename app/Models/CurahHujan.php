@@ -39,18 +39,44 @@ class CurahHujan extends Model
         });
     }
 
+    // protected static function updateDatasetSistem($tanggal)
+    // {
+    //     $month = date('n', strtotime($tanggal));
+    //     $year = date('Y', strtotime($tanggal));
+
+    //     $totalCurahHujan = CurahHujan::whereMonth('tanggal', $month)
+    //         ->whereYear('tanggal', $year)
+    //         ->sum('curah_hujan');
+
+    //     DatasetSistem::updateOrCreate(
+    //         ['month' => $month, 'year' => $year],
+    //         ['total_curah_hujan' => $totalCurahHujan]
+    //     );
+    // }
+
     protected static function updateDatasetSistem($tanggal)
     {
         $month = date('n', strtotime($tanggal));
         $year = date('Y', strtotime($tanggal));
 
-        $totalCurahHujan = CurahHujan::whereMonth('tanggal', $month)
+        $totalCurahHujan = self::whereMonth('tanggal', $month)
             ->whereYear('tanggal', $year)
             ->sum('curah_hujan');
 
-        DatasetSistem::updateOrCreate(
-            ['month' => $month, 'year' => $year],
-            ['total_curah_hujan' => $totalCurahHujan]
-        );
+        // Cari record dengan bulan dan tahun yang sama
+        $existingRecord = DatasetSistem::whereMonth('tanggal', $month)
+            ->whereYear('tanggal', $year)
+            ->first();
+
+        if ($existingRecord) {
+            // Update record yang sudah ada
+            $existingRecord->update(['total_curah_hujan' => $totalCurahHujan]);
+        } else {
+            // Buat record baru dengan tanggal pertama bulan tersebut
+            DatasetSistem::create([
+                'tanggal' => date('Y-m-t', strtotime($tanggal)),
+                'total_curah_hujan' => $totalCurahHujan
+            ]);
+        }
     }
 }

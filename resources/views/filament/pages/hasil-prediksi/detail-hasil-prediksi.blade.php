@@ -29,7 +29,7 @@
         </div>
 
         <!-- Card Prediksi Utama -->
-        <div class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 rounded-xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-br from-green-50 to-green-100 dark:from-gray-900 dark:to-gray-800 rounded-xl shadow-lg overflow-hidden">
             <div class="p-6">
                 <div class="flex items-center justify-between">
                     <div>
@@ -61,7 +61,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
             <div class="p-6">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                    Data Historis 6 Bulan Terakhir yang digunakan
+                    Data Historis 12 Bulan Terakhir yang digunakan
                 </h3>
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-700">

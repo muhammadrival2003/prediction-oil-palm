@@ -28,7 +28,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        $url = "dashboard";
+        $url = "/";
 
         // if ($request->user()->role == "admin") {
         //     $url = "admin/dashboard";
@@ -37,7 +37,9 @@ class AuthenticatedSessionController extends Controller
         // }
         if ($request->user()->role == "user") {
             $url = "beranda";
-        } else { 
+        } elseif ($request->user()->role == "manager") {
+            $url = "manager/laporan";
+        } else {
             Auth::guard('web')->logout();
             return redirect()->route('login')->with('status', 'You are not authorized to access this page.');
         }

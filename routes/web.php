@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\HasilProduksiController;
+use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\PemupukanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
@@ -11,9 +12,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/beranda', function () {
-    return view('user.beranda');
-})->middleware(['auth', 'verified'])->name('beranda');
+Route::get('/', function () {
+    return view('auth.login');
+})->middleware(['auth', 'verified'])->name('login');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -29,6 +30,12 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/api/activities', [ActivityController::class, 'getActivities'])->name('activity.get');
     Route::post('/hasil-produksi', [HasilProduksiController::class, 'store'])->name('hasil-produksi.store');
     Route::post('/pemupukan', [PemupukanController::class, 'store'])->name('pemupukan.store');
+});
+
+Route::middleware(['auth', 'role:manager'])->group(function () {
+    Route::get('manager/beranda', [ManagerController::class, 'beranda'])->name('manager.beranda');
+    Route::get('manager/laporan', [ManagerController::class, 'laporan'])->name('manager.laporan');
+    Route::get('manager/statistik', [ManagerController::class, 'statistik'])->name('manager.statistik');
 });
 
 require __DIR__ . '/auth.php';
