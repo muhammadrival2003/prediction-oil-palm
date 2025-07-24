@@ -305,6 +305,7 @@
                         <thead class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-slate-700 dark:to-slate-600">
                             <tr>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Blok</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Afdeling</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Produksi</th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Status</th>
                             </tr>
@@ -322,6 +323,12 @@
                                             <div class="text-xs text-gray-500 dark:text-gray-400">Blok Aktif</div>
                                         </div>
                                     </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-bold text-gray-900 dark:text-white">
+                                        {{ $produksi->blok->tahunTanam->afdeling->nama ?? 'N/A' }}
+                                    </div>
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">Afdeling</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-bold text-gray-900 dark:text-white">{{ number_format($produksi->total_produksi) }}</div>
@@ -398,7 +405,7 @@
         </div>
 
         <!-- Export Section -->
-        <!-- <div class="group bg-gradient-to-br from-white/90 to-gray-50/90 dark:from-slate-800/90 dark:to-slate-700/90 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 dark:border-slate-700/50 p-8 card-hover animate-slide-up">
+        <div class="group bg-gradient-to-br from-white/90 to-gray-50/90 dark:from-slate-800/90 dark:to-slate-700/90 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 dark:border-slate-700/50 p-8 card-hover animate-slide-up">
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center space-x-4">
                     <div class="p-3 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg">
@@ -409,14 +416,14 @@
                         <p class="text-gray-600 dark:text-gray-400">Download laporan dalam berbagai format</p>
                     </div>
                 </div>
-                <div class="hidden md:flex items-center space-x-2 px-4 py-2 bg-blue-100 dark:bg-blue-900/30 rounded-full">
-                    <i class="fas fa-info-circle text-blue-600 dark:text-blue-400"></i>
-                    <span class="text-sm font-medium text-blue-700 dark:text-blue-300">Read-Only Mode</span>
+                <div class="hidden md:flex items-center space-x-2 px-4 py-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
+                    <i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400"></i>
+                    <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Available</span>
                 </div>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <button class="group/btn relative overflow-hidden bg-gradient-to-r from-red-500 to-red-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                <a href="{{ route('manager.laporan.download-pdf') }}" class="group/btn relative overflow-hidden bg-gradient-to-r from-red-500 to-red-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 block text-center">
                     <div class="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
                     <div class="relative z-10 flex flex-col items-center space-y-3">
                         <div class="p-3 bg-white/20 rounded-lg">
@@ -427,9 +434,9 @@
                             <p class="text-sm text-red-100">Format dokumen</p>
                         </div>
                     </div>
-                </button>
+                </a>
                 
-                <button class="group/btn relative overflow-hidden bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                <a href="{{ route('manager.laporan.download-excel') }}" class="group/btn relative overflow-hidden bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 block text-center">
                     <div class="absolute inset-0 bg-gradient-to-r from-emerald-600 to-emerald-700 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
                     <div class="relative z-10 flex flex-col items-center space-y-3">
                         <div class="p-3 bg-white/20 rounded-lg">
@@ -440,9 +447,9 @@
                             <p class="text-sm text-emerald-100">Spreadsheet data</p>
                         </div>
                     </div>
-                </button>
+                </a>
                 
-                <button class="group/btn relative overflow-hidden bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                <a href="{{ route('manager.laporan.print') }}" target="_blank" class="group/btn relative overflow-hidden bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 block text-center">
                     <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-700 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
                     <div class="relative z-10 flex flex-col items-center space-y-3">
                         <div class="p-3 bg-white/20 rounded-lg">
@@ -453,16 +460,16 @@
                             <p class="text-sm text-blue-100">Cetak langsung</p>
                         </div>
                     </div>
-                </button>
+                </a>
             </div>
             
-            <div class="flex items-center justify-center space-x-3 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
-                <i class="fas fa-exclamation-triangle text-amber-600 dark:text-amber-400"></i>
-                <p class="text-sm text-amber-700 dark:text-amber-300 font-medium">
-                    Fitur export tersedia dalam mode read-only untuk manager. Data yang ditampilkan adalah real-time.
+            <div class="flex items-center justify-center space-x-3 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl">
+                <i class="fas fa-info-circle text-emerald-600 dark:text-emerald-400"></i>
+                <p class="text-sm text-emerald-700 dark:text-emerald-300 font-medium">
+                    Fitur export tersedia untuk manager. Data yang ditampilkan adalah real-time dan dapat diunduh dalam format PDF, Excel, atau dicetak langsung.
                 </p>
             </div>
-        </div> -->
+        </div>
     </div>
 
     @push('scripts')
@@ -513,7 +520,7 @@
             const pemupukanCtx = document.getElementById('pemupukanChart').getContext('2d');
             const pemupukanData = @json($pemupukanPerJenis);
             
-            const pemupukanLabels = pemupukanData.map(item => item.jenis_pupuk.nama_pupuk);
+            const pemupukanLabels = pemupukanData.map(item => item.jenis_pupuk.nama);
             const pemupukanValues = pemupukanData.map(item => item.total_volume);
 
             new Chart(pemupukanCtx, {

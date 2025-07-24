@@ -130,7 +130,7 @@
                                     <i class="fas fa-seedling text-white text-xl"></i>
                                 </div>
                                 <div>
-                                    <h1 class="text-white text-xl font-bold tracking-tight">Palm Oil</h1>
+                                    <h1 class="text-white text-xl font-bold tracking-tight">PTPN IV KEBUN LAMA</h1>
                                     <p class="text-emerald-100 text-xs font-medium">Manager Portal</p>
                                 </div>
                             </div>
@@ -280,7 +280,7 @@
         </div>
 
         <!-- Footer -->
-        <footer class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg border-t border-gray-200 dark:border-slate-700 mt-12">
+        <!-- <footer class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg border-t border-gray-200 dark:border-slate-700 mt-12">
             <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div class="space-y-4">
@@ -339,7 +339,7 @@
                     </div>
                 </div>
             </div>
-        </footer>
+        </footer> -->
     </div>
 
     <style>

@@ -13,6 +13,8 @@ use App\Models\DatasetSistem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\LaporanExport;
 
 class ManagerController extends Controller
 {
@@ -62,7 +64,7 @@ class ManagerController extends Controller
 
         // Produksi per blok
         $produksiPerBlok = HasilProduksi::select('blok_id', DB::raw('SUM(realisasi_produksi) as total_produksi'))
-            ->with('blok')
+            ->with(['blok.tahunTanam.afdeling'])
             ->groupBy('blok_id')
             ->orderBy('total_produksi', 'desc')
             ->get();
@@ -137,5 +139,87 @@ class ManagerController extends Controller
             'efisiensiPemupukan',
             'perbandinganRencanaRealisasi'
         ));
+    }
+
+    public function downloadPDF()
+    {
+        // Get the same data as laporan method
+        $data = $this->getLaporanData();
+        
+        // Return the PDF view with download headers
+        $filename = 'laporan-kebun-' . Carbon::now()->format('Y-m-d') . '.html';
+        
+        return response()
+            ->view('manager.laporan-pdf', $data)
+            ->header('Content-Type', 'text/html')
+            ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
+    }
+
+    public function downloadExcel()
+    {
+        return Excel::download(new LaporanExport, 'laporan-kebun-' . Carbon::now()->format('Y-m-d') . '.xlsx');
+    }
+
+    public function printLaporan()
+    {
+        // Get the same data as laporan method
+        $data = $this->getLaporanData();
+        
+        return view('manager.laporan-print', $data);
+    }
+
+    private function getLaporanData()
+    {
+        // Statistik umum
+        $totalBlok = Blok::count();
+        $totalPokok = Blok::sum('jumlah_pokok');
+        $totalProduksiBulanIni = HasilProduksi::whereRaw('EXTRACT(MONTH FROM tanggal) = ?', [Carbon::now()->month])
+            ->whereRaw('EXTRACT(YEAR FROM tanggal) = ?', [Carbon::now()->year])
+            ->sum('realisasi_produksi') ?? 0;
+        $totalPemupukanBulanIni = Pemupukan::whereRaw('EXTRACT(MONTH FROM tanggal) = ?', [Carbon::now()->month])
+            ->whereRaw('EXTRACT(YEAR FROM tanggal) = ?', [Carbon::now()->year])
+            ->sum('volume') ?? 0;
+
+        // Data produksi 12 bulan terakhir
+        $produksi12Bulan = HasilProduksi::select(
+                DB::raw('EXTRACT(YEAR FROM tanggal)::integer as year'),
+                DB::raw('EXTRACT(MONTH FROM tanggal)::integer as month'),
+                DB::raw('SUM(realisasi_produksi) as total_produksi')
+            )
+            ->where('tanggal', '>=', Carbon::now()->subMonths(12))
+            ->groupBy(DB::raw('EXTRACT(YEAR FROM tanggal)'), DB::raw('EXTRACT(MONTH FROM tanggal)'))
+            ->orderBy(DB::raw('EXTRACT(YEAR FROM tanggal)'), 'asc')
+            ->orderBy(DB::raw('EXTRACT(MONTH FROM tanggal)'), 'asc')
+            ->get();
+
+        // Data pemupukan per jenis
+        $pemupukanPerJenis = Pemupukan::select('jenis_pupuk_id', DB::raw('SUM(volume) as total_volume'))
+            ->with('jenisPupuk')
+            ->groupBy('jenis_pupuk_id')
+            ->get();
+
+        // Produksi per blok
+        $produksiPerBlok = HasilProduksi::select('blok_id', DB::raw('SUM(realisasi_produksi) as total_produksi'))
+            ->with(['blok.tahunTanam.afdeling'])
+            ->groupBy('blok_id')
+            ->orderBy('total_produksi', 'desc')
+            ->get();
+
+        // Aktivitas terbaru
+        $aktivitasTerbaru = ActivityLog::with('user')
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+
+        return compact(
+            'totalBlok',
+            'totalPokok', 
+            'totalProduksiBulanIni',
+            'totalPemupukanBulanIni',
+            'produksi12Bulan',
+            'pemupukanPerJenis',
+            'produksiPerBlok',
+            'aktivitasTerbaru'
+        );
     }
 }

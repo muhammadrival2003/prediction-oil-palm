@@ -112,10 +112,6 @@
                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Real-time Analytics</span>
                     </div>
                     <div class="flex items-center space-x-2 px-4 py-2 bg-white/80 dark:bg-slate-700/80 backdrop-blur-sm rounded-full shadow-lg">
-                        <i class="fas fa-eye text-blue-500"></i>
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Read-Only Mode</span>
-                    </div>
-                    <div class="flex items-center space-x-2 px-4 py-2 bg-white/80 dark:bg-slate-700/80 backdrop-blur-sm rounded-full shadow-lg">
                         <i class="fas fa-clock text-purple-500"></i>
                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ now()->format('d M Y, H:i') }}</span>
                     </div>

@@ -194,7 +194,7 @@
                     @foreach($jenisPupuks as $pupuk)
                     <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                         <div>
-                            <p class="font-medium text-gray-800">{{ $pupuk->nama_pupuk }}</p>
+                            <p class="font-medium text-gray-800">{{ $pupuk->nama }}</p>
                             <p class="text-sm text-gray-600">{{ $pupuk->jenis_pupuk }}</p>
                         </div>
                         <div class="text-right">

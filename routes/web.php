@@ -36,6 +36,11 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('manager/beranda', [ManagerController::class, 'beranda'])->name('manager.beranda');
     Route::get('manager/laporan', [ManagerController::class, 'laporan'])->name('manager.laporan');
     Route::get('manager/statistik', [ManagerController::class, 'statistik'])->name('manager.statistik');
+    
+    // Download routes
+    Route::get('manager/laporan/download-pdf', [ManagerController::class, 'downloadPDF'])->name('manager.laporan.download-pdf');
+    Route::get('manager/laporan/download-excel', [ManagerController::class, 'downloadExcel'])->name('manager.laporan.download-excel');
+    Route::get('manager/laporan/print', [ManagerController::class, 'printLaporan'])->name('manager.laporan.print');
 });
 
 require __DIR__ . '/auth.php';
