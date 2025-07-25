@@ -145,6 +145,13 @@
                                     <span>Laporan</span>
                                 </div>
                             </a>
+                            <a href="{{ route('manager.laporan-afdeling') }}" 
+                               class="nav-link-modern group px-6 py-3 rounded-xl font-medium transition-all duration-300 {{ request()->routeIs('manager.laporan-afdeling') ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/10' }}">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-layer-group text-sm group-hover:scale-110 transition-transform"></i>
+                                    <span>Laporan Afdeling</span>
+                                </div>
+                            </a>
                             <a href="{{ route('manager.statistik') }}" 
                                class="nav-link-modern group px-6 py-3 rounded-xl font-medium transition-all duration-300 {{ request()->routeIs('manager.statistik') ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/10' }}">
                                 <div class="flex items-center space-x-2">
@@ -238,6 +245,10 @@
                     <a href="{{ route('manager.laporan') }}" 
                        class="mobile-nav-link {{ request()->routeIs('manager.laporan') ? 'active' : '' }}">
                         <i class="fas fa-chart-bar mr-2"></i>Laporan
+                    </a>
+                    <a href="{{ route('manager.laporan-afdeling') }}" 
+                       class="mobile-nav-link {{ request()->routeIs('manager.laporan-afdeling') ? 'active' : '' }}">
+                        <i class="fas fa-layer-group mr-2"></i>Laporan Afdeling
                     </a>
                     <a href="{{ route('manager.statistik') }}" 
                        class="mobile-nav-link {{ request()->routeIs('manager.statistik') ? 'active' : '' }}">

@@ -35,6 +35,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('manager/beranda', [ManagerController::class, 'beranda'])->name('manager.beranda');
     Route::get('manager/laporan', [ManagerController::class, 'laporan'])->name('manager.laporan');
+    Route::get('manager/laporan-afdeling', [ManagerController::class, 'laporanAfdeling'])->name('manager.laporan-afdeling');
     Route::get('manager/statistik', [ManagerController::class, 'statistik'])->name('manager.statistik');
     
     // Download routes

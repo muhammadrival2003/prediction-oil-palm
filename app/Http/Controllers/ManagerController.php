@@ -10,6 +10,7 @@ use App\Models\HasilProduksi;
 use App\Models\Pemupukan;
 use App\Models\ActivityLog;
 use App\Models\DatasetSistem;
+use App\Models\Afdeling;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -166,6 +167,146 @@ class ManagerController extends Controller
         $data = $this->getLaporanData();
         
         return view('manager.laporan-print', $data);
+    }
+
+    public function laporanAfdeling()
+    {
+        // Data laporan berdasarkan afdeling
+        $laporanPerAfdeling = Afdeling::with(['tahunTanams.bloks'])
+            ->get()
+            ->map(function ($afdeling) {
+                // Hitung total blok per afdeling
+                $totalBlok = $afdeling->tahunTanams->sum(function ($tahunTanam) {
+                    return $tahunTanam->bloks->count();
+                });
+
+                // Hitung total pokok per afdeling
+                $totalPokok = $afdeling->tahunTanams->sum(function ($tahunTanam) {
+                    return $tahunTanam->bloks->sum('jumlah_pokok');
+                });
+
+                // Hitung total produksi per afdeling
+                $blokIds = $afdeling->tahunTanams->flatMap(function ($tahunTanam) {
+                    return $tahunTanam->bloks->pluck('id');
+                });
+
+                $totalProduksi = HasilProduksi::whereIn('blok_id', $blokIds)
+                    ->sum('realisasi_produksi') ?? 0;
+
+                // Hitung total pemupukan per afdeling
+                $totalPemupukan = Pemupukan::whereIn('blok_id', $blokIds)
+                    ->sum('volume') ?? 0;
+
+                // Produksi bulan ini per afdeling
+                $produksiBulanIni = HasilProduksi::whereIn('blok_id', $blokIds)
+                    ->whereRaw('EXTRACT(MONTH FROM tanggal) = ?', [Carbon::now()->month])
+                    ->whereRaw('EXTRACT(YEAR FROM tanggal) = ?', [Carbon::now()->year])
+                    ->sum('realisasi_produksi') ?? 0;
+
+                // Pemupukan bulan ini per afdeling
+                $pemupukanBulanIni = Pemupukan::whereIn('blok_id', $blokIds)
+                    ->whereRaw('EXTRACT(MONTH FROM tanggal) = ?', [Carbon::now()->month])
+                    ->whereRaw('EXTRACT(YEAR FROM tanggal) = ?', [Carbon::now()->year])
+                    ->sum('volume') ?? 0;
+
+                // Rata-rata produksi per pokok
+                $rataRataProduksiPerPokok = $totalPokok > 0 ? $totalProduksi / $totalPokok : 0;
+
+                // Efisiensi pemupukan (produksi per kg pupuk)
+                $efisiensiPemupukan = $totalPemupukan > 0 ? $totalProduksi / $totalPemupukan : 0;
+
+                return [
+                    'afdeling' => $afdeling,
+                    'total_blok' => $totalBlok,
+                    'total_pokok' => $totalPokok,
+                    'total_produksi' => $totalProduksi,
+                    'total_pemupukan' => $totalPemupukan,
+                    'produksi_bulan_ini' => $produksiBulanIni,
+                    'pemupukan_bulan_ini' => $pemupukanBulanIni,
+                    'rata_rata_produksi_per_pokok' => $rataRataProduksiPerPokok,
+                    'efisiensi_pemupukan' => $efisiensiPemupukan,
+                ];
+            });
+
+        // Data produksi per afdeling untuk chart
+        $produksiPerAfdelingChart = Afdeling::with(['tahunTanams.bloks'])
+            ->get()
+            ->map(function ($afdeling) {
+                $blokIds = $afdeling->tahunTanams->flatMap(function ($tahunTanam) {
+                    return $tahunTanam->bloks->pluck('id');
+                });
+
+                $totalProduksi = HasilProduksi::whereIn('blok_id', $blokIds)
+                    ->sum('realisasi_produksi') ?? 0;
+
+                return [
+                    'nama' => $afdeling->nama,
+                    'total_produksi' => $totalProduksi
+                ];
+            });
+
+        // Data trend produksi 6 bulan terakhir per afdeling
+        $trendProduksiAfdeling = Afdeling::with(['tahunTanams.bloks'])
+            ->get()
+            ->map(function ($afdeling) {
+                $blokIds = $afdeling->tahunTanams->flatMap(function ($tahunTanam) {
+                    return $tahunTanam->bloks->pluck('id');
+                });
+
+                $produksi6Bulan = HasilProduksi::whereIn('blok_id', $blokIds)
+                    ->select(
+                        DB::raw('EXTRACT(YEAR FROM tanggal)::integer as year'),
+                        DB::raw('EXTRACT(MONTH FROM tanggal)::integer as month'),
+                        DB::raw('SUM(realisasi_produksi) as total_produksi')
+                    )
+                    ->where('tanggal', '>=', Carbon::now()->subMonths(6))
+                    ->groupBy(DB::raw('EXTRACT(YEAR FROM tanggal)'), DB::raw('EXTRACT(MONTH FROM tanggal)'))
+                    ->orderBy(DB::raw('EXTRACT(YEAR FROM tanggal)'), 'asc')
+                    ->orderBy(DB::raw('EXTRACT(MONTH FROM tanggal)'), 'asc')
+                    ->get();
+
+                return [
+                    'nama' => $afdeling->nama,
+                    'data' => $produksi6Bulan
+                ];
+            });
+
+        // Detail blok per afdeling
+        $detailBlokPerAfdeling = Afdeling::with(['tahunTanams.bloks'])
+            ->get()
+            ->map(function ($afdeling) {
+                $bloks = $afdeling->tahunTanams->flatMap(function ($tahunTanam) {
+                    return $tahunTanam->bloks->map(function ($blok) use ($tahunTanam) {
+                        // Hitung produksi per blok
+                        $produksiBlok = HasilProduksi::where('blok_id', $blok->id)
+                            ->sum('realisasi_produksi') ?? 0;
+
+                        // Hitung pemupukan per blok
+                        $pemupukanBlok = Pemupukan::where('blok_id', $blok->id)
+                            ->sum('volume') ?? 0;
+
+                        return [
+                            'blok' => $blok,
+                            'tahun_tanam' => $tahunTanam,
+                            'produksi' => $produksiBlok,
+                            'pemupukan' => $pemupukanBlok,
+                            'produktivitas' => $blok->jumlah_pokok > 0 ? $produksiBlok / $blok->jumlah_pokok : 0
+                        ];
+                    });
+                });
+
+                return [
+                    'afdeling' => $afdeling,
+                    'bloks' => $bloks
+                ];
+            });
+
+        return view('manager.laporan-afdeling', compact(
+            'laporanPerAfdeling',
+            'produksiPerAfdelingChart',
+            'trendProduksiAfdeling',
+            'detailBlokPerAfdeling'
+        ));
     }
 
     private function getLaporanData()

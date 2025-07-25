@@ -1,0 +1,614 @@
+<x-manager-layout>
+    @push('styles')
+    <style>
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .badge-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.39);
+        }
+
+        .badge-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            box-shadow: 0 4px 14px 0 rgba(245, 158, 11, 0.39);
+        }
+
+        .badge-info {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);
+        }
+
+        .badge-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            box-shadow: 0 4px 14px 0 rgba(239, 68, 68, 0.39);
+        }
+
+        .gradient-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .floating-card {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .bg-grid-pattern {
+            background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0);
+            background-size: 20px 20px;
+        }
+
+        .afdeling-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .dark .afdeling-card {
+            background: linear-gradient(135deg, rgba(30,41,59,0.9) 0%, rgba(30,41,59,0.7) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.6) 100%);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .dark .metric-card {
+            background: linear-gradient(135deg, rgba(51,65,85,0.8) 0%, rgba(51,65,85,0.6) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @endpush
+
+    <!-- Page Header -->
+    <div class="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 dark:from-slate-800 dark:via-slate-700 dark:to-slate-800">
+        <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        <div class="relative max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="text-center animate-fade-in">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl mb-6 shadow-lg">
+                    <i class="fas fa-layer-group text-white text-2xl"></i>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-4">
+                    Laporan Per Afdeling
+                </h1>
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
+                    Analisis komprehensif kinerja operasional berdasarkan pembagian afdeling dengan visualisasi data real-time
+                </p>
+                <div class="flex items-center justify-center space-x-4">
+                    <div class="flex items-center space-x-2 px-4 py-2 bg-white/80 dark:bg-slate-700/80 backdrop-blur-sm rounded-full shadow-lg">
+                        <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Live Data</span>
+                    </div>
+                    <div class="flex items-center space-x-2 px-4 py-2 bg-white/80 dark:bg-slate-700/80 backdrop-blur-sm rounded-full shadow-lg">
+                        <i class="fas fa-clock text-purple-500"></i>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ now()->format('d M Y, H:i') }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 space-y-8">
+        <!-- Overview Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-slide-up">
+            <!-- Produksi Per Afdeling Chart -->
+            <div class="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 dark:border-slate-700/50 p-8 card-hover">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg">
+                            <i class="fas fa-chart-bar text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Produksi Per Afdeling</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Total Produksi Keseluruhan</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">Active</span>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="produksiAfdelingChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Trend Produksi Chart -->
+            <div class="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 dark:border-slate-700/50 p-8 card-hover">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg">
+                            <i class="fas fa-chart-line text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Trend Produksi</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">6 Bulan Terakhir</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></div>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">Trending</span>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="trendProduksiChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Afdeling Cards -->
+        <div class="space-y-8 animate-slide-up">
+            @foreach($laporanPerAfdeling as $index => $laporan)
+            <div class="afdeling-card rounded-2xl shadow-2xl p-8 card-hover">
+                <!-- Afdeling Header -->
+                <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                            {{ substr($laporan['afdeling']->nama, 0, 2) }}
+                        </div>
+                        <div>
+                            <h2 class="text-3xl font-bold text-gray-900 dark:text-white">{{ $laporan['afdeling']->nama }}</h2>
+                            <p class="text-gray-600 dark:text-gray-400">Afdeling {{ $index + 1 }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        @if($laporan['total_produksi'] > 50000)
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold badge-success">
+                                <i class="fas fa-arrow-up mr-1"></i>Produktif Tinggi
+                            </span>
+                        @elseif($laporan['total_produksi'] > 25000)
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold badge-warning">
+                                <i class="fas fa-minus mr-1"></i>Produktif Sedang
+                            </span>
+                        @else
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold badge-info">
+                                <i class="fas fa-arrow-down mr-1"></i>Perlu Perhatian
+                            </span>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Metrics Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+                    <!-- Total Blok -->
+                    <div class="metric-card p-6 rounded-xl">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                                <i class="fas fa-map text-blue-600 dark:text-blue-400"></i>
+                            </div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Blok</span>
+                        </div>
+                        <div class="space-y-1">
+                            <h4 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $laporan['total_blok'] }}</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Total Blok</p>
+                        </div>
+                    </div>
+
+                    <!-- Total Pokok -->
+                    <div class="metric-card p-6 rounded-xl">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                                <i class="fas fa-tree text-green-600 dark:text-green-400"></i>
+                            </div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Pokok</span>
+                        </div>
+                        <div class="space-y-1">
+                            <h4 class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($laporan['total_pokok']) }}</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Total Pokok</p>
+                        </div>
+                    </div>
+
+                    <!-- Total Produksi -->
+                    <div class="metric-card p-6 rounded-xl">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                                <i class="fas fa-weight-hanging text-purple-600 dark:text-purple-400"></i>
+                            </div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Produksi</span>
+                        </div>
+                        <div class="space-y-1">
+                            <h4 class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($laporan['total_produksi']) }}</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">kg TBS</p>
+                        </div>
+                    </div>
+
+                    <!-- Efisiensi -->
+                    <div class="metric-card p-6 rounded-xl">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
+                                <i class="fas fa-chart-line text-orange-600 dark:text-orange-400"></i>
+                            </div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Efisiensi</span>
+                        </div>
+                        <div class="space-y-1">
+                            <h4 class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($laporan['efisiensi_pemupukan'], 2) }}</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">kg/kg pupuk</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Indicators -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <!-- Produksi Bulan Ini -->
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-xl border border-blue-200 dark:border-blue-800">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <div class="p-2 bg-blue-500 rounded-lg">
+                                <i class="fas fa-calendar-month text-white text-sm"></i>
+                            </div>
+                            <h5 class="font-semibold text-gray-900 dark:text-white">Produksi Bulan Ini</h5>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ number_format($laporan['produksi_bulan_ini']) }} kg</p>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                <span class="text-sm text-gray-600 dark:text-gray-400">{{ now()->format('F Y') }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pemupukan Bulan Ini -->
+                    <div class="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 p-6 rounded-xl border border-emerald-200 dark:border-emerald-800">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <div class="p-2 bg-emerald-500 rounded-lg">
+                                <i class="fas fa-seedling text-white text-sm"></i>
+                            </div>
+                            <h5 class="font-semibold text-gray-900 dark:text-white">Pemupukan Bulan Ini</h5>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{{ number_format($laporan['pemupukan_bulan_ini']) }} kg</p>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                                <span class="text-sm text-gray-600 dark:text-gray-400">{{ now()->format('F Y') }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Produktivitas -->
+                    <div class="bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20 p-6 rounded-xl border border-purple-200 dark:border-purple-800">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <div class="p-2 bg-purple-500 rounded-lg">
+                                <i class="fas fa-chart-bar text-white text-sm"></i>
+                            </div>
+                            <h5 class="font-semibold text-gray-900 dark:text-white">Produktivitas</h5>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ number_format($laporan['rata_rata_produksi_per_pokok'], 2) }}</p>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                                <span class="text-sm text-gray-600 dark:text-gray-400">kg per pokok</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detail Blok Table -->
+                <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-slate-600 overflow-hidden">
+                    <div class="px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-slate-700 dark:to-slate-600 border-b border-gray-200 dark:border-slate-600">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                            <i class="fas fa-table mr-2 text-gray-600 dark:text-gray-400"></i>
+                            Detail Blok - {{ $laporan['afdeling']->nama }}
+                        </h4>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-600">
+                            <thead class="bg-gray-50 dark:bg-slate-700">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Blok</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Tahun Tanam</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Jumlah Pokok</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Produksi</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Pemupukan</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Produktivitas</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-600">
+                                @foreach($detailBlokPerAfdeling->where('afdeling.id', $laporan['afdeling']->id)->first()['bloks'] ?? [] as $blokDetail)
+                                <tr class="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors duration-200">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold text-xs">
+                                                {{ substr($blokDetail['blok']->nama_blok, -2) }}
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $blokDetail['blok']->nama_blok }}</div>
+                                                <div class="text-xs text-gray-500 dark:text-gray-400">{{ $blokDetail['blok']->luas_blok }} ha</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                                            {{ $blokDetail['tahun_tanam']->tahun_tanam }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white font-medium">
+                                        {{ number_format($blokDetail['blok']->jumlah_pokok) }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900 dark:text-white">{{ number_format($blokDetail['produksi']) }} kg</div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400">Total produksi</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900 dark:text-white">{{ number_format($blokDetail['pemupukan']) }} kg</div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400">Total pupuk</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center space-x-2">
+                                            <div class="text-sm font-medium text-gray-900 dark:text-white">{{ number_format($blokDetail['produktivitas'], 2) }}</div>
+                                            @if($blokDetail['produktivitas'] > 20)
+                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium badge-success">
+                                                    <i class="fas fa-arrow-up mr-1"></i>Tinggi
+                                                </span>
+                                            @elseif($blokDetail['produktivitas'] > 10)
+                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium badge-warning">
+                                                    <i class="fas fa-minus mr-1"></i>Sedang
+                                                </span>
+                                            @else
+                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium badge-danger">
+                                                    <i class="fas fa-arrow-down mr-1"></i>Rendah
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400">kg/pokok</div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+
+        <!-- Export Section -->
+        <div class="group bg-gradient-to-br from-white/90 to-gray-50/90 dark:from-slate-800/90 dark:to-slate-700/90 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 dark:border-slate-700/50 p-8 card-hover animate-slide-up">
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center space-x-4">
+                    <div class="p-3 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg">
+                        <i class="fas fa-download text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Export Laporan Afdeling</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Download laporan berdasarkan afdeling dalam berbagai format</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-2 px-4 py-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
+                    <i class="fas fa-check-circle text-emerald-600 dark:text-emerald-400"></i>
+                    <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Available</span>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <a href="#" class="group/btn relative overflow-hidden bg-gradient-to-r from-red-500 to-red-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 block text-center">
+                    <div class="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                    <div class="relative z-10 flex flex-col items-center space-y-3">
+                        <div class="p-3 bg-white/20 rounded-lg">
+                            <i class="fas fa-file-pdf text-2xl"></i>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="font-bold">Export PDF</h4>
+                            <p class="text-sm text-red-100">Laporan per afdeling</p>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="#" class="group/btn relative overflow-hidden bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 block text-center">
+                    <div class="absolute inset-0 bg-gradient-to-r from-emerald-600 to-emerald-700 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                    <div class="relative z-10 flex flex-col items-center space-y-3">
+                        <div class="p-3 bg-white/20 rounded-lg">
+                            <i class="fas fa-file-excel text-2xl"></i>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="font-bold">Export Excel</h4>
+                            <p class="text-sm text-emerald-100">Data terstruktur</p>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="#" target="_blank" class="group/btn relative overflow-hidden bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 block text-center">
+                    <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-700 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                    <div class="relative z-10 flex flex-col items-center space-y-3">
+                        <div class="p-3 bg-white/20 rounded-lg">
+                            <i class="fas fa-print text-2xl"></i>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="font-bold">Print Laporan</h4>
+                            <p class="text-sm text-blue-100">Cetak langsung</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="flex items-center justify-center space-x-3 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl">
+                <i class="fas fa-info-circle text-emerald-600 dark:text-emerald-400"></i>
+                <p class="text-sm text-emerald-700 dark:text-emerald-300 font-medium">
+                    Laporan ini menampilkan data real-time yang dikelompokkan berdasarkan afdeling untuk analisis kinerja yang lebih detail.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Produksi Per Afdeling Chart
+            const produksiAfdelingCtx = document.getElementById('produksiAfdelingChart').getContext('2d');
+            const produksiAfdelingData = @json($produksiPerAfdelingChart);
+            
+            const afdelingLabels = produksiAfdelingData.map(item => item.nama);
+            const afdelingValues = produksiAfdelingData.map(item => item.total_produksi);
+
+            new Chart(produksiAfdelingCtx, {
+                type: 'bar',
+                data: {
+                    labels: afdelingLabels,
+                    datasets: [{
+                        label: 'Produksi (kg)',
+                        data: afdelingValues,
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(239, 68, 68, 0.8)',
+                            'rgba(139, 92, 246, 0.8)',
+                            'rgba(236, 72, 153, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(16, 185, 129, 1)',
+                            'rgba(245, 158, 11, 1)',
+                            'rgba(239, 68, 68, 1)',
+                            'rgba(139, 92, 246, 1)',
+                            'rgba(236, 72, 153, 1)'
+                        ],
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        borderSkipped: false,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Trend Produksi Chart
+            const trendCtx = document.getElementById('trendProduksiChart').getContext('2d');
+            const trendData = @json($trendProduksiAfdeling);
+            
+            // Prepare data for line chart
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const colors = [
+                'rgba(59, 130, 246, 1)',
+                'rgba(16, 185, 129, 1)',
+                'rgba(245, 158, 11, 1)',
+                'rgba(239, 68, 68, 1)',
+                'rgba(139, 92, 246, 1)',
+                'rgba(236, 72, 153, 1)'
+            ];
+
+            const datasets = trendData.map((afdeling, index) => {
+                const monthlyData = new Array(6).fill(0);
+                afdeling.data.forEach(item => {
+                    const monthIndex = item.month - 1;
+                    if (monthIndex >= 0 && monthIndex < 6) {
+                        monthlyData[monthIndex] = item.total_produksi;
+                    }
+                });
+
+                return {
+                    label: afdeling.nama,
+                    data: monthlyData,
+                    borderColor: colors[index % colors.length],
+                    backgroundColor: colors[index % colors.length].replace('1)', '0.1)'),
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: false,
+                    pointBackgroundColor: colors[index % colors.length],
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                };
+            });
+
+            // Get last 6 months labels
+            const last6Months = [];
+            for (let i = 5; i >= 0; i--) {
+                const date = new Date();
+                date.setMonth(date.getMonth() - i);
+                last6Months.push(months[date.getMonth()]);
+            }
+
+            new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: last6Months,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+        });
+    </script>
+    @endpush
+</x-manager-layout>

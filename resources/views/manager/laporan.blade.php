@@ -126,6 +126,14 @@
                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ now()->format('d M Y, H:i') }}</span>
                     </div>
                 </div>
+                <div class="mt-6">
+                    <a href="{{ route('manager.laporan-afdeling') }}" 
+                       class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-medium rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+                        <i class="fas fa-layer-group mr-2"></i>
+                        Lihat Laporan Per Afdeling
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
