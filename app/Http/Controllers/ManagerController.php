@@ -11,11 +11,13 @@ use App\Models\Pemupukan;
 use App\Models\ActivityLog;
 use App\Models\DatasetSistem;
 use App\Models\Afdeling;
+use App\Models\Prediction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\LaporanExport;
+use GuzzleHttp\Client;
 
 class ManagerController extends Controller
 {
@@ -76,6 +78,17 @@ class ManagerController extends Controller
             ->take(10)
             ->get();
 
+        // Data prediksi yang sudah tersedia (read-only untuk manager)
+        $prediksiTerbaru = Prediction::orderBy('created_at', 'desc')->take(5)->get();
+        $totalPrediksi = Prediction::count();
+        $prediksiRataRata = Prediction::avg('prediction');
+        
+        // Data untuk chart perbandingan prediksi vs aktual
+        $perbandinganPrediksiAktual = $this->getPerbandinganPrediksiAktual();
+        
+        // Akurasi model (jika ada data aktual)
+        $akurasiModel = $this->hitungAkurasiModel();
+
         return view('manager.laporan', compact(
             'totalBlok',
             'totalPokok', 
@@ -84,7 +97,12 @@ class ManagerController extends Controller
             'produksi12Bulan',
             'pemupukanPerJenis',
             'produksiPerBlok',
-            'aktivitasTerbaru'
+            'aktivitasTerbaru',
+            'prediksiTerbaru',
+            'totalPrediksi',
+            'prediksiRataRata',
+            'perbandinganPrediksiAktual',
+            'akurasiModel'
         ));
     }
 
@@ -362,5 +380,70 @@ class ManagerController extends Controller
             'produksiPerBlok',
             'aktivitasTerbaru'
         );
+    }
+
+    /**
+     * Dapatkan data perbandingan prediksi vs aktual
+     */
+    private function getPerbandinganPrediksiAktual()
+    {
+        $perbandingan = [];
+        
+        // Ambil prediksi yang sudah memiliki data aktual
+        $predictions = Prediction::where('year', '<=', Carbon::now()->year)
+            ->where(function($query) {
+                $query->where('year', '<', Carbon::now()->year)
+                      ->orWhere(function($q) {
+                          $q->where('year', '=', Carbon::now()->year)
+                            ->where('month', '<=', Carbon::now()->month);
+                      });
+            })
+            ->orderBy('year', 'asc')
+            ->orderBy('month', 'asc')
+            ->get();
+
+        foreach ($predictions as $prediction) {
+            // Cari data produksi aktual untuk bulan dan tahun yang sama
+            $actualProduction = HasilProduksi::whereRaw('EXTRACT(YEAR FROM tanggal) = ?', [$prediction->year])
+                ->whereRaw('EXTRACT(MONTH FROM tanggal) = ?', [$prediction->month])
+                ->sum('realisasi_produksi');
+
+            if ($actualProduction > 0) {
+                $perbandingan[] = [
+                    'period' => $prediction->month . '/' . $prediction->year,
+                    'predicted' => $prediction->prediction,
+                    'actual' => $actualProduction,
+                    'accuracy' => $this->hitungAkurasi($prediction->prediction, $actualProduction)
+                ];
+            }
+        }
+
+        return $perbandingan;
+    }
+
+    /**
+     * Hitung akurasi model secara keseluruhan
+     */
+    private function hitungAkurasiModel()
+    {
+        $perbandingan = $this->getPerbandinganPrediksiAktual();
+        
+        if (empty($perbandingan)) {
+            return null;
+        }
+
+        $totalAccuracy = array_sum(array_column($perbandingan, 'accuracy'));
+        return $totalAccuracy / count($perbandingan);
+    }
+
+    /**
+     * Hitung akurasi antara prediksi dan aktual
+     */
+    private function hitungAkurasi($predicted, $actual)
+    {
+        if ($actual == 0) return 0;
+        
+        $error = abs($predicted - $actual) / $actual;
+        return max(0, (1 - $error) * 100);
     }
 }

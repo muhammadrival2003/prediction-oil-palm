@@ -70,6 +70,57 @@
             background: linear-gradient(135deg, rgba(51,65,85,0.8) 0%, rgba(51,65,85,0.6) 100%);
             border: 1px solid rgba(255,255,255,0.1);
         }
+
+        /* Tab Styles */
+        .tab-button {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .tab-button:hover::before {
+            left: 100%;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tab-indicator {
+            position: absolute;
+            bottom: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+            transition: all 0.3s ease;
+            border-radius: 2px 2px 0 0;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @endpush
@@ -150,224 +201,263 @@
             </div>
         </div>
 
-        <!-- Afdeling Cards -->
-        <div class="space-y-8 animate-slide-up">
+        <!-- Tab Navigation -->
+        <div class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 dark:border-slate-700/50 p-8 animate-slide-up">
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center space-x-4">
+                    <div class="p-3 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl shadow-lg">
+                        <i class="fas fa-layer-group text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Detail Per Afdeling</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Pilih afdeling untuk melihat detail lengkap</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-2 px-4 py-2 bg-purple-100 dark:bg-purple-900/30 rounded-full">
+                    <i class="fas fa-tabs text-purple-600 dark:text-purple-400"></i>
+                    <span class="text-sm font-medium text-purple-700 dark:text-purple-300">{{ count($laporanPerAfdeling) }} Afdeling</span>
+                </div>
+            </div>
+
+            <!-- Tab Headers -->
+            <div class="relative mb-8">
+                <div class="flex flex-wrap gap-2 border-b border-gray-200 dark:border-slate-600 relative">
+                    <div class="tab-indicator" id="tabIndicator"></div>
+                    @foreach($laporanPerAfdeling as $index => $laporan)
+                    <button 
+                        class="tab-button px-6 py-4 font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-t-lg transition-all duration-300 {{ $index === 0 ? 'active' : '' }}"
+                        data-tab="afdeling-{{ $index }}"
+                        data-index="{{ $index }}">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-lg flex items-center justify-center text-white font-bold text-xs">
+                                {{ substr($laporan['afdeling']->nama, 0, 2) }}
+                            </div>
+                            <span>{{ $laporan['afdeling']->nama }}</span>
+                        </div>
+                    </button>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- Tab Contents -->
             @foreach($laporanPerAfdeling as $index => $laporan)
-            <div class="afdeling-card rounded-2xl shadow-2xl p-8 card-hover">
-                <!-- Afdeling Header -->
-                <div class="flex items-center justify-between mb-8">
-                    <div class="flex items-center space-x-4">
-                        <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                            {{ substr($laporan['afdeling']->nama, 0, 2) }}
-                        </div>
-                        <div>
-                            <h2 class="text-3xl font-bold text-gray-900 dark:text-white">{{ $laporan['afdeling']->nama }}</h2>
-                            <p class="text-gray-600 dark:text-gray-400">Afdeling {{ $index + 1 }}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        @if($laporan['total_produksi'] > 50000)
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold badge-success">
-                                <i class="fas fa-arrow-up mr-1"></i>Produktif Tinggi
-                            </span>
-                        @elseif($laporan['total_produksi'] > 25000)
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold badge-warning">
-                                <i class="fas fa-minus mr-1"></i>Produktif Sedang
-                            </span>
-                        @else
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold badge-info">
-                                <i class="fas fa-arrow-down mr-1"></i>Perlu Perhatian
-                            </span>
-                        @endif
-                    </div>
-                </div>
-
-                <!-- Metrics Grid -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-                    <!-- Total Blok -->
-                    <div class="metric-card p-6 rounded-xl">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                                <i class="fas fa-map text-blue-600 dark:text-blue-400"></i>
+            <div class="tab-content {{ $index === 0 ? 'active' : '' }}" id="afdeling-{{ $index }}">
+                <div class="space-y-8">
+                    <!-- Afdeling Header -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                                {{ substr($laporan['afdeling']->nama, 0, 2) }}
                             </div>
-                            <span class="text-xs text-gray-500 dark:text-gray-400">Blok</span>
+                            <div>
+                                <h2 class="text-3xl font-bold text-gray-900 dark:text-white">{{ $laporan['afdeling']->nama }}</h2>
+                                <p class="text-gray-600 dark:text-gray-400">Afdeling {{ $index + 1 }}</p>
+                            </div>
                         </div>
-                        <div class="space-y-1">
-                            <h4 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $laporan['total_blok'] }}</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Total Blok</p>
+                        <div class="flex items-center space-x-2">
+                            @if($laporan['total_produksi'] > 50000)
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold badge-success">
+                                    <i class="fas fa-arrow-up mr-1"></i>Produktif Tinggi
+                                </span>
+                            @elseif($laporan['total_produksi'] > 25000)
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold badge-warning">
+                                    <i class="fas fa-minus mr-1"></i>Produktif Sedang
+                                </span>
+                            @else
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold badge-info">
+                                    <i class="fas fa-arrow-down mr-1"></i>Perlu Perhatian
+                                </span>
+                            @endif
                         </div>
                     </div>
 
-                    <!-- Total Pokok -->
-                    <div class="metric-card p-6 rounded-xl">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
-                                <i class="fas fa-tree text-green-600 dark:text-green-400"></i>
+                    <!-- Metrics Grid -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <!-- Total Blok -->
+                        <div class="metric-card p-6 rounded-xl">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                                    <i class="fas fa-map text-blue-600 dark:text-blue-400"></i>
+                                </div>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">Blok</span>
                             </div>
-                            <span class="text-xs text-gray-500 dark:text-gray-400">Pokok</span>
+                            <div class="space-y-1">
+                                <h4 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $laporan['total_blok'] }}</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Total Blok</p>
+                            </div>
                         </div>
-                        <div class="space-y-1">
-                            <h4 class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($laporan['total_pokok']) }}</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Total Pokok</p>
-                        </div>
-                    </div>
 
-                    <!-- Total Produksi -->
-                    <div class="metric-card p-6 rounded-xl">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                                <i class="fas fa-weight-hanging text-purple-600 dark:text-purple-400"></i>
+                        <!-- Total Pokok -->
+                        <div class="metric-card p-6 rounded-xl">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                                    <i class="fas fa-tree text-green-600 dark:text-green-400"></i>
+                                </div>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">Pokok</span>
                             </div>
-                            <span class="text-xs text-gray-500 dark:text-gray-400">Produksi</span>
+                            <div class="space-y-1">
+                                <h4 class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($laporan['total_pokok']) }}</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Total Pokok</p>
+                            </div>
                         </div>
-                        <div class="space-y-1">
-                            <h4 class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($laporan['total_produksi']) }}</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">kg TBS</p>
-                        </div>
-                    </div>
 
-                    <!-- Efisiensi -->
-                    <div class="metric-card p-6 rounded-xl">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
-                                <i class="fas fa-chart-line text-orange-600 dark:text-orange-400"></i>
+                        <!-- Total Produksi -->
+                        <div class="metric-card p-6 rounded-xl">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                                    <i class="fas fa-weight-hanging text-purple-600 dark:text-purple-400"></i>
+                                </div>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">Produksi</span>
                             </div>
-                            <span class="text-xs text-gray-500 dark:text-gray-400">Efisiensi</span>
+                            <div class="space-y-1">
+                                <h4 class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($laporan['total_produksi']) }}</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">kg TBS</p>
+                            </div>
                         </div>
-                        <div class="space-y-1">
-                            <h4 class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($laporan['efisiensi_pemupukan'], 2) }}</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">kg/kg pupuk</p>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Performance Indicators -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <!-- Produksi Bulan Ini -->
-                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-xl border border-blue-200 dark:border-blue-800">
-                        <div class="flex items-center space-x-3 mb-3">
-                            <div class="p-2 bg-blue-500 rounded-lg">
-                                <i class="fas fa-calendar-month text-white text-sm"></i>
+                        <!-- Efisiensi -->
+                        <div class="metric-card p-6 rounded-xl">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
+                                    <i class="fas fa-chart-line text-orange-600 dark:text-orange-400"></i>
+                                </div>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">Efisiensi</span>
                             </div>
-                            <h5 class="font-semibold text-gray-900 dark:text-white">Produksi Bulan Ini</h5>
-                        </div>
-                        <div class="space-y-2">
-                            <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ number_format($laporan['produksi_bulan_ini']) }} kg</p>
-                            <div class="flex items-center space-x-2">
-                                <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                <span class="text-sm text-gray-600 dark:text-gray-400">{{ now()->format('F Y') }}</span>
+                            <div class="space-y-1">
+                                <h4 class="text-2xl font-bold text-gray-900 dark:text-white">{{ number_format($laporan['efisiensi_pemupukan'], 2) }}</h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">kg/kg pupuk</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Pemupukan Bulan Ini -->
-                    <div class="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 p-6 rounded-xl border border-emerald-200 dark:border-emerald-800">
-                        <div class="flex items-center space-x-3 mb-3">
-                            <div class="p-2 bg-emerald-500 rounded-lg">
-                                <i class="fas fa-seedling text-white text-sm"></i>
+                    <!-- Performance Indicators -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Produksi Bulan Ini -->
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-xl border border-blue-200 dark:border-blue-800">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <div class="p-2 bg-blue-500 rounded-lg">
+                                    <i class="fas fa-calendar-month text-white text-sm"></i>
+                                </div>
+                                <h5 class="font-semibold text-gray-900 dark:text-white">Produksi Bulan Ini</h5>
                             </div>
-                            <h5 class="font-semibold text-gray-900 dark:text-white">Pemupukan Bulan Ini</h5>
+                            <div class="space-y-2">
+                                <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ number_format($laporan['produksi_bulan_ini']) }} kg</p>
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ now()->format('F Y') }}</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="space-y-2">
-                            <p class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{{ number_format($laporan['pemupukan_bulan_ini']) }} kg</p>
-                            <div class="flex items-center space-x-2">
-                                <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                                <span class="text-sm text-gray-600 dark:text-gray-400">{{ now()->format('F Y') }}</span>
+
+                        <!-- Pemupukan Bulan Ini -->
+                        <div class="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 p-6 rounded-xl border border-emerald-200 dark:border-emerald-800">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <div class="p-2 bg-emerald-500 rounded-lg">
+                                    <i class="fas fa-seedling text-white text-sm"></i>
+                                </div>
+                                <h5 class="font-semibold text-gray-900 dark:text-white">Pemupukan Bulan Ini</h5>
+                            </div>
+                            <div class="space-y-2">
+                                <p class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{{ number_format($laporan['pemupukan_bulan_ini']) }} kg</p>
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ now()->format('F Y') }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Produktivitas -->
+                        <div class="bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20 p-6 rounded-xl border border-purple-200 dark:border-purple-800">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <div class="p-2 bg-purple-500 rounded-lg">
+                                    <i class="fas fa-chart-bar text-white text-sm"></i>
+                                </div>
+                                <h5 class="font-semibold text-gray-900 dark:text-white">Produktivitas</h5>
+                            </div>
+                            <div class="space-y-2">
+                                <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ number_format($laporan['rata_rata_produksi_per_pokok'], 2) }}</p>
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                                    <span class="text-sm text-gray-600 dark:text-gray-400">kg per pokok</span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Produktivitas -->
-                    <div class="bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20 p-6 rounded-xl border border-purple-200 dark:border-purple-800">
-                        <div class="flex items-center space-x-3 mb-3">
-                            <div class="p-2 bg-purple-500 rounded-lg">
-                                <i class="fas fa-chart-bar text-white text-sm"></i>
-                            </div>
-                            <h5 class="font-semibold text-gray-900 dark:text-white">Produktivitas</h5>
+                    <!-- Detail Blok Table -->
+                    <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-slate-600 overflow-hidden">
+                        <div class="px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-slate-700 dark:to-slate-600 border-b border-gray-200 dark:border-slate-600">
+                            <h4 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                                <i class="fas fa-table mr-2 text-gray-600 dark:text-gray-400"></i>
+                                Detail Blok - {{ $laporan['afdeling']->nama }}
+                            </h4>
                         </div>
-                        <div class="space-y-2">
-                            <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ number_format($laporan['rata_rata_produksi_per_pokok'], 2) }}</p>
-                            <div class="flex items-center space-x-2">
-                                <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
-                                <span class="text-sm text-gray-600 dark:text-gray-400">kg per pokok</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Detail Blok Table -->
-                <div class="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-slate-600 overflow-hidden">
-                    <div class="px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-slate-700 dark:to-slate-600 border-b border-gray-200 dark:border-slate-600">
-                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                            <i class="fas fa-table mr-2 text-gray-600 dark:text-gray-400"></i>
-                            Detail Blok - {{ $laporan['afdeling']->nama }}
-                        </h4>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-600">
-                            <thead class="bg-gray-50 dark:bg-slate-700">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Blok</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Tahun Tanam</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Jumlah Pokok</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Produksi</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Pemupukan</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Produktivitas</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-600">
-                                @foreach($detailBlokPerAfdeling->where('afdeling.id', $laporan['afdeling']->id)->first()['bloks'] ?? [] as $blokDetail)
-                                <tr class="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors duration-200">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center space-x-3">
-                                            <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold text-xs">
-                                                {{ substr($blokDetail['blok']->nama_blok, -2) }}
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-600">
+                                <thead class="bg-gray-50 dark:bg-slate-700">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Blok</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Tahun Tanam</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Jumlah Pokok</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Produksi</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Pemupukan</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Produktivitas</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-600">
+                                    @foreach($detailBlokPerAfdeling->where('afdeling.id', $laporan['afdeling']->id)->first()['bloks'] ?? [] as $blokDetail)
+                                    <tr class="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors duration-200">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold text-xs">
+                                                    {{ substr($blokDetail['blok']->nama_blok, -2) }}
+                                                </div>
+                                                <div>
+                                                    <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $blokDetail['blok']->nama_blok }}</div>
+                                                    <div class="text-xs text-gray-500 dark:text-gray-400">{{ $blokDetail['blok']->luas_blok }} ha</div>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $blokDetail['blok']->nama_blok }}</div>
-                                                <div class="text-xs text-gray-500 dark:text-gray-400">{{ $blokDetail['blok']->luas_blok }} ha</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                                                {{ $blokDetail['tahun_tanam']->tahun_tanam }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white font-medium">
+                                            {{ number_format($blokDetail['blok']->jumlah_pokok) }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900 dark:text-white">{{ number_format($blokDetail['produksi']) }} kg</div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">Total produksi</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900 dark:text-white">{{ number_format($blokDetail['pemupukan']) }} kg</div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">Total pupuk</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center space-x-2">
+                                                <div class="text-sm font-medium text-gray-900 dark:text-white">{{ number_format($blokDetail['produktivitas'], 2) }}</div>
+                                                @if($blokDetail['produktivitas'] > 20)
+                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium badge-success">
+                                                        <i class="fas fa-arrow-up mr-1"></i>Tinggi
+                                                    </span>
+                                                @elseif($blokDetail['produktivitas'] > 10)
+                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium badge-warning">
+                                                        <i class="fas fa-minus mr-1"></i>Sedang
+                                                    </span>
+                                                @else
+                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium badge-danger">
+                                                        <i class="fas fa-arrow-down mr-1"></i>Rendah
+                                                    </span>
+                                                @endif
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
-                                            {{ $blokDetail['tahun_tanam']->tahun_tanam }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white font-medium">
-                                        {{ number_format($blokDetail['blok']->jumlah_pokok) }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white">{{ number_format($blokDetail['produksi']) }} kg</div>
-                                        <div class="text-xs text-gray-500 dark:text-gray-400">Total produksi</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white">{{ number_format($blokDetail['pemupukan']) }} kg</div>
-                                        <div class="text-xs text-gray-500 dark:text-gray-400">Total pupuk</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center space-x-2">
-                                            <div class="text-sm font-medium text-gray-900 dark:text-white">{{ number_format($blokDetail['produktivitas'], 2) }}</div>
-                                            @if($blokDetail['produktivitas'] > 20)
-                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium badge-success">
-                                                    <i class="fas fa-arrow-up mr-1"></i>Tinggi
-                                                </span>
-                                            @elseif($blokDetail['produktivitas'] > 10)
-                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium badge-warning">
-                                                    <i class="fas fa-minus mr-1"></i>Sedang
-                                                </span>
-                                            @else
-                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium badge-danger">
-                                                    <i class="fas fa-arrow-down mr-1"></i>Rendah
-                                                </span>
-                                            @endif
-                                        </div>
-                                        <div class="text-xs text-gray-500 dark:text-gray-400">kg/pokok</div>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">kg/pokok</div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -445,6 +535,52 @@
     @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Tab functionality
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const tabIndicator = document.getElementById('tabIndicator');
+
+            function updateTabIndicator(activeButton) {
+                const buttonRect = activeButton.getBoundingClientRect();
+                const containerRect = activeButton.parentElement.getBoundingClientRect();
+                const left = buttonRect.left - containerRect.left;
+                const width = buttonRect.width;
+                
+                tabIndicator.style.left = left + 'px';
+                tabIndicator.style.width = width + 'px';
+            }
+
+            // Initialize tab indicator position
+            const activeTab = document.querySelector('.tab-button.active');
+            if (activeTab) {
+                updateTabIndicator(activeTab);
+            }
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetTab = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all buttons and contents
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked button and corresponding content
+                    this.classList.add('active');
+                    document.getElementById(targetTab).classList.add('active');
+                    
+                    // Update tab indicator
+                    updateTabIndicator(this);
+                });
+            });
+
+            // Handle window resize for tab indicator
+            window.addEventListener('resize', function() {
+                const activeButton = document.querySelector('.tab-button.active');
+                if (activeButton) {
+                    updateTabIndicator(activeButton);
+                }
+            });
+
             // Produksi Per Afdeling Chart
             const produksiAfdelingCtx = document.getElementById('produksiAfdelingChart').getContext('2d');
             const produksiAfdelingData = @json($produksiPerAfdelingChart);

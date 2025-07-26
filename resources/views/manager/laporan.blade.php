@@ -403,6 +403,104 @@
             </div>
         </div>
 
+        <!-- Prediction Results Section -->
+        <div class="group bg-gradient-to-br from-purple-50/90 to-indigo-50/90 dark:from-slate-800/90 dark:to-slate-700/90 backdrop-blur-lg rounded-2xl shadow-2xl border border-purple-200/20 dark:border-slate-700/50 p-8 card-hover animate-slide-up">
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center space-x-4">
+                    <div class="p-3 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl shadow-lg">
+                        <i class="fas fa-brain text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Prediksi</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Data prediksi hasil produksi yang tersedia</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Statistics Cards -->
+            <div class="grid grid-cols-1 gap-6 mb-6">
+                <!-- Rata-rata Prediksi -->
+                <div class="bg-white/80 dark:bg-slate-700/80 rounded-xl p-6 border border-purple-200/50 dark:border-slate-600/50">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                            <i class="fas fa-chart-bar text-blue-600 dark:text-blue-400"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Rata-rata</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Prediksi</p>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ number_format($prediksiRataRata ?? 0) }}</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">kg per bulan</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <!-- Latest Predictions -->
+                <div class="bg-white/80 dark:bg-slate-700/80 rounded-xl p-6 border border-purple-200/50 dark:border-slate-600/50">
+                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <i class="fas fa-history text-purple-500 mr-2"></i>
+                        Prediksi Terbaru
+                    </h4>
+                    <div class="space-y-3 max-h-64 overflow-y-auto custom-scrollbar">
+                        @forelse($prediksiTerbaru as $prediction)
+                        <div class="flex items-center justify-between p-3 bg-purple-50 dark:bg-slate-600 rounded-lg">
+                            <div>
+                                <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                    {{ $prediction->month_name }} {{ $prediction->year }}
+                                </div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">
+                                    {{ $prediction->created_at->diffForHumans() }}
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm font-bold text-purple-600 dark:text-purple-400">
+                                    {{ number_format($prediction->prediction) }} kg
+                                </div>
+                                @if($prediction->confidence_score)
+                                <div class="text-xs text-gray-500 dark:text-gray-400">
+                                    {{ number_format($prediction->confidence_score * 100, 1) }}% confidence
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                        @empty
+                        <div class="text-center py-8">
+                            <i class="fas fa-brain text-gray-400 text-3xl mb-3"></i>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Belum ada data prediksi</p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Data akan muncul setelah prediksi dibuat</p>
+                        </div>
+                        @endforelse
+                    </div>
+                </div>
+
+                <!-- Comparison Chart -->
+                @if(!empty($perbandinganPrediksiAktual))
+                <div class="bg-white/80 dark:bg-slate-700/80 rounded-xl p-6 border border-purple-200/50 dark:border-slate-600/50">
+                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <i class="fas fa-chart-line text-purple-500 mr-2"></i>
+                        Perbandingan Prediksi vs Aktual
+                    </h4>
+                    <div class="chart-container" style="height: 250px;">
+                        <canvas id="predictionComparisonChart"></canvas>
+                    </div>
+                </div>
+                @else
+                <div class="bg-white/80 dark:bg-slate-700/80 rounded-xl p-6 border border-purple-200/50 dark:border-slate-600/50">
+                    <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <i class="fas fa-chart-line text-purple-500 mr-2"></i>
+                        Analisis Akurasi
+                    </h4>
+                    <div class="text-center py-8">
+                        <i class="fas fa-chart-line text-gray-400 text-3xl mb-3"></i>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Belum ada data perbandingan</p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Perbandingan akan muncul setelah ada data aktual</p>
+                    </div>
+                </div>
+                @endif
+            </div>
+        </div>
+
         <!-- Export Section -->
         <div class="group bg-gradient-to-br from-white/90 to-gray-50/90 dark:from-slate-800/90 dark:to-slate-700/90 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 dark:border-slate-700/50 p-8 card-hover animate-slide-up">
             <div class="flex items-center justify-between mb-8">
@@ -549,6 +647,65 @@
                     }
                 }
             });
+
+            // Prediction Comparison Chart
+            @if(!empty($perbandinganPrediksiAktual))
+            const predictionCtx = document.getElementById('predictionComparisonChart').getContext('2d');
+            const comparisonData = @json($perbandinganPrediksiAktual);
+            
+            new Chart(predictionCtx, {
+                type: 'line',
+                data: {
+                    labels: comparisonData.map(item => item.period),
+                    datasets: [
+                        {
+                            label: 'Prediksi',
+                            data: comparisonData.map(item => item.predicted),
+                            borderColor: '#8b5cf6',
+                            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Data Aktual',
+                            data: comparisonData.map(item => item.actual),
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                afterBody: function(context) {
+                                    const index = context[0].dataIndex;
+                                    const accuracy = comparisonData[index].accuracy;
+                                    return `Akurasi: ${accuracy.toFixed(1)}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return new Intl.NumberFormat('id-ID').format(value) + ' kg';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            @endif
         });
     </script>
     @endpush
