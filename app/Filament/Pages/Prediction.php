@@ -196,7 +196,7 @@ class Prediction extends Page implements HasForms
         return DatasetSistem::orderBy('tanggal', 'desc')
             ->take(12)
             ->get()
-            ->sortBy('tanggal')
+            ->sortByDesc('tanggal')
             ->values();
     }
 }
