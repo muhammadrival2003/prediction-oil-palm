@@ -10,7 +10,7 @@
     <div class="bg-gradient-to-r from-emerald-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 mb-6 shadow-sm border border-gray-200/50 dark:border-gray-700/50">
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Menu Afdeling</h1>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Tahun Tanam</h1>
                 <p class="text-sm text-emerald-600 dark:text-emerald-400 mt-1">
                     Pilih Menu untuk mengelola Data Tahun Tanam
                 </p>

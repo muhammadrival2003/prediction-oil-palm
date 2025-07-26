@@ -23,15 +23,14 @@ class BlokPemupukan extends Page
 
     public function mount()
     {
-        $afdeling_id = request('afdeling_id'); 
+        $afdeling_id = request('afdeling_id');
         $this->afdeling_id = request('afdeling_id');
 
         $this->bloks = Blok::whereHas('tahunTanam', function ($query) use ($afdeling_id) {
             $query->where('afdeling_id', $afdeling_id);
         })
-            ->with(['tahunTanam', 'pemupukans' => function ($query) {
-                $query->orderBy('tanggal', 'desc');
-            }])
+            ->with(['tahunTanam', 'pemupukans' => fn($q) => $q->orderBy('tanggal', 'desc')])
+            ->withCount('pemupukans') // Tetap tambahkan counter terpisah
             ->get();
     }
 }

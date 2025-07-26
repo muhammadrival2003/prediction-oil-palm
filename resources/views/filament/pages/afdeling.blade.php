@@ -36,15 +36,11 @@
                         <div class="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
                             <x-heroicon-o-map class="w-8 h-8 text-white" />
                         </div>
-                        <div class="absolute inset-0 bg-emerald-500 rounded-2xl pulse-ring"></div>
                     </div>
                     <div>
                         <h1 class="text-4xl font-bold bg-gradient-to-r from-gray-900 via-emerald-800 to-emerald-600 dark:from-white dark:via-emerald-200 dark:to-emerald-400 bg-clip-text text-transparent">
                             Manajemen Afdeling
                         </h1>
-                        <p class="text-lg text-gray-600 dark:text-gray-300 mt-1">
-                            Kelola dan pantau seluruh afdeling perkebunan kelapa sawit
-                        </p>
                     </div>
                 </div>
                 

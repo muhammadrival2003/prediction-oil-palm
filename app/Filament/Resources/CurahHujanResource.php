@@ -218,7 +218,7 @@ class CurahHujanResource extends Resource
                 
                 // Action untuk mengambil data dalam rentang bulan
                 Tables\Actions\Action::make('fetch_rainfall_range')
-                    ->label('Ambil Banyak Data CHIRPS)')
+                    ->label('Ambil Banyak Data CHIRPS')
                     ->icon('heroicon-o-calendar-days')
                     ->form([
                         Forms\Components\Select::make('tahun')

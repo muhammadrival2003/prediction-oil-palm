@@ -27,7 +27,8 @@
                         <!-- Logo -->
                         <div class="flex-shrink-0">
                             <h1 class="text-white text-xl font-bold">
-                                <i class="fas fa-seedling mr-2"></i>
+                                <img src="{{ asset('images/icons/icon-72x72.png') }}" alt="Palm Oil Logo" class="h-8 w-8 inline-block mr-2">
+                                <!-- <i class="fas fa-seedling mr-2"></i> -->
                                 Palm Oil Manager
                             </h1>
                         </div>

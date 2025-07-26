@@ -1,15 +1,6 @@
 <x-manager-layout>
     @push('styles')
     <style>
-        .card-hover {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .card-hover:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-        }
-
         .chart-container {
             position: relative;
             height: 400px;

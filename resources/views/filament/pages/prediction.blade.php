@@ -12,7 +12,7 @@
                         <div>
                             <p class="text-sm text-primary-600 dark:text-primary-300 mt-1">
                                 Total {{ $totalData }} data historis untuk prediksi.
-                                12 bulan terakhir yang digunakan
+                                Data 12 bulan terakhir yang digunakan untuk Prediksi.
                             </p>
                         </div>
                     </div>

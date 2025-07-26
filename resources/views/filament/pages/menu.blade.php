@@ -53,12 +53,7 @@
                     </div>
                 </div>
 
-                <!-- Content -->
-                <div class="mb-4 z-10">
-                    <p class="text-gray-600 dark:text-gray-300 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors duration-300">
-                        Kelola Data Tahun Tanam
-                    </p>
-                </div>
+                
 
                 <!-- Footer with animated button -->
                 <div class="mt-auto z-10">
@@ -99,12 +94,6 @@
                     </div>
                 </div>
 
-                <div class="mb-4 z-10">
-                    <p class="text-gray-600 dark:text-gray-300 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors duration-300">
-                        Kelola Data Karyawan Lapangan
-                    </p>
-                </div>
-
                 <div class="mt-auto z-10">
                     <div class="inline-flex items-center text-sm font-medium text-emerald-600 dark:text-emerald-400 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors duration-300">
                         <span>Buka Menu</span>
@@ -142,12 +131,6 @@
                     </div>
                 </div>
 
-                <div class="mb-4 z-10">
-                    <p class="text-gray-600 dark:text-gray-300 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors duration-300">
-                        Kelola Data Pekerjaan
-                    </p>
-                </div>
-
                 <div class="mt-auto z-10">
                     <div class="inline-flex items-center text-sm font-medium text-emerald-600 dark:text-emerald-400 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors duration-300">
                         <span>Buka Menu</span>
@@ -183,12 +166,6 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                         </svg>
                     </div>
-                </div>
-
-                <div class="mb-4 z-10">
-                    <p class="text-gray-600 dark:text-gray-300 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors duration-300">
-                        Kelola Data Hasil Produksi
-                    </p>
                 </div>
 
                 <div class="mt-auto z-10">

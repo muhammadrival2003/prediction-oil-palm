@@ -58,8 +58,8 @@ class KaryawanLapanganResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('afdeling.nama')
                     ->sortable()
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->searchable(),
+                    // ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('nama')
                     ->searchable()

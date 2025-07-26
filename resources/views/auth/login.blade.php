@@ -115,9 +115,9 @@
             
             <!-- Logo/Icon -->
             <div class="relative z-10 mb-4">
-                <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4 pulse-ring">
+                <!-- <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4 pulse-ring">
                     <i class="fas fa-seedling text-2xl text-white"></i>
-                </div>
+                </div> -->
                 <h1 class="text-3xl font-bold tracking-tight">Selamat Datang</h1>
                 <p class="opacity-90 mt-2 font-medium">PTPN IV Oil Palm Prediction</p>
                 <div class="w-16 h-1 bg-white bg-opacity-30 rounded-full mx-auto mt-4"></div>

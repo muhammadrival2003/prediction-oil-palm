@@ -1,14 +1,6 @@
 <x-manager-layout>
     @push('styles')
     <style>
-        .card-hover {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .card-hover:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-        }
 
         .chart-container {
             position: relative;
@@ -69,25 +61,6 @@
             animation: fadeIn 0.6s ease-out;
         }
         
-        .animate-slide-up {
-            animation: slideUp 0.8s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes slideUp {
-            from { 
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @endpush

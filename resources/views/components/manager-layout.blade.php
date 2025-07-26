@@ -127,7 +127,7 @@
                         <div class="flex-shrink-0 animate-fade-in">
                             <div class="flex items-center space-x-3">
                                 <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                                    <i class="fas fa-seedling text-white text-xl"></i>
+                                    <img src="{{ asset('images/icons/icon-72x72.png') }}" alt="Palm Oil Logo" class="h-8 w-8 inline-block">
                                 </div>
                                 <div>
                                     <h1 class="text-white text-xl font-bold tracking-tight">PTPN IV KEBUN LAMA</h1>
@@ -170,12 +170,12 @@
                         </button>
                         
                         <!-- Notifications -->
-                        <div class="relative">
+                        <!-- <div class="relative">
                             <button class="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors duration-200">
                                 <i class="fas fa-bell text-white text-sm"></i>
                                 <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">3</span>
                             </button>
-                        </div>
+                        </div> -->
 
                         <!-- User Dropdown -->
                         <div class="relative">
@@ -209,10 +209,10 @@
                                         <i class="fas fa-user-edit text-emerald-500 mr-3"></i>
                                         <span>Edit Profile</span>
                                     </a>
-                                    <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50 transition-colors">
+                                    <!-- <a href="#" class="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50 transition-colors">
                                         <i class="fas fa-cog text-gray-400 mr-3"></i>
                                         <span>Settings</span>
-                                    </a>
+                                    </a> -->
                                     <div class="border-t border-gray-100 my-2"></div>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf

@@ -14,7 +14,8 @@ class ListKaryawanLapangans extends ListRecords
     {
         $afdeling_id = request('afdeling_id');
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->label('Tambah'),
             Actions\Action::make('kembali')
                 ->label('Kembali')
                 ->color('gray')

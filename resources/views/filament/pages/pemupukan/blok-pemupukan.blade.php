@@ -1,4 +1,11 @@
 <x-filament::page>
+    <!-- Bradcrumb -->
+    <x-filament::breadcrumbs :breadcrumbs="[
+    '/admin/afdeling' => 'Afdeling',
+    '/admin/afdeling/menu' => 'Menu',
+    '/admin/menu-pekerjaan' => 'Pekerjaan',
+    '#' => 'Blok Pemupukan',
+    ]" />
     <div class="space-y-8">
         <!-- Enhanced Header with Gradient Background -->
         <div class="bg-gradient-to-r from-emerald-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 shadow-sm border border-gray-200/50 dark:border-gray-700/50">
@@ -54,6 +61,10 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
                             <span>Luas: {{ $blok->luas_lahan }} ha</span>
+                        </div>
+                        <div class="flex items-center text-gray-600 dark:text-gray-300 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors duration-300">
+                            <span>Jumlah Data: {{ $blok->pemupukans->count() }}</span>
+                            
                         </div>
                     </div>
 

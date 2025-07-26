@@ -1,10 +1,16 @@
 <x-filament-panels::page>
+    <x-filament::breadcrumbs :breadcrumbs="[
+    '/admin/afdeling' => 'Afdeling',
+    '/admin/afdeling/menu' => 'Menu',
+    '/admin/tahun-tanam' => 'Tahun Tanam',
+    '#' => 'Tahun Tanam Blok',
+    ]" />
     <div class="space-y-8">
         <!-- Enhanced Header with Gradient Background -->
         <div class="bg-gradient-to-r from-emerald-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 shadow-sm border border-gray-200/50 dark:border-gray-700/50">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Data Blok</h1>
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Blok</h1>
                     <p class="text-sm text-emerald-600 dark:text-emerald-400 mt-1">
                         Kelola data blok per tahun tanam
                     </p>

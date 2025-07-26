@@ -1,4 +1,12 @@
 <x-filament::page>
+    <!-- Bradcrumb -->
+    <x-filament::breadcrumbs :breadcrumbs="[
+    '/admin/afdeling' => 'Afdeling',
+    '/admin/afdeling/menu' => 'Menu',
+    '/admin/blok-produksi' => 'Blok Produksi',
+    '#' => 'Data Hasil Produksi',
+    ]" />
+
     <div class="space-y-8">
         <!-- Enhanced Header with Gradient Background -->
         <div class="bg-gradient-to-r from-emerald-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 shadow-sm border border-gray-200/50 dark:border-gray-700/50">
