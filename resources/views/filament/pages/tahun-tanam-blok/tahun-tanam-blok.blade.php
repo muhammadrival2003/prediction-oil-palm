@@ -5,38 +5,12 @@
     '/admin/tahun-tanam' => 'Tahun Tanam',
     '#' => 'Tahun Tanam Blok',
     ]" />
-    <div class="space-y-8">
-        <!-- Enhanced Header with Gradient Background -->
-        <div class="bg-gradient-to-r from-emerald-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 shadow-sm border border-gray-200/50 dark:border-gray-700/50">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Blok</h1>
-                    <p class="text-sm text-emerald-600 dark:text-emerald-400 mt-1">
-                        Kelola data blok per tahun tanam
-                    </p>
-                </div>
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <a href="{{ route('filament.admin.pages.tahun-tanam', ['afdeling_id' => $this->afdeling_id]) }}" class="inline-flex items-center text-emerald-600 hover:text-emerald-800">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-                        </svg>
-                        Kembali
-                    </a>
-                    <x-filament::button
-                        icon="heroicon-o-plus"
-                        size="sm"
-                        tag="a"
-                        color="emerald"
-                        href="{{ route('filament.admin.resources.bloks.create', [
-                            'tahun_tanam_id' => request('tahun_tanam_id'),
-                            'afdeling_id' => request('afdeling_id')
-                        ]) }}"
-                        class="shadow-sm hover:shadow-md transition-shadow">
-                        Tambah Blok
-                    </x-filament::button>
-                </div>
-            </div>
-        </div>
+    <div class="space-y-6">
+        <!-- Header -->
+        <x-page-header
+            title="Blok"
+            subtitle="Kelola Data Blok"
+            :back-url="route('filament.admin.pages.tahun-tanam', ['afdeling_id' => $this->afdeling_id])" />
 
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -59,6 +33,19 @@
                 </p>
             </div>
         </div>
+
+        <x-filament::button
+            icon="heroicon-o-plus"
+            size="sm"
+            tag="a"
+            color="emerald"
+            href="{{ route('filament.admin.resources.bloks.create', [
+                            'tahun_tanam_id' => request('tahun_tanam_id'),
+                            'afdeling_id' => request('afdeling_id')
+                        ]) }}"
+            class="shadow-sm hover:shadow-md transition-shadow">
+            Tambah Blok
+        </x-filament::button>
 
         <!-- Table Container -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200/50 dark:border-gray-700/50">

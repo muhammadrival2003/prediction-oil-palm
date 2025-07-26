@@ -7,34 +7,12 @@
     '#' => 'Data Hasil Produksi',
     ]" />
 
-    <div class="space-y-8">
-        <!-- Enhanced Header with Gradient Background -->
-        <div class="bg-gradient-to-r from-emerald-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 shadow-sm border border-gray-200/50 dark:border-gray-700/50">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Hasil Produksi</h1>
-                    <p class="text-sm text-emerald-600 dark:text-emerald-400 mt-1">
-                        Blok {{ $blokId }} - Kelola data hasil produksi
-                    </p>
-                </div>
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <a href="{{ route('filament.admin.pages.blok-produksi', ['afdeling_id' => $afdeling_id]) }}" 
-                       class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-emerald-200 dark:border-emerald-800 rounded-lg text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors duration-300 shadow-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-                        </svg>
-                        Kembali
-                    </a>
-                    <x-filament::button
-                        wire:click="openCreateModal"
-                        icon="heroicon-o-plus"
-                        color="emerald"
-                        class="shadow-sm">
-                        Tambah Data Baru
-                    </x-filament::button>
-                </div>
-            </div>
-        </div>
+    <div class="space-y-6">
+        <!-- Header -->
+        <x-page-header
+            title="Hasil Produksi"
+            subtitle="Blok {{ $blokId }} - Kelola data hasil produksi"
+            :back-url="route('filament.admin.pages.blok-produksi', ['afdeling_id' => $afdeling_id])" />
 
         @if($hasilProduksis->isEmpty())
         <!-- Empty State -->
@@ -76,6 +54,14 @@
                 </p>
             </div>
         </div>
+
+        <x-filament::button
+            wire:click="openCreateModal"
+            icon="heroicon-o-plus"
+            color="emerald"
+            class="shadow-sm">
+            Tambah Data Baru
+        </x-filament::button>
 
         <!-- Tabel Data -->
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200/50 dark:border-gray-700/50">
@@ -120,9 +106,9 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @php
-                                    $selisih = $hasil->realisasi_produksi - $hasil->rencana_produksi;
-                                    $status = $selisih >= 0 ? 'Terpenuhi' : 'Belum Terpenuhi';
-                                    $color = $selisih >= 0 ? 'emerald' : 'red';
+                                $selisih = $hasil->realisasi_produksi - $hasil->rencana_produksi;
+                                $status = $selisih >= 0 ? 'Terpenuhi' : 'Belum Terpenuhi';
+                                $color = $selisih >= 0 ? 'emerald' : 'red';
                                 @endphp
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-{{ $color }}-100 dark:bg-{{ $color }}-900/30 text-{{ $color }}-800 dark:text-{{ $color }}-400">
                                     {{ $status }}
@@ -134,8 +120,7 @@
                                         wire:click="edit({{ $hasil->id }})"
                                         wire:loading.attr="disabled"
                                         size="sm"
-                                        class="bg-white dark:bg-gray-800 border border-emerald-200 dark:border-emerald-800 rounded-lg text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors duration-300 shadow-sm"
-                                        >
+                                        class="bg-white dark:bg-gray-800 border border-emerald-200 dark:border-emerald-800 rounded-lg text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors duration-300 shadow-sm">
                                         Edit
                                     </x-filament::button>
 
@@ -143,8 +128,7 @@
                                         wire:click="confirmDelete({{ $hasil->id }})"
                                         wire:loading.attr="disabled"
                                         size="sm"
-                                        color="danger"
-                                        >
+                                        color="danger">
                                         Delete
                                     </x-filament::button>
                                 </div>

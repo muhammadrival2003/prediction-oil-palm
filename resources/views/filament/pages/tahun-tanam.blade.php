@@ -6,34 +6,11 @@
     '#' => 'Tahun Tanam',
     ]" />
 
-    <!-- Enhanced Header with Gradient Background -->
-    <div class="bg-gradient-to-r from-emerald-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 mb-6 shadow-sm border border-gray-200/50 dark:border-gray-700/50">
-        <div class="flex items-center justify-between">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Tahun Tanam</h1>
-                <p class="text-sm text-emerald-600 dark:text-emerald-400 mt-1">
-                    Pilih Menu untuk mengelola Data Tahun Tanam
-                </p>
-            </div>
-            <div>
-                <a href="{{ route('filament.admin.pages.afdeling.menu',  ['afdeling_id' => $this->afdeling_id]) }}"
-                    class="inline-flex items-center text-sm px-4 py-2 me-2 bg-white dark:bg-gray-800 border border-emerald-200 dark:border-emerald-800 rounded-lg text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors duration-300 shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-                    </svg>
-                    Kembali
-                </a>
-                <x-filament::button
-                    icon="heroicon-o-plus"
-                    size="sm"
-                    tag="a"
-                    class="inline-flex items-center text-sm px-4 py-2"
-                    href="{{ route('filament.admin.resources.tahun-tanams.create', ['afdeling_id' => $this->afdeling_id]) }}">
-                    Tambah Tahun
-                </x-filament::button>
-            </div>
-        </div>
-    </div>
+    <!-- Header -->
+    <x-page-header
+        title="Tahun Tanam"
+        subtitle="Pilih menu untuk mengelola Tahun Tanam Afdeling {{ $this->afdeling_id }}"
+        :back-url="route('filament.admin.pages.afdeling.menu', ['afdeling_id' => $this->afdeling_id])" />
 
     <!-- Statistik Cards with Emerald Accents -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">

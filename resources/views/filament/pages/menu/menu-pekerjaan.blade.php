@@ -6,26 +6,12 @@
     '#' => 'Pekerjaan',
     ]" />
 
-    <!-- Enhanced Header with Gradient Background -->
-    <div class="bg-gradient-to-r from-emerald-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 mb-6 shadow-sm border border-gray-200/50 dark:border-gray-700/50">
-        <div class="flex items-center justify-between">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Menu Pekerjaan</h1>
-                <p class="text-sm text-emerald-600 dark:text-emerald-400 mt-1">
-                    Kelola berbagai jenis pekerjaan di afdeling ini
-                </p>
-            </div>
-            <div>
-                <a href="{{ route('filament.admin.pages.afdeling.menu', ['afdeling_id' => $afdeling_id]) }}" 
-                   class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-emerald-200 dark:border-emerald-800 rounded-lg text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors duration-300 shadow-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-                    </svg>
-                    Kembali
-                </a>
-            </div>
-        </div>
-    </div>
+    <!-- Header -->
+     <x-page-header 
+        title="Menu Pekerjaan"
+        subtitle="Kelola berbagai pekerjaan di Afdeling {{ $this->afdeling_id }}"
+        :back-url="route('filament.admin.pages.afdeling.menu', ['afdeling_id' => $afdeling_id])"
+    />
 
     <!-- Card Grid with Enhanced Design -->
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

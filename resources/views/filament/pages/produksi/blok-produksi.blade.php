@@ -7,26 +7,11 @@
     ]" />
 
     <div class="space-y-8">
-        <!-- Enhanced Header with Gradient Background -->
-        <div class="bg-gradient-to-r from-emerald-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 shadow-sm border border-gray-200/50 dark:border-gray-700/50">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Daftar Blok</h1>
-                    <p class="text-sm text-emerald-600 dark:text-emerald-400 mt-1">
-                        Pilih Blok untuk mengelola Hasil Produksi
-                    </p>
-                </div>
-                <div>
-                    <a href="{{ route('filament.admin.pages.afdeling.menu', ['afdeling_id' => $this->afdeling_id]) }}" 
-                       class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-emerald-200 dark:border-emerald-800 rounded-lg text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors duration-300 shadow-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-                        </svg>
-                        Kembali
-                    </a>
-                </div>
-            </div>
-        </div>
+        <!-- Header -->
+        <x-page-header
+            title="Blok Produksi"
+            subtitle="Pilih Blok untuk mengelola Hasil Produksi"
+            :back-url="route('filament.admin.pages.afdeling.menu', ['afdeling_id' => $this->afdeling_id])" />
 
         <!-- Blok Cards Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -36,8 +21,8 @@
                 <div x-show="hover" class="absolute inset-0 bg-gradient-to-br from-emerald-400/20 to-emerald-600/10 rounded-2xl blur-xl scale-105 -z-10 transition-all duration-500"></div>
 
                 <a href="{{ route('filament.admin.pages.hasil-produksi', ['blok_id' => $blok->id, 'afdeling_id' => $this->afdeling_id]) }}"
-                   class="relative flex flex-col h-full overflow-hidden rounded-2xl bg-gradient-to-br from-white via-emerald-50 to-white dark:from-gray-800 dark:via-emerald-900/20 dark:to-gray-800 p-6 shadow-lg transition-all duration-500 hover:shadow-xl hover:-translate-y-1 border border-gray-200/70 dark:border-gray-700/50 hover:border-emerald-300 dark:hover:border-emerald-500/50">
-                    
+                    class="relative flex flex-col h-full overflow-hidden rounded-2xl bg-gradient-to-br from-white via-emerald-50 to-white dark:from-gray-800 dark:via-emerald-900/20 dark:to-gray-800 p-6 shadow-lg transition-all duration-500 hover:shadow-xl hover:-translate-y-1 border border-gray-200/70 dark:border-gray-700/50 hover:border-emerald-300 dark:hover:border-emerald-500/50">
+
                     <!-- Animated background pattern -->
                     <div class="absolute inset-0 opacity-5 group-hover:opacity-10 transition-opacity duration-500">
                         <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2IiBoZWlnaHQ9IjYiPgo8cmVjdCB3aWR0aD0iNiIgaGVpZ2h0PSI2IiBmaWxsPSIjMDAwMDAwIiBvcGFjaXR5PSIwLjA1Ij48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDZMNiAwWiIgc3Ryb2tlLXdpZHRoPSIwLjUiIHN0cm9rZT0iIzEwYjk4MSIgb3BhY2l0eT0iMC4zIj48L3BhdGg+Cjwvc3ZnPg==')]"></div>
