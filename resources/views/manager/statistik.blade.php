@@ -76,9 +76,6 @@
                 <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-4">
                     Analisis Statistik
                 </h1>
-                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-                    Analisis mendalam data produksi dan efisiensi dengan insights berbasis data untuk optimasi operasional
-                </p>
                 <div class="flex items-center justify-center space-x-4">
                     <div class="flex items-center space-x-2 px-4 py-2 bg-white/80 dark:bg-slate-700/80 backdrop-blur-sm rounded-full shadow-lg">
                         <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>

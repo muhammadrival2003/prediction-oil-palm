@@ -152,13 +152,13 @@
                                     <span>Laporan Afdeling</span>
                                 </div>
                             </a>
-                            <a href="{{ route('manager.statistik') }}" 
+                            <!-- <a href="{{ route('manager.statistik') }}" 
                                class="nav-link-modern group px-6 py-3 rounded-xl font-medium transition-all duration-300 {{ request()->routeIs('manager.statistik') ? 'bg-white/20 text-white shadow-lg' : 'hover:bg-white/10' }}">
                                 <div class="flex items-center space-x-2">
                                     <i class="fas fa-chart-line text-sm group-hover:scale-110 transition-transform"></i>
                                     <span>Statistik</span>
                                 </div>
-                            </a>
+                            </a> -->
                         </div>
                     </div>
 
@@ -236,41 +236,96 @@
             </div>
 
             <!-- Responsive Navigation Menu -->
-            <div id="mobile-menu" class="hidden sm:hidden">
-                <div class="pt-2 pb-3 space-y-1">
-                    <a href="{{ route('manager.beranda') }}" 
-                       class="mobile-nav-link {{ request()->routeIs('manager.beranda') ? 'active' : '' }}">
-                        <i class="fas fa-home mr-2"></i>Beranda
-                    </a>
+            <div id="mobile-menu" class="hidden sm:hidden bg-gradient-to-b from-emerald-600/95 to-teal-600/95 backdrop-blur-lg border-t border-white/10">
+                <div class="px-4 pt-4 pb-3 space-y-2">
+                    <!-- Navigation Links -->
+                    <!-- <a href="{{ route('manager.beranda') }}"
+                       class="mobile-nav-link-modern {{ request()->routeIs('manager.beranda') ? 'active' : '' }}">
+                        <div class="flex items-center space-x-3 mb-4 text-white">
+                            <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+                                <i class="fas fa-home text-sm"></i>
+                            </div>
+                            <span class="font-medium">Beranda</span>
+                        </div>
+                    </a> -->
+                    
                     <a href="{{ route('manager.laporan') }}" 
-                       class="mobile-nav-link {{ request()->routeIs('manager.laporan') ? 'active' : '' }}">
-                        <i class="fas fa-chart-bar mr-2"></i>Laporan
+                       class="mobile-nav-link-modern {{ request()->routeIs('manager.laporan') ? 'active' : '' }}">
+                        <div class="flex items-center space-x-3 mb-4 text-white">
+                            <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+                                <i class="fas fa-chart-bar text-sm"></i>
+                            </div>
+                            <span class="font-medium">Laporan</span>
+                        </div>
                     </a>
+                    
                     <a href="{{ route('manager.laporan-afdeling') }}" 
-                       class="mobile-nav-link {{ request()->routeIs('manager.laporan-afdeling') ? 'active' : '' }}">
-                        <i class="fas fa-layer-group mr-2"></i>Laporan Afdeling
+                       class="mobile-nav-link-modern {{ request()->routeIs('manager.laporan-afdeling') ? 'active' : '' }}">
+                        <div class="flex items-center space-x-3 mb-4 text-white">
+                            <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+                                <i class="fas fa-layer-group text-sm"></i>
+                            </div>
+                            <span class="font-medium">Laporan Afdeling</span>
+                        </div>
                     </a>
-                    <a href="{{ route('manager.statistik') }}" 
-                       class="mobile-nav-link {{ request()->routeIs('manager.statistik') ? 'active' : '' }}">
-                        <i class="fas fa-chart-line mr-2"></i>Statistik
-                    </a>
+                    
+                    <!-- <a href="{{ route('manager.statistik') }}" 
+                       class="mobile-nav-link-modern {{ request()->routeIs('manager.statistik') ? 'active' : '' }}">
+                        <div class="flex items-center space-x-3 mb-4 text-white">
+                            <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+                                <i class="fas fa-chart-line text-sm"></i>
+                            </div>
+                            <span class="font-medium">Statistik</span>
+                        </div>
+                    </a> -->
                 </div>
 
                 <!-- Responsive Settings Options -->
-                <div class="pt-4 pb-1 border-t border-white border-opacity-20">
-                    <div class="px-4">
-                        <div class="font-medium text-base text-white">{{ Auth::user()->name }}</div>
-                        <div class="font-medium text-sm text-gray-300">{{ Auth::user()->email }}</div>
+                <div class="px-4 pt-4 pb-4 border-t border-white/20">
+                    <!-- User Info Card -->
+                    <div class="bg-white/10 rounded-xl p-4 mb-4 backdrop-blur-sm">
+                        <div class="flex items-center space-x-3 mb-4 text-white">
+                            <div class="w-12 h-12 bg-gradient-to-br from-white/30 to-white/10 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-user text-white"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="font-semibold text-white text-sm truncate">{{ Auth::user()->name }}</p>
+                                <p class="text-emerald-100 text-xs truncate">{{ Auth::user()->email }}</p>
+                                <span class="inline-block px-2 py-1 bg-emerald-400/20 text-emerald-100 text-xs rounded-full mt-1">Manager</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mt-3 space-y-1">
-                        <a href="{{ route('profile.edit') }}" class="mobile-nav-link">
-                            <i class="fas fa-user-edit mr-2"></i>Profile
+                    <!-- Action Links -->
+                    <div class="space-y-2">
+                        <!-- Dark Mode Toggle -->
+                        <button onclick="toggleDarkMode()" class="mobile-action-link">
+                            <div class="flex items-center space-x-3 mb-4 text-white">
+                                <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+                                    <i class="fas fa-moon text-sm" id="darkModeIconMobile"></i>
+                                </div>
+                                <span class="font-medium">Dark Mode</span>
+                            </div>
+                        </button>
+                        
+                        <a href="{{ route('profile.edit') }}" class="mobile-action-link">
+                            <div class="flex items-center space-x-3 mb-4 text-white">
+                                <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+                                    <i class="fas fa-user-edit text-sm"></i>
+                                </div>
+                                <span class="font-medium">Edit Profile</span>
+                            </div>
                         </a>
-                        <form method="POST" action="{{ route('logout') }}">
+                        
+                        <form method="POST" action="{{ route('logout') }}" class="w-full">
                             @csrf
-                            <button type="submit" class="w-full text-left mobile-nav-link">
-                                <i class="fas fa-sign-out-alt mr-2"></i>Log Out
+                            <button type="submit" class="mobile-action-link w-full text-red-200 hover:bg-red-500/20">
+                                <div class="flex items-center space-x-3 mb-4 text-white">
+                                    <div class="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center">
+                                        <i class="fas fa-sign-out-alt text-sm"></i>
+                                    </div>
+                                    <span class="font-medium">Sign Out</span>
+                                </div>
                             </button>
                         </form>
                     </div>
@@ -369,6 +424,81 @@
         .mobile-nav-link.active {
             @apply bg-white bg-opacity-20 text-white;
         }
+
+        /* Modern Mobile Navigation Styles */
+        .mobile-nav-link-modern {
+            @apply flex items-center justify-between w-full px-4 py-3 text-white rounded-xl transition-all duration-300 hover:bg-white/10 hover:scale-[1.02] hover:shadow-lg;
+        }
+        
+        .mobile-nav-link-modern.active {
+            @apply bg-white/20 shadow-lg scale-[1.02];
+        }
+        
+        .mobile-nav-link-modern:active {
+            @apply scale-[0.98];
+        }
+
+        /* Mobile Action Link Styles */
+        .mobile-action-link {
+            @apply flex items-center justify-between w-full px-4 py-3 text-white rounded-xl transition-all duration-300 hover:bg-white/10 hover:scale-[1.02] hover:shadow-lg;
+        }
+        
+        .mobile-action-link:active {
+            @apply scale-[0.98];
+        }
+
+        /* Mobile Menu Animation */
+        #mobile-menu {
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        #mobile-menu.hidden {
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Touch-friendly mobile interactions */
+        @media (max-width: 640px) {
+            .mobile-nav-link-modern,
+            .mobile-action-link {
+                min-height: 48px; /* Minimum touch target size */
+                @apply text-base;
+            }
+            
+            .mobile-nav-link-modern .w-8,
+            .mobile-action-link .w-8 {
+                @apply w-10 h-10; /* Larger icons for better visibility */
+            }
+        }
+
+        /* Responsive text sizing */
+        @media (max-width: 375px) {
+            .mobile-nav-link-modern span,
+            .mobile-action-link span {
+                @apply text-sm;
+            }
+        }
     </style>
 
     <script>
@@ -376,14 +506,20 @@
         function toggleDarkMode() {
             const html = document.documentElement;
             const icon = document.getElementById('darkModeIcon');
+            const mobileIcon = document.getElementById('darkModeIconMobile');
+            const toggle = document.getElementById('darkModeToggle');
             
             if (html.classList.contains('dark')) {
                 html.classList.remove('dark');
-                icon.className = 'fas fa-moon text-white text-sm';
+                if (icon) icon.className = 'fas fa-moon text-white text-sm';
+                if (mobileIcon) mobileIcon.className = 'fas fa-moon text-sm';
+                if (toggle) toggle.style.transform = 'translateX(0)';
                 localStorage.setItem('darkMode', 'false');
             } else {
                 html.classList.add('dark');
-                icon.className = 'fas fa-sun text-white text-sm';
+                if (icon) icon.className = 'fas fa-sun text-white text-sm';
+                if (mobileIcon) mobileIcon.className = 'fas fa-sun text-sm';
+                if (toggle) toggle.style.transform = 'translateX(20px)';
                 localStorage.setItem('darkMode', 'true');
             }
         }
@@ -392,10 +528,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             const darkMode = localStorage.getItem('darkMode');
             const icon = document.getElementById('darkModeIcon');
+            const mobileIcon = document.getElementById('darkModeIconMobile');
+            const toggle = document.getElementById('darkModeToggle');
             
             if (darkMode === 'true') {
                 document.documentElement.classList.add('dark');
-                icon.className = 'fas fa-sun text-white text-sm';
+                if (icon) icon.className = 'fas fa-sun text-white text-sm';
+                if (mobileIcon) mobileIcon.className = 'fas fa-sun text-sm';
+                if (toggle) toggle.style.transform = 'translateX(20px)';
             }
         });
 
@@ -406,7 +546,16 @@
 
         function toggleMobileMenu() {
             const mobileMenu = document.getElementById('mobile-menu');
+            const hamburgerIcon = document.querySelector('[onclick="toggleMobileMenu()"] i');
+            
             mobileMenu.classList.toggle('hidden');
+            
+            // Animate hamburger icon
+            if (mobileMenu.classList.contains('hidden')) {
+                hamburgerIcon.className = 'fas fa-bars text-white';
+            } else {
+                hamburgerIcon.className = 'fas fa-times text-white';
+            }
         }
 
         function scrollToTop() {
@@ -419,10 +568,34 @@
         // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
             const dropdown = document.getElementById('dropdown');
+            const mobileMenu = document.getElementById('mobile-menu');
             const button = event.target.closest('button');
             
+            // Close dropdown if clicking outside
             if (!button || !button.onclick || button.onclick.toString().indexOf('toggleDropdown') === -1) {
-                dropdown.classList.add('hidden');
+                if (dropdown) dropdown.classList.add('hidden');
+            }
+            
+            // Close mobile menu if clicking outside
+            if (!button || !button.onclick || button.onclick.toString().indexOf('toggleMobileMenu') === -1) {
+                if (mobileMenu && !mobileMenu.contains(event.target)) {
+                    mobileMenu.classList.add('hidden');
+                    const hamburgerIcon = document.querySelector('[onclick="toggleMobileMenu()"] i');
+                    if (hamburgerIcon) hamburgerIcon.className = 'fas fa-bars text-white';
+                }
+            }
+        });
+
+        // Close mobile menu when clicking on navigation links
+        document.addEventListener('click', function(event) {
+            if (event.target.closest('.mobile-nav-link-modern')) {
+                const mobileMenu = document.getElementById('mobile-menu');
+                const hamburgerIcon = document.querySelector('[onclick="toggleMobileMenu()"] i');
+                
+                setTimeout(() => {
+                    if (mobileMenu) mobileMenu.classList.add('hidden');
+                    if (hamburgerIcon) hamburgerIcon.className = 'fas fa-bars text-white';
+                }, 150);
             }
         });
 
@@ -438,6 +611,32 @@
                     });
                 }
             });
+        });
+
+        // Handle window resize to close mobile menu on larger screens
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 640) { // sm breakpoint
+                const mobileMenu = document.getElementById('mobile-menu');
+                const hamburgerIcon = document.querySelector('[onclick="toggleMobileMenu()"] i');
+                
+                if (mobileMenu) mobileMenu.classList.add('hidden');
+                if (hamburgerIcon) hamburgerIcon.className = 'fas fa-bars text-white';
+            }
+        });
+
+        // Add touch feedback for mobile interactions
+        document.addEventListener('touchstart', function(event) {
+            if (event.target.closest('.mobile-nav-link-modern, .mobile-action-link')) {
+                event.target.closest('.mobile-nav-link-modern, .mobile-action-link').style.transform = 'scale(0.98)';
+            }
+        });
+
+        document.addEventListener('touchend', function(event) {
+            if (event.target.closest('.mobile-nav-link-modern, .mobile-action-link')) {
+                setTimeout(() => {
+                    event.target.closest('.mobile-nav-link-modern, .mobile-action-link').style.transform = '';
+                }, 150);
+            }
         });
     </script>
 

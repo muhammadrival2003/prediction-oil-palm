@@ -29,9 +29,9 @@
         }
 
         .gradient-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .pulse-animation {
@@ -39,8 +39,15 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
         }
 
         .floating-card {
@@ -48,8 +55,15 @@
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
         .shimmer {
@@ -59,8 +73,13 @@
         }
 
         @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
         }
 
         .custom-scrollbar {
@@ -86,7 +105,7 @@
         }
 
         .bg-grid-pattern {
-            background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0);
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0);
             background-size: 20px 20px;
         }
     </style>
@@ -104,9 +123,6 @@
                 <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent mb-4">
                     Laporan Komprehensif
                 </h1>
-                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-                    Analisis mendalam operasional Unit Kebun Lama dengan visualisasi data real-time dan insights yang actionable
-                </p>
                 <div class="flex items-center justify-center space-x-4">
                     <div class="flex items-center space-x-2 px-4 py-2 bg-white/80 dark:bg-slate-700/80 backdrop-blur-sm rounded-full shadow-lg">
                         <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
@@ -118,8 +134,8 @@
                     </div>
                 </div>
                 <div class="mt-6">
-                    <a href="{{ route('manager.laporan-afdeling') }}" 
-                       class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-medium rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+                    <a href="{{ route('manager.laporan-afdeling') }}"
+                        class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-medium rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
                         <i class="fas fa-layer-group mr-2"></i>
                         Lihat Laporan Per Afdeling
                         <i class="fas fa-arrow-right ml-2"></i>
@@ -335,17 +351,17 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($produksi->total_produksi > 10000)
-                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold badge-success">
-                                            <i class="fas fa-arrow-up mr-1"></i>Tinggi
-                                        </span>
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold badge-success">
+                                        <i class="fas fa-arrow-up mr-1"></i>Tinggi
+                                    </span>
                                     @elseif($produksi->total_produksi > 5000)
-                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold badge-warning">
-                                            <i class="fas fa-minus mr-1"></i>Sedang
-                                        </span>
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold badge-warning">
+                                        <i class="fas fa-minus mr-1"></i>Sedang
+                                    </span>
                                     @else
-                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold badge-info">
-                                            <i class="fas fa-arrow-down mr-1"></i>Rendah
-                                        </span>
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold badge-info">
+                                        <i class="fas fa-arrow-down mr-1"></i>Rendah
+                                    </span>
                                     @endif
                                 </td>
                             </tr>
@@ -416,7 +432,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Statistics Cards -->
             <div class="grid grid-cols-1 gap-6 mb-6">
                 <!-- Rata-rata Prediksi -->
@@ -518,10 +534,10 @@
                     <span class="text-sm font-medium text-emerald-700 dark:text-emerald-300">Available</span>
                 </div>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <a href="{{ route('manager.laporan.download-pdf') }}" class="group/btn relative overflow-hidden bg-gradient-to-r from-red-500 to-red-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 block text-center">
-                    <div class="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <a href="{{ route('manager.laporan.download-pdf') }}" class="group/btn relative overflow-hidden bg-gradient-to-r from-red-500 to-red-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-700 block text-center">
+                    <div class="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-700"></div>
                     <div class="relative z-10 flex flex-col items-center space-y-3">
                         <div class="p-3 bg-white/20 rounded-lg">
                             <i class="fas fa-file-pdf text-2xl"></i>
@@ -532,8 +548,8 @@
                         </div>
                     </div>
                 </a>
-                
-                <a href="{{ route('manager.laporan.download-excel') }}" class="group/btn relative overflow-hidden bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 block text-center">
+
+                <a href="{{ route('manager.laporan.download-excel') }}" class="group/btn relative overflow-hidden bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-700 block text-center">
                     <div class="absolute inset-0 bg-gradient-to-r from-emerald-600 to-emerald-700 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
                     <div class="relative z-10 flex flex-col items-center space-y-3">
                         <div class="p-3 bg-white/20 rounded-lg">
@@ -545,21 +561,8 @@
                         </div>
                     </div>
                 </a>
-                
-                <a href="{{ route('manager.laporan.print') }}" target="_blank" class="group/btn relative overflow-hidden bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 block text-center">
-                    <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-700 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-                    <div class="relative z-10 flex flex-col items-center space-y-3">
-                        <div class="p-3 bg-white/20 rounded-lg">
-                            <i class="fas fa-print text-2xl"></i>
-                        </div>
-                        <div class="text-center">
-                            <h4 class="font-bold">Print Laporan</h4>
-                            <p class="text-sm text-blue-100">Cetak langsung</p>
-                        </div>
-                    </div>
-                </a>
             </div>
-            
+
             <div class="flex items-center justify-center space-x-3 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl">
                 <i class="fas fa-info-circle text-emerald-600 dark:text-emerald-400"></i>
                 <p class="text-sm text-emerald-700 dark:text-emerald-300 font-medium">
@@ -575,12 +578,12 @@
             // Produksi Chart
             const produksiCtx = document.getElementById('produksiChart').getContext('2d');
             const produksiData = @json($produksi12Bulan);
-            
+
             const produksiLabels = produksiData.map(item => {
                 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
                 return months[item.month - 1] + ' ' + item.year;
             });
-            
+
             const produksiValues = produksiData.map(item => item.total_produksi);
 
             new Chart(produksiCtx, {
@@ -616,7 +619,7 @@
             // Pemupukan Chart
             const pemupukanCtx = document.getElementById('pemupukanChart').getContext('2d');
             const pemupukanData = @json($pemupukanPerJenis);
-            
+
             const pemupukanLabels = pemupukanData.map(item => item.jenis_pupuk.nama);
             const pemupukanValues = pemupukanData.map(item => item.total_volume);
 
@@ -652,13 +655,12 @@
             @if(!empty($perbandinganPrediksiAktual))
             const predictionCtx = document.getElementById('predictionComparisonChart').getContext('2d');
             const comparisonData = @json($perbandinganPrediksiAktual);
-            
+
             new Chart(predictionCtx, {
                 type: 'line',
                 data: {
                     labels: comparisonData.map(item => item.period),
-                    datasets: [
-                        {
+                    datasets: [{
                             label: 'Prediksi',
                             data: comparisonData.map(item => item.predicted),
                             borderColor: '#8b5cf6',

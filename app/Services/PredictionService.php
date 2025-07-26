@@ -79,6 +79,8 @@ class PredictionService
             ->get()
             ->sortBy('tanggal')
             ->values();
+        
+        // dd($historicalData);
 
         if ($historicalData->count() < 12) {
             throw new \Exception('Butuh data historis minimal 12 bulan terakhir.');
@@ -128,6 +130,7 @@ class PredictionService
             ]);
 
             $predictionData = $response->json();
+            // dd($predictionData);
 
             // Simpan model performance dari response pertama saja
             if ($i === 0 && isset($predictionData['model_performance'])) {
