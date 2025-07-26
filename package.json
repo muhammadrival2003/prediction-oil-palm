@@ -21,6 +21,6 @@
     "dependencies": {
         "@alpinejs/intersect": "^3.14.9",
         "apexcharts": "^4.6.0",
-        "chart.js": "^4.4.9"
+        "chart.js": "^4.5.0"
     }
 }
